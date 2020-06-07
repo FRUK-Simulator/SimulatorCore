@@ -1,5 +1,15 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+import SimulatorConfig from "./SimulatorConfig";
+import { makeGrid, GridPlane } from "./utils/GridUtil";
+
+const DEFAULT_CONFIG: SimulatorConfig = {
+    world: {
+        zLength: 10,
+        xLength: 10,
+        includeWalls: true
+    }
+};
 
 export class Sim3D {
     private scene: THREE.Scene;
@@ -10,7 +20,11 @@ export class Sim3D {
 
     private isRendering: boolean = false;
 
-    constructor(private canvas: HTMLCanvasElement) {
+    constructor(private canvas: HTMLCanvasElement, config?: SimulatorConfig) {
+        if (!config) {
+            config = DEFAULT_CONFIG;
+        }
+
         // Scene
         const scene = (this.scene = new THREE.Scene());
         scene.background = new THREE.Color(0xeeeeee);
@@ -46,14 +60,14 @@ export class Sim3D {
 
         scene.add(new THREE.AmbientLight(0x333333));
 
-        // Grid
-        const gridHelper = new THREE.GridHelper(1, 10);
-        gridHelper.scale.addScalar(10);
-        scene.add(gridHelper);
-         
+        // Grid - By default, draw grid lines every 1 unit (metre)
+        const grid = makeGrid(GridPlane.XZ, config.world.xLength, config.world.zLength, config.world.xLength, config.world.zLength);
+        scene.add(grid);
+
         // Axes
         const axesHelper = new THREE.AxesHelper(1);
         scene.add(axesHelper);
+
     }
 
     onresize() {
