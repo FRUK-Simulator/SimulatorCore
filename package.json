@@ -6,7 +6,8 @@
   "scripts": {
     "build": "tsc",
     "build+watch": "tsc -w",
-    "start-web": "webpack-dev-server"
+    "start-web": "webpack-dev-server",
+    "postinstall": "tsc"
   },
   "repository": {
     "type": "git",
