@@ -50,6 +50,10 @@ export class Sim3D {
         const gridHelper = new THREE.GridHelper(1, 10);
         gridHelper.scale.addScalar(10);
         scene.add(gridHelper);
+         
+        // Axes
+        const axesHelper = new THREE.AxesHelper(1);
+        scene.add(axesHelper);
     }
 
     onresize() {
