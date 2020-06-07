@@ -5,7 +5,9 @@
   "main": "dist/package.js",
   "scripts": {
     "build": "tsc",
-    "start-web": "webpack-dev-server"
+    "build+watch": "tsc -w",
+    "start-web": "webpack-dev-server",
+    "postinstall": "tsc"
   },
   "repository": {
     "type": "git",
