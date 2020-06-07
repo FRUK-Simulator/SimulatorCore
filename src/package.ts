@@ -1,1 +1,1 @@
-export { Sim3D } from "./engine/Sim3d";
+export { Sim3D } from "./engine/Sim3D";

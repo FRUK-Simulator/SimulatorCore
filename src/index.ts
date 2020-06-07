@@ -1,4 +1,4 @@
-import { Sim3D } from "./engine/Sim3d";
+import { Sim3D } from "./engine/Sim3D";
 
 let simulator: Sim3D;
 
