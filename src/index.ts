@@ -13,10 +13,18 @@ function main() {
     const canvas = <HTMLCanvasElement>document.getElementById("render-area");
 
     simulator = new Sim3D(canvas, {
-        world: {
+        defaultWorld: {
             xLength: 10,
             zLength: 20,
-            includeWalls: true
+            includeWalls: true,
+
+            camera: {
+                position: {
+                    x: 0,
+                    y: 4,
+                    z: 12
+                }
+            }
         }
     });
     simulator.onresize();

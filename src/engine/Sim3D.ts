@@ -1,13 +1,22 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-import SimulatorConfig from "./SimulatorConfig";
+import { SimulatorConfig, WorldConfig } from "./SimulatorConfig";
 import { makeGrid, GridPlane } from "./utils/GridUtil";
+import { SimWall } from "./objects/SimWall";
 
 const DEFAULT_CONFIG: SimulatorConfig = {
-    world: {
+    defaultWorld: {
         zLength: 10,
         xLength: 10,
-        includeWalls: true
+        includeWalls: true,
+
+        camera: {
+            position: {
+                x: 0,
+                y: 4,
+                z: 5
+            }
+        }
     }
 };
 
@@ -20,10 +29,14 @@ export class Sim3D {
 
     private isRendering: boolean = false;
 
+    private config: SimulatorConfig;
+
     constructor(private canvas: HTMLCanvasElement, config?: SimulatorConfig) {
         if (!config) {
             config = DEFAULT_CONFIG;
         }
+
+        this.config = config;
 
         // Scene
         const scene = (this.scene = new THREE.Scene());
@@ -36,9 +49,23 @@ export class Sim3D {
         }));
         renderer.setSize(canvas.width, canvas.height);
 
+        // If a default world is specified, configure it now
+        // The reset method runs when configureWorld is called
+        this.configureWorld(config.defaultWorld);
+
+        // Axes
+        const axesHelper = new THREE.AxesHelper(1);
+        scene.add(axesHelper);
+    }
+
+    private resetScene(config: WorldConfig) {
+        while(this.scene.children.length > 0) {
+            this.scene.remove(this.scene.children[0]);
+        }
+
         // Camera
         const fov = 80;
-        const aspect = canvas.width / canvas.height;
+        const aspect = this.canvas.width / this.canvas.height;
         const near = 0.01;
         const far = 100;
         const camera = (this.camera = new THREE.PerspectiveCamera(
@@ -47,27 +74,69 @@ export class Sim3D {
             near,
             far
         ));
-        camera.position.z += 3;
-        camera.position.y += 2;
-        this.cameraControls = new OrbitControls(camera, renderer.domElement);
+
+        camera.position.z += config.camera ? config.camera.position.z : 0;
+        camera.position.y += config.camera ? config.camera.position.y : 0;
+        this.cameraControls = new OrbitControls(camera, this.renderer.domElement);
 
         // Lighting
         const pointLight = new THREE.PointLight(0xffffff, 0.8);
         pointLight.position.x = 3;
         pointLight.position.y = 10;
         pointLight.position.z = 3;
-        scene.add(pointLight);
+        this.scene.add(pointLight);
 
-        scene.add(new THREE.AmbientLight(0x333333));
+        this.scene.add(new THREE.AmbientLight(0x333333));
+    }
+
+    /**
+     * Configure the world
+     *
+     * This essentially means reset the simulator environment, and add the playing field (and walls if necessary)
+     * @param worldConfig Configuration for the world
+     */
+    configureWorld(worldConfig: WorldConfig) {
+        this.resetScene(worldConfig);
 
         // Grid - By default, draw grid lines every 1 unit (metre)
-        // Since the makeGrid function takes in half lengths, we need to divide the provided world lengths by 2
-        const grid = makeGrid(GridPlane.XZ, config.world.xLength / 2, config.world.zLength / 2, config.world.xLength, config.world.zLength);
-        scene.add(grid);
+        const grid = makeGrid(GridPlane.XZ, worldConfig.xLength / 2, worldConfig.zLength / 2, worldConfig.xLength, worldConfig.zLength);
+        this.scene.add(grid);
 
-        // Axes
-        const axesHelper = new THREE.AxesHelper(1);
-        scene.add(axesHelper);
+        // Walls if necessary
+        if (worldConfig.includeWalls) {
+
+            const walls = [
+                new SimWall({
+                    position: { x: 0, y: 0.4, z: worldConfig.zLength / 2},
+                    rotation: { x: 0, y: 0, z: 0 },
+                    extents: { xh: worldConfig.xLength / 2, yh: 0.4, zh: 0.125 },
+                    wallColor: 0x00ff00
+                }),
+
+                new SimWall({
+                    position: { x: 0, y: 0.4, z: -worldConfig.zLength / 2},
+                    rotation: { x: 0, y: 0, z: 0 },
+                    extents: { xh: worldConfig.xLength / 2, yh: 0.4, zh: 0.125 },
+                    wallColor: 0xff0000
+                }),
+
+                new SimWall({
+                    position: { x: -worldConfig.xLength / 2, y: 0.4, z: 0},
+                    rotation: { x: 0, y: Math.PI / 2, z: 0 },
+                    extents: { xh: worldConfig.zLength / 2, yh: 0.4, zh: 0.125 }
+                }),
+
+                new SimWall({
+                    position: { x: worldConfig.xLength / 2, y: 0.4, z: 0},
+                    rotation: { x: 0, y: Math.PI / 2, z: 0 },
+                    extents: { xh: worldConfig.zLength / 2, yh: 0.4, zh: 0.125 }
+                }),
+            ];
+
+            walls.forEach(wall => {
+                this.scene.add(wall.mesh);
+            });
+        }
     }
 
     onresize() {
