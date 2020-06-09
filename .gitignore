@@ -62,3 +62,6 @@ typings/
 
 # Ignore build ts files
 dist
+
+# netlify hosting
+public
