@@ -3,6 +3,7 @@ import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { SimulatorConfig, WorldConfig } from "./SimulatorConfig";
 import { makeGrid, GridPlane } from "./utils/GridUtil";
 import { SimWall } from "./objects/SimWall";
+import { World, Vec2 } from "planck-js";
 
 const DEFAULT_CONFIG: SimulatorConfig = {
     defaultWorld: {
@@ -31,12 +32,21 @@ export class Sim3D {
 
     private config: SimulatorConfig;
 
+    // Physics!
+    private world: World;
+
+    private lastAnimateTime: number = 0;
+
     constructor(private canvas: HTMLCanvasElement, config?: SimulatorConfig) {
         if (!config) {
             config = DEFAULT_CONFIG;
         }
 
         this.config = config;
+
+        // Physics Setup
+        const gravity = new Vec2(0, 0);
+        this.world = new World(gravity);
 
         // Scene
         const scene = (this.scene = new THREE.Scene());
@@ -108,21 +118,21 @@ export class Sim3D {
             if (worldConfig.walls.length === 0) {
                 // Empty array, generate the default set of walls (perimeter)
                 walls = [
-                    new SimWall({
+                    new SimWall(this.scene, this.world, {
                         start: { x: -worldConfig.xLength / 2, y: -worldConfig.zLength / 2},
                         end: { x: worldConfig.xLength / 2, y: -worldConfig.zLength / 2},
                         color: 0x00ff00
                     }),
-                    new SimWall({
+                    new SimWall(this.scene, this.world, {
                         start: { x: -worldConfig.xLength / 2, y: worldConfig.zLength / 2},
                         end: { x: worldConfig.xLength / 2, y: worldConfig.zLength / 2},
                         color: 0xff0000
                     }),
-                    new SimWall({
+                    new SimWall(this.scene, this.world, {
                         start: { x: -worldConfig.xLength / 2, y: -worldConfig.zLength / 2},
                         end: { x: -worldConfig.xLength / 2, y: worldConfig.zLength / 2},
                     }),
-                    new SimWall({
+                    new SimWall(this.scene, this.world, {
                         start: { x: worldConfig.xLength / 2, y: -worldConfig.zLength / 2},
                         end: { x: worldConfig.xLength / 2, y: worldConfig.zLength / 2},
                     }),
@@ -130,15 +140,21 @@ export class Sim3D {
             }
             else {
                 worldConfig.walls.forEach(wallSpec => {
-                    walls.push(new SimWall(wallSpec));
+                    walls.push(new SimWall(this.scene, this.world, wallSpec));
                 });
             }
         }
 
         walls.forEach(wall => {
-            this.scene.add(wall.mesh);
+            wall.addToScene();
         });
 
+        const angleWall = new SimWall(this.scene, this.world, {
+            start: { x: -5, y: 6},
+            end: { x: 5, y: 8 }
+        });
+
+        angleWall.addToScene();
     }
 
     onresize() {
@@ -152,18 +168,27 @@ export class Sim3D {
         this.renderer.render(this.scene, this.camera);
     }
 
+    updatePhysics(time: number) {
+        this.world.step(time, 10, 8);
+        this.world.clearForces();
+    }
+
     beginRendering() {
-        const r = () => {
+        const r = (time: number) => {
             if (!this.isRendering) {
                 return;
             }
 
+            const dt = (time - this.lastAnimateTime) / 1000;
+            this.lastAnimateTime = time;
+
             window.requestAnimationFrame(r);
+            this.updatePhysics(dt);
             this.render();
         };
 
         this.isRendering = true;
-        r();
+        window.requestAnimationFrame(r);
     }
 
     stopRendering() {

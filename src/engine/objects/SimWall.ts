@@ -2,6 +2,8 @@ import * as THREE from "three";
 import { SimObject } from "./SimObject";
 import { Vector2d } from "../SimTypes";
 import { getLineLength2d, getMidpoint2d, getAngleRadians2d } from "../utils/Geom2dUtil";
+import { World, Vec2, Box } from "planck-js";
+import { Scene } from "three";
 
 const DEFAULT_WALL_THICKNESS: number = 0.1;
 const DEFAULT_WALL_HEIGHT: number = 1;
@@ -16,8 +18,8 @@ export interface ISimWallSpec {
 }
 
 export class SimWall extends SimObject {
-    constructor(spec: ISimWallSpec) {
-        super();
+    constructor(scene: Scene, world: World, spec: ISimWallSpec) {
+        super(scene, world);
 
         const wallLength: number = getLineLength2d(spec.start, spec.end);
         const wallMidpoint: Vector2d = getMidpoint2d(spec.start, spec.end);
@@ -45,5 +47,22 @@ export class SimWall extends SimObject {
         wallMesh.rotation.y = wallAngleRadians;
 
         this._mesh = wallMesh;
+
+        // Physics
+        this._body = world.createBody({
+            type: "static",
+            angle: wallAngleRadians,
+            position: new Vec2(wallMidpoint.x, wallMidpoint.y)
+        });
+
+        this._body.createFixture({
+            shape: new Box(wallLength / 2, wallThickness / 2),
+            density: 1,
+            isSensor: false
+        });
+    }
+
+    public update(ms: number) {
+        // noop
     }
 }

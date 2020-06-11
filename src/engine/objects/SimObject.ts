@@ -1,7 +1,8 @@
-import { Body } from "planck-js";
+import { Body, World } from "planck-js";
 import { v4 as uuid } from "uuid";
 import * as THREE from "three";
 import { Vector3d, Extents3d } from "../SimTypes";
+import { Scene } from "three";
 
 /**
  * Basic interface defining an object (right now it assumes a box)
@@ -17,13 +18,16 @@ export abstract class SimObject {
     protected _mesh: THREE.Mesh;
     protected _body: Body;
     protected _children: SimObject[] = [];
-    protected _parentGuid: string | undefined;
+
+    protected _world: World;
+    protected _scene: Scene;
 
     private _guid: string;
 
-    constructor(parentGuid?: string) {
-        this._parentGuid = parentGuid;
+    constructor(scene: Scene, world: World) {
         this._guid = uuid();
+        this._world = world;
+        this._scene = scene;
     }
 
     get guid(): string {
@@ -56,4 +60,16 @@ export abstract class SimObject {
             this._children.splice(childIdx, 1);
         }
     }
+
+    /**
+     * Add this object (and any children) to the scene
+     */
+    public addToScene() {
+        this._scene.add(this._mesh);
+        this._children.forEach(simObj => {
+            simObj.addToScene();
+        });
+    }
+
+    public abstract update(ms: number): void;
 }
