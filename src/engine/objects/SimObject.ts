@@ -14,6 +14,10 @@ export interface ISimObjectSpec {
     extents: Extents3d;
 }
 
+/**
+ * Base class representing an object that can be rendered in a scene
+ * and take part in physics simulation.
+ */
 export abstract class SimObject {
     protected _mesh: THREE.Mesh;
     protected _body: Body;
@@ -71,5 +75,9 @@ export abstract class SimObject {
         });
     }
 
+    /**
+     * Update the object based on physics calculations
+     * @param ms Time delta between now and the last time this function was run
+     */
     public abstract update(ms: number): void;
 }

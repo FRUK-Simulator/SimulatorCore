@@ -3,22 +3,21 @@ import { SimObject } from "./SimObject";
 import { World, Vec2, Box } from "planck-js";
 import { Scene } from "three";
 
-export interface ISimRobotSpec {
-
-}
-
-export class SimRobot extends SimObject {
+/**
+ * Example of a dynamic SimObject that participates in the physics simulation
+ */
+export class SimDemoBlock extends SimObject {
     constructor(scene: Scene, world: World) {
         super(scene, world);
 
         // DEMO - Simple Red Box
         const meshGeom = new THREE.BoxGeometry(1, 1, 1);
-        const robotMaterial = new THREE.MeshStandardMaterial({ color: 0xff0000 });
-        const robotMesh = new THREE.Mesh(meshGeom, robotMaterial);
+        const blockMaterial = new THREE.MeshStandardMaterial({ color: 0xff0000 });
+        const blockMesh = new THREE.Mesh(meshGeom, blockMaterial);
 
-        robotMesh.position.y = 0.5;
+        blockMesh.position.y = 0.5;
 
-        this._mesh = robotMesh;
+        this._mesh = blockMesh;
 
         // Physics
         this._body = world.createBody({

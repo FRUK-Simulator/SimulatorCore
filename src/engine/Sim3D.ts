@@ -4,7 +4,7 @@ import { SimulatorConfig, WorldConfig } from "./SimulatorConfig";
 import { makeGrid, GridPlane } from "./utils/GridUtil";
 import { SimWall } from "./objects/SimWall";
 import { World, Vec2 } from "planck-js";
-import { SimRobot } from "./objects/SimRobot";
+import { SimDemoBlock } from "./objects/SimDemoBlock";
 
 const DEFAULT_CONFIG: SimulatorConfig = {
     defaultWorld: {
@@ -37,7 +37,7 @@ export class Sim3D {
     private world: World;
 
     // DEMO
-    private robot: SimRobot;
+    private demoBlock: SimDemoBlock;
 
     private lastAnimateTime: number = 0;
 
@@ -153,6 +153,7 @@ export class Sim3D {
             wall.addToScene();
         });
 
+        // DEMO - Add an angled wall to the scene
         const angleWall = new SimWall(this.scene, this.world, {
             start: { x: -5, y: 6},
             end: { x: 5, y: 8 }
@@ -160,8 +161,9 @@ export class Sim3D {
 
         angleWall.addToScene();
 
-        this.robot = new SimRobot(this.scene, this.world);
-        this.robot.addToScene();
+        // DEMO - Add a demo block to the screen
+        this.demoBlock = new SimDemoBlock(this.scene, this.world);
+        this.demoBlock.addToScene();
     }
 
     onresize() {
@@ -176,7 +178,7 @@ export class Sim3D {
     }
 
     updatePhysics(time: number) {
-        this.robot.update(time);
+        this.demoBlock.update(time);
         this.world.step(time, 10, 8);
         this.world.clearForces();
     }
