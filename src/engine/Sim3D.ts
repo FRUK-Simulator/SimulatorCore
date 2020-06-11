@@ -1,13 +1,24 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-import SimulatorConfig from "./SimulatorConfig";
+import { SimulatorConfig, WorldConfig } from "./SimulatorConfig";
 import { makeGrid, GridPlane } from "./utils/GridUtil";
+import { SimWall } from "./objects/SimWall";
+import { World, Vec2 } from "planck-js";
+import { SimDemoBlock } from "./objects/SimDemoBlock";
 
 const DEFAULT_CONFIG: SimulatorConfig = {
-    world: {
+    defaultWorld: {
         zLength: 10,
         xLength: 10,
-        includeWalls: true
+        walls: [],
+
+        camera: {
+            position: {
+                x: 0,
+                y: 4,
+                z: 5
+            }
+        }
     }
 };
 
@@ -20,10 +31,26 @@ export class Sim3D {
 
     private isRendering: boolean = false;
 
+    private config: SimulatorConfig;
+
+    // Physics!
+    private world: World;
+
+    // DEMO
+    private demoBlock: SimDemoBlock;
+
+    private lastAnimateTime: number = 0;
+
     constructor(private canvas: HTMLCanvasElement, config?: SimulatorConfig) {
         if (!config) {
             config = DEFAULT_CONFIG;
         }
+
+        this.config = config;
+
+        // Physics Setup
+        const gravity = new Vec2(0, 0);
+        this.world = new World(gravity);
 
         // Scene
         const scene = (this.scene = new THREE.Scene());
@@ -36,9 +63,23 @@ export class Sim3D {
         }));
         renderer.setSize(canvas.width, canvas.height);
 
+        // If a default world is specified, configure it now
+        // The reset method runs when configureWorld is called
+        this.configureWorld(config.defaultWorld);
+
+        // Axes
+        const axesHelper = new THREE.AxesHelper(1);
+        scene.add(axesHelper);
+    }
+
+    private resetScene(config: WorldConfig) {
+        while(this.scene.children.length > 0) {
+            this.scene.remove(this.scene.children[0]);
+        }
+
         // Camera
         const fov = 80;
-        const aspect = canvas.width / canvas.height;
+        const aspect = this.canvas.width / this.canvas.height;
         const near = 0.01;
         const far = 100;
         const camera = (this.camera = new THREE.PerspectiveCamera(
@@ -47,27 +88,82 @@ export class Sim3D {
             near,
             far
         ));
-        camera.position.z += 3;
-        camera.position.y += 2;
-        this.cameraControls = new OrbitControls(camera, renderer.domElement);
+
+        camera.position.z += config.camera ? config.camera.position.z : 0;
+        camera.position.y += config.camera ? config.camera.position.y : 0;
+        this.cameraControls = new OrbitControls(camera, this.renderer.domElement);
 
         // Lighting
         const pointLight = new THREE.PointLight(0xffffff, 0.8);
         pointLight.position.x = 3;
         pointLight.position.y = 10;
         pointLight.position.z = 3;
-        scene.add(pointLight);
+        this.scene.add(pointLight);
 
-        scene.add(new THREE.AmbientLight(0x333333));
+        this.scene.add(new THREE.AmbientLight(0x333333));
+    }
+
+    /**
+     * Configure the world
+     *
+     * This essentially means reset the simulator environment, and add the playing field (and walls if necessary)
+     * @param worldConfig Configuration for the world
+     */
+    configureWorld(worldConfig: WorldConfig) {
+        this.resetScene(worldConfig);
 
         // Grid - By default, draw grid lines every 1 unit (metre)
-        // Since the makeGrid function takes in half lengths, we need to divide the provided world lengths by 2
-        const grid = makeGrid(GridPlane.XZ, config.world.xLength / 2, config.world.zLength / 2, config.world.xLength, config.world.zLength);
-        scene.add(grid);
+        const grid = makeGrid(GridPlane.XZ, worldConfig.xLength / 2, worldConfig.zLength / 2, worldConfig.xLength, worldConfig.zLength);
+        this.scene.add(grid);
 
-        // Axes
-        const axesHelper = new THREE.AxesHelper(1);
-        scene.add(axesHelper);
+        let walls: SimWall[] = [];
+        if (worldConfig.walls) {
+            // We want walls
+            if (worldConfig.walls.length === 0) {
+                // Empty array, generate the default set of walls (perimeter)
+                walls = [
+                    new SimWall(this.scene, this.world, {
+                        start: { x: -worldConfig.xLength / 2, y: -worldConfig.zLength / 2},
+                        end: { x: worldConfig.xLength / 2, y: -worldConfig.zLength / 2},
+                        color: 0x00ff00
+                    }),
+                    new SimWall(this.scene, this.world, {
+                        start: { x: -worldConfig.xLength / 2, y: worldConfig.zLength / 2},
+                        end: { x: worldConfig.xLength / 2, y: worldConfig.zLength / 2},
+                        color: 0xff0000
+                    }),
+                    new SimWall(this.scene, this.world, {
+                        start: { x: -worldConfig.xLength / 2, y: -worldConfig.zLength / 2},
+                        end: { x: -worldConfig.xLength / 2, y: worldConfig.zLength / 2},
+                    }),
+                    new SimWall(this.scene, this.world, {
+                        start: { x: worldConfig.xLength / 2, y: -worldConfig.zLength / 2},
+                        end: { x: worldConfig.xLength / 2, y: worldConfig.zLength / 2},
+                    }),
+                ]
+            }
+            else {
+                worldConfig.walls.forEach(wallSpec => {
+                    walls.push(new SimWall(this.scene, this.world, wallSpec));
+                });
+            }
+        }
+
+        walls.forEach(wall => {
+            wall.addToScene();
+        });
+
+        // DEMO - Add an angled wall to the scene
+        const angleWall = new SimWall(this.scene, this.world, {
+            start: { x: -5, y: 6},
+            end: { x: 5, y: 8 }
+        });
+
+        angleWall.addToScene();
+
+        // DEMO - Add a demo block to the screen
+        this.demoBlock = new SimDemoBlock(this.scene, this.world);
+        this.demoBlock.addToScene();
     }
 
     onresize() {
@@ -81,18 +177,28 @@ export class Sim3D {
         this.renderer.render(this.scene, this.camera);
     }
 
+    updatePhysics(time: number) {
+        this.demoBlock.update(time);
+        this.world.step(time, 10, 8);
+        this.world.clearForces();
+    }
+
     beginRendering() {
-        const r = () => {
+        const r = (time: number) => {
             if (!this.isRendering) {
                 return;
             }
 
+            const dt = (time - this.lastAnimateTime) / 1000;
+            this.lastAnimateTime = time;
+
             window.requestAnimationFrame(r);
+            this.updatePhysics(dt);
             this.render();
         };
 
         this.isRendering = true;
-        r();
+        window.requestAnimationFrame(r);
     }
 
     stopRendering() {
