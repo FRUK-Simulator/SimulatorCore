@@ -61,13 +61,13 @@ export class Sim3D {
         scene.add(new THREE.AmbientLight(0x333333));
 
         // Grid - By default, draw grid lines every 1 unit (metre)
-        const grid = makeGrid(GridPlane.XZ, config.world.xLength, config.world.zLength, config.world.xLength, config.world.zLength);
+        // Since the makeGrid function takes in half lengths, we need to divide the provided world lengths by 2
+        const grid = makeGrid(GridPlane.XZ, config.world.xLength / 2, config.world.zLength / 2, config.world.xLength, config.world.zLength);
         scene.add(grid);
 
         // Axes
         const axesHelper = new THREE.AxesHelper(1);
         scene.add(axesHelper);
-
     }
 
     onresize() {

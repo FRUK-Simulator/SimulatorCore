@@ -7,17 +7,22 @@ export enum GridPlane {
 };
 
 /**
- * Make a plane grid
+ * Make a plane grid centered around origin
+ *
+ * Note that this function takes in HALF-LENGTHS, thus, if you want a grid
+ * that is e.g. 10 x 20, you should pass in 5 and 10 instead. The center of
+ * the grid will be set as the origin.
+ *
  * @param plane Plane to create the grid in
- * @param xLength Width of grid in normalized units (metres)
- * @param zLength Length of grid in normalized units (metres)
+ * @param axis1HalfLength half-length of grid in first axis in normalized units (metres)
+ * @param axis2HalfLength half-length of grid in second axis normalized units (metres)
  * @param numLinesX Number of lines to draw in the width axis
  * @param numLinesZ Number of lines to draw in the length axis
  * @param color Grid color
  */
 export function makeGrid(plane: GridPlane,
-                          axis1Length: number,
-                          axis2Length: number,
+                          axis1HalfLength: number,
+                          axis2HalfLength: number,
                           numLinesAxis1: number,
                           numLinesAxis2: number,
                           color: number = 0xCCCCCC): THREE.Object3D {
@@ -29,10 +34,10 @@ export function makeGrid(plane: GridPlane,
 
     const gridObject = new THREE.Object3D();
     const gridGeom = new THREE.Geometry();
-    const stepAxis1 = 2 * axis1Length / numLinesAxis1;
-    const stepAxis2 = 2 * axis2Length / numLinesAxis2;
+    const stepAxis1 = 2 * axis1HalfLength / numLinesAxis1;
+    const stepAxis2 = 2 * axis2HalfLength / numLinesAxis2;
 
-    for (let i = -axis1Length; i <= axis1Length; i += stepAxis1) {
+    for (let i = -axis1HalfLength; i <= axis1HalfLength; i += stepAxis1) {
         let xVal = 0;
         let yVal = 0;
         let zVal = 0;
@@ -40,47 +45,47 @@ export function makeGrid(plane: GridPlane,
         switch (plane) {
             case GridPlane.XY:
                 xVal = i;
-                yVal = axis2Length;
+                yVal = axis2HalfLength;
                 break;
             case GridPlane.XZ:
                 xVal = i;
-                zVal = axis2Length;
+                zVal = axis2HalfLength;
                 break;
             case GridPlane.YZ:
                 yVal = i;
-                zVal = axis2Length;
+                zVal = axis2HalfLength;
         }
         gridGeom.vertices.push(new THREE.Vector3(xVal, yVal, zVal));
 
         switch (plane) {
             case GridPlane.XY:
-                yVal = -axis2Length;
+                yVal = -axis2HalfLength;
                 break;
             case GridPlane.XZ:
-                zVal = -axis2Length;
+                zVal = -axis2HalfLength;
                 break;
             case GridPlane.YZ:
-                zVal = -axis2Length;
+                zVal = -axis2HalfLength;
         }
         gridGeom.vertices.push(new THREE.Vector3(xVal, yVal, zVal));
     }
 
-    for (let i = -axis2Length; i <= axis2Length; i += stepAxis2) {
+    for (let i = -axis2HalfLength; i <= axis2HalfLength; i += stepAxis2) {
         let xVal = 0;
         let yVal = 0;
         let zVal = 0;
 
         switch (plane) {
             case GridPlane.XY:
-                xVal = axis1Length;
+                xVal = axis1HalfLength;
                 yVal = i;
                 break;
             case GridPlane.XZ:
-                xVal = axis1Length;
+                xVal = axis1HalfLength;
                 zVal = i;
                 break;
             case GridPlane.YZ:
-                yVal = axis1Length;
+                yVal = axis1HalfLength;
                 zVal = i;
         }
 
@@ -88,13 +93,13 @@ export function makeGrid(plane: GridPlane,
 
         switch (plane) {
             case GridPlane.XY:
-                xVal = -axis1Length;
+                xVal = -axis1HalfLength;
                 break;
             case GridPlane.XZ:
-                xVal = -axis1Length;
+                xVal = -axis1HalfLength;
                 break;
             case GridPlane.YZ:
-                yVal = -axis1Length;
+                yVal = -axis1HalfLength;
         }
         gridGeom.vertices.push(new THREE.Vector3(xVal, yVal, zVal));
     }
