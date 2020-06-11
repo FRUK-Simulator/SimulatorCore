@@ -16,7 +16,7 @@ function main() {
         defaultWorld: {
             xLength: 10,
             zLength: 20,
-            includeWalls: true,
+            walls: [],
 
             camera: {
                 position: {

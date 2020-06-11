@@ -8,7 +8,7 @@ const DEFAULT_CONFIG: SimulatorConfig = {
     defaultWorld: {
         zLength: 10,
         xLength: 10,
-        includeWalls: true,
+        walls: [],
 
         camera: {
             position: {
@@ -102,41 +102,43 @@ export class Sim3D {
         const grid = makeGrid(GridPlane.XZ, worldConfig.xLength / 2, worldConfig.zLength / 2, worldConfig.xLength, worldConfig.zLength);
         this.scene.add(grid);
 
-        // Walls if necessary
-        if (worldConfig.includeWalls) {
-
-            const walls = [
-                new SimWall({
-                    position: { x: 0, y: 0.4, z: worldConfig.zLength / 2},
-                    rotation: { x: 0, y: 0, z: 0 },
-                    extents: { xh: worldConfig.xLength / 2, yh: 0.4, zh: 0.125 },
-                    wallColor: 0x00ff00
-                }),
-
-                new SimWall({
-                    position: { x: 0, y: 0.4, z: -worldConfig.zLength / 2},
-                    rotation: { x: 0, y: 0, z: 0 },
-                    extents: { xh: worldConfig.xLength / 2, yh: 0.4, zh: 0.125 },
-                    wallColor: 0xff0000
-                }),
-
-                new SimWall({
-                    position: { x: -worldConfig.xLength / 2, y: 0.4, z: 0},
-                    rotation: { x: 0, y: Math.PI / 2, z: 0 },
-                    extents: { xh: worldConfig.zLength / 2, yh: 0.4, zh: 0.125 }
-                }),
-
-                new SimWall({
-                    position: { x: worldConfig.xLength / 2, y: 0.4, z: 0},
-                    rotation: { x: 0, y: Math.PI / 2, z: 0 },
-                    extents: { xh: worldConfig.zLength / 2, yh: 0.4, zh: 0.125 }
-                }),
-            ];
-
-            walls.forEach(wall => {
-                this.scene.add(wall.mesh);
-            });
+        let walls: SimWall[] = [];
+        if (worldConfig.walls) {
+            // We want walls
+            if (worldConfig.walls.length === 0) {
+                // Empty array, generate the default set of walls (perimeter)
+                walls = [
+                    new SimWall({
+                        start: { x: -worldConfig.xLength / 2, y: -worldConfig.zLength / 2},
+                        end: { x: worldConfig.xLength / 2, y: -worldConfig.zLength / 2},
+                        color: 0x00ff00
+                    }),
+                    new SimWall({
+                        start: { x: -worldConfig.xLength / 2, y: worldConfig.zLength / 2},
+                        end: { x: worldConfig.xLength / 2, y: worldConfig.zLength / 2},
+                        color: 0xff0000
+                    }),
+                    new SimWall({
+                        start: { x: -worldConfig.xLength / 2, y: -worldConfig.zLength / 2},
+                        end: { x: -worldConfig.xLength / 2, y: worldConfig.zLength / 2},
+                    }),
+                    new SimWall({
+                        start: { x: worldConfig.xLength / 2, y: -worldConfig.zLength / 2},
+                        end: { x: worldConfig.xLength / 2, y: worldConfig.zLength / 2},
+                    }),
+                ]
+            }
+            else {
+                worldConfig.walls.forEach(wallSpec => {
+                    walls.push(new SimWall(wallSpec));
+                });
+            }
         }
+
+        walls.forEach(wall => {
+            this.scene.add(wall.mesh);
+        });
+
     }
 
     onresize() {
