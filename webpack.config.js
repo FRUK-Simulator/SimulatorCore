@@ -2,7 +2,7 @@ const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 const webConfig = {
-  entry: "./src/index.ts",
+  entry: "./src/demos/demo1.ts",
   mode: "development",
   devtool: "inline-source-map",
   module: {
@@ -18,7 +18,7 @@ const webConfig = {
     extensions: [".tsx", ".ts", ".js"],
   },
   output: {
-    filename: "web-bundle.js",
+    filename: "[name].bundle.js",
     path: path.resolve(__dirname, "dist"),
   },
   plugins: [
