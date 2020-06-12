@@ -5,6 +5,7 @@ import { makeGrid, GridPlane } from "./utils/GridUtil";
 import { SimWall } from "./objects/SimWall";
 import { World, Vec2 } from "planck-js";
 import { SimDemoBlock } from "./objects/SimDemoBlock";
+import { SimObject } from "./objects/SimObject";
 
 const DEFAULT_CONFIG: SimulatorConfig = {
   defaultWorld: {
@@ -41,7 +42,11 @@ export class Sim3D {
 
   private lastAnimateTime = 0;
 
+  private simObjects: Map<string, SimObject>;
+
   constructor(private canvas: HTMLCanvasElement, config?: SimulatorConfig) {
+    this.simObjects = new Map();
+
     if (!config) {
       config = DEFAULT_CONFIG;
     }
@@ -155,7 +160,7 @@ export class Sim3D {
     }
 
     walls.forEach((wall) => {
-      wall.addToScene();
+      this.addObject(wall);
     });
 
     // DEMO - Add an angled wall to the scene
@@ -164,11 +169,25 @@ export class Sim3D {
       end: { x: 5, y: 8 },
     });
 
-    angleWall.addToScene();
+    this.addObject(angleWall);
 
     // DEMO - Add a demo block to the screen
     this.demoBlock = new SimDemoBlock(this.scene, this.world);
-    this.demoBlock.addToScene();
+    this.addObject(this.demoBlock);
+  }
+
+  /**
+   * Adds and tracks a Simulator object and its children to the Simulator.
+   *
+   * @param obj the object to add to the simulator
+   */
+  addObject(obj: SimObject) {
+    this.scene.add(obj.mesh);
+
+    // add each child to the scene as well
+    obj.forEachChild(this.addObject);
+
+    this.simObjects.set(obj.guid, obj);
   }
 
   onresize(): void {
@@ -183,7 +202,9 @@ export class Sim3D {
   }
 
   updatePhysics(time: number): void {
-    this.demoBlock.update(time);
+    // update each known child
+    this.simObjects.forEach((obj) => obj.update(time));
+
     this.world.step(time, 10, 8);
     this.world.clearForces();
   }

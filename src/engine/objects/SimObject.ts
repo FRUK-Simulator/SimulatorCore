@@ -65,13 +65,12 @@ export abstract class SimObject {
   }
 
   /**
-   * Add this object (and any children) to the scene
+   * Used to safely loop over the children nested within the object.
+   *
+   * @param cb callback function thats called once per child
    */
-  public addToScene(): void {
-    this._scene.add(this._mesh);
-    this._children.forEach((simObj) => {
-      simObj.addToScene();
-    });
+  public forEachChild(cb: (child: SimObject) => void) {
+    this._children.forEach(cb);
   }
 
   /**
