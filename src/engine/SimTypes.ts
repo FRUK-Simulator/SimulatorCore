@@ -4,7 +4,7 @@ export type Vector3d = {
   x: number;
   y: number;
   z: number;
-}
+};
 
 export type Extents3d = {
   xh: number;
@@ -15,4 +15,4 @@ export type Extents3d = {
 export type Vector2d = {
   x: number;
   y: number;
-}
+};

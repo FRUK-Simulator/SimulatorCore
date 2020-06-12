@@ -12,5 +12,5 @@ export interface WorldConfig {
 
   camera?: {
     position: Vector3d;
-  }
+  };
 }

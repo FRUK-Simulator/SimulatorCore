@@ -3,8 +3,8 @@ import * as THREE from "three";
 export enum GridPlane {
   XY,
   XZ,
-  YZ
-};
+  YZ,
+}
 
 /**
  * Make a plane grid centered around origin
@@ -20,22 +20,23 @@ export enum GridPlane {
  * @param numLinesZ Number of lines to draw in the length axis
  * @param color Grid color
  */
-export function makeGrid(plane: GridPlane,
-                        axis1HalfLength: number,
-                        axis2HalfLength: number,
-                        numLinesAxis1: number,
-                        numLinesAxis2: number,
-                        color: number = 0xCCCCCC): THREE.Object3D {
-
+export function makeGrid(
+  plane: GridPlane,
+  axis1HalfLength: number,
+  axis2HalfLength: number,
+  numLinesAxis1: number,
+  numLinesAxis2: number,
+  color = 0xcccccc
+): THREE.Object3D {
   const material = new THREE.LineBasicMaterial({
     color,
-    opacity: 0.2
+    opacity: 0.2,
   });
 
   const gridObject = new THREE.Object3D();
   const gridGeom = new THREE.Geometry();
-  const stepAxis1 = 2 * axis1HalfLength / numLinesAxis1;
-  const stepAxis2 = 2 * axis2HalfLength / numLinesAxis2;
+  const stepAxis1 = (2 * axis1HalfLength) / numLinesAxis1;
+  const stepAxis2 = (2 * axis2HalfLength) / numLinesAxis2;
 
   for (let i = -axis1HalfLength; i <= axis1HalfLength; i += stepAxis1) {
     let xVal = 0;

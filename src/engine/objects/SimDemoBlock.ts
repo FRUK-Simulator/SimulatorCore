@@ -26,7 +26,7 @@ export class SimDemoBlock extends SimObject {
       angle: 0,
       linearDamping: 0.5,
       bullet: true,
-      angularDamping: 0.3
+      angularDamping: 0.3,
     });
 
     this._body.createFixture({
@@ -34,18 +34,19 @@ export class SimDemoBlock extends SimObject {
       density: 1,
       isSensor: false,
       friction: 0.3,
-      restitution: 0.4
+      restitution: 0.4,
     });
   }
 
-  update(ms: number) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  update(ms: number): void {
     const force = this._body.getWorldVector(new Vec2(0, 1));
     force.mul(5);
 
     const bodyCenter = this._body.getWorldCenter();
 
     this._body.applyForce(force, bodyCenter);
-    this._mesh.position.x = bodyCenter.x
+    this._mesh.position.x = bodyCenter.x;
     this._mesh.position.z = bodyCenter.y;
 
     this._mesh.rotation.y = -this._body.getAngle();

@@ -5,9 +5,9 @@ let simulator: Sim3D;
 window.onload = main;
 window.onresize = () => {
   if (simulator) {
-      simulator.onresize();
+    simulator.onresize();
   }
-}
+};
 
 function main() {
   const canvas = <HTMLCanvasElement>document.getElementById("render-area");
@@ -20,12 +20,12 @@ function main() {
 
       camera: {
         position: {
-            x: 0,
-            y: 4,
-            z: 12
-        }
-      }
-    }
+          x: 0,
+          y: 4,
+          z: 12,
+        },
+      },
+    },
   });
   simulator.onresize();
   simulator.beginRendering();

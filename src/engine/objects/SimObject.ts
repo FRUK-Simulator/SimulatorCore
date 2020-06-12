@@ -46,20 +46,19 @@ export abstract class SimObject {
     return this._body;
   }
 
-  protected addChild(child: SimObject) {
+  protected addChild(child: SimObject): void {
     this._children.push(child);
   }
 
-  protected removeChild(child: SimObject | string) {
+  protected removeChild(child: SimObject | string): void {
     let childId: string;
     if (child instanceof SimObject) {
       childId = child.guid;
-    }
-    else {
+    } else {
       childId = child;
     }
 
-    const childIdx = this._children.findIndex(obj => obj.guid === childId);
+    const childIdx = this._children.findIndex((obj) => obj.guid === childId);
     if (childIdx !== -1) {
       this._children.splice(childIdx, 1);
     }
@@ -68,9 +67,9 @@ export abstract class SimObject {
   /**
    * Add this object (and any children) to the scene
    */
-  public addToScene() {
+  public addToScene(): void {
     this._scene.add(this._mesh);
-    this._children.forEach(simObj => {
+    this._children.forEach((simObj) => {
       simObj.addToScene();
     });
   }
