@@ -9,9 +9,9 @@ import { Scene } from "three";
  * Basic positional + sizing data
  */
 export interface ISimObjectSpec {
-    position: Vector3d;
-    rotation: Vector3d;
-    extents: Extents3d;
+  position: Vector3d;
+  rotation: Vector3d;
+  extents: Extents3d;
 }
 
 /**
@@ -19,65 +19,63 @@ export interface ISimObjectSpec {
  * and take part in physics simulation.
  */
 export abstract class SimObject {
-    protected _mesh: THREE.Mesh;
-    protected _body: Body;
-    protected _children: SimObject[] = [];
+  protected _mesh: THREE.Mesh;
+  protected _body: Body;
+  protected _children: SimObject[] = [];
 
-    protected _world: World;
-    protected _scene: Scene;
+  protected _world: World;
+  protected _scene: Scene;
 
-    private _guid: string;
+  private _guid: string;
 
-    constructor(scene: Scene, world: World) {
-        this._guid = uuid();
-        this._world = world;
-        this._scene = scene;
+  constructor(scene: Scene, world: World) {
+    this._guid = uuid();
+    this._world = world;
+    this._scene = scene;
+  }
+
+  get guid(): string {
+    return this._guid;
+  }
+
+  get mesh(): THREE.Mesh {
+    return this._mesh;
+  }
+
+  get body(): Body {
+    return this._body;
+  }
+
+  protected addChild(child: SimObject) {
+    this._children.push(child);
+  }
+
+  protected removeChild(child: SimObject | string) {
+    let childId: string;
+    if (child instanceof SimObject) {
+      childId = child.guid;
+    } else {
+      childId = child;
     }
 
-    get guid(): string {
-        return this._guid;
+    const childIdx = this._children.findIndex((obj) => obj.guid === childId);
+    if (childIdx !== -1) {
+      this._children.splice(childIdx, 1);
     }
+  }
 
-    get mesh(): THREE.Mesh {
-        return this._mesh;
-    }
+  /**
+   * Safely accesses the children that is contained within this object.
+   *
+   * @param cb callback that is called once per object contained in this object
+   */
+  public forEachChild(cb: (obj: SimObject) => void) {
+    this._children.forEach(cb);
+  }
 
-    get body(): Body {
-        return this._body;
-    }
-
-    protected addChild(child: SimObject) {
-        this._children.push(child);
-    }
-
-    protected removeChild(child: SimObject | string) {
-        let childId: string;
-        if (child instanceof SimObject) {
-            childId = child.guid;
-        }
-        else {
-            childId = child;
-        }
-
-        const childIdx = this._children.findIndex(obj => obj.guid === childId);
-        if (childIdx !== -1) {
-            this._children.splice(childIdx, 1);
-        }
-    }
-
-    /**
-     * Add this object (and any children) to the scene
-     */
-    public addToScene() {
-        this._scene.add(this._mesh);
-        this._children.forEach(simObj => {
-            simObj.addToScene();
-        });
-    }
-
-    /**
-     * Update the object based on physics calculations
-     * @param ms Time delta between now and the last time this function was run
-     */
-    public abstract update(ms: number): void;
+  /**
+   * Update the object based on physics calculations
+   * @param ms Time delta between now and the last time this function was run
+   */
+  public abstract update(ms: number): void;
 }
