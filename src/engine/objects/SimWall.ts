@@ -23,7 +23,7 @@ export interface ISimWallSpec {
 
 export class SimWall extends SimObject {
   constructor(scene: Scene, world: World, spec: ISimWallSpec) {
-    super(scene, world);
+    super("SimWall", scene, world);
 
     const wallLength: number = getLineLength2d(spec.start, spec.end);
     const wallMidpoint: Vector2d = getMidpoint2d(spec.start, spec.end);

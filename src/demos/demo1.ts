@@ -1,4 +1,5 @@
 import { Sim3D } from "../engine/Sim3D";
+import { DemoBlockHandle } from "../engine/handles/DemoBlockHandle";
 
 let simulator: Sim3D;
 
@@ -29,4 +30,19 @@ function main() {
   });
   simulator.onresize();
   simulator.beginRendering();
+
+  const block1Ref = simulator.addRobot({
+    startingPosition: { x: -2, y: -2 },
+    dimensions: { x: 1, y: 1, z: 1 },
+    color: 0xff00ff,
+  });
+
+  const block1Handle = new DemoBlockHandle(block1Ref, simulator);
+
+  let force = 5;
+  block1Handle.applyForce(force);
+  setInterval(() => {
+    force = -force;
+    block1Handle.applyForce(force);
+  }, 1000);
 }

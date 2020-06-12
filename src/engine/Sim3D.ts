@@ -4,7 +4,9 @@ import { SimulatorConfig, WorldConfig } from "./SimulatorConfig";
 import { makeGrid, GridPlane } from "./utils/GridUtil";
 import { SimWall } from "./objects/SimWall";
 import { World, Vec2 } from "planck-js";
-import { SimDemoBlock } from "./objects/SimDemoBlock";
+import { SimDemoBlock, ISimDemoBlockSpec } from "./objects/SimDemoBlock";
+import { ISimObjectRef } from "./SimTypes";
+import { SimObject } from "./objects/SimObject";
 
 const DEFAULT_CONFIG: SimulatorConfig = {
   defaultWorld: {
@@ -22,6 +24,11 @@ const DEFAULT_CONFIG: SimulatorConfig = {
   },
 };
 
+interface ISimObjectContainer {
+  type: string;
+  object: SimObject;
+}
+
 export class Sim3D {
   private scene: THREE.Scene;
   private renderer: THREE.Renderer;
@@ -33,12 +40,10 @@ export class Sim3D {
 
   private config: SimulatorConfig;
 
+  private objects: Map<string, ISimObjectContainer>;
+
   // Physics!
   private world: World;
-
-  // DEMO
-  private demoBlock: SimDemoBlock;
-
   private lastAnimateTime = 0;
 
   constructor(private canvas: HTMLCanvasElement, config?: SimulatorConfig) {
@@ -47,6 +52,8 @@ export class Sim3D {
     }
 
     this.config = config;
+
+    this.objects = new Map<string, ISimObjectContainer>();
 
     // Physics Setup
     const gravity = new Vec2(0, 0);
@@ -165,10 +172,6 @@ export class Sim3D {
     });
 
     angleWall.addToScene();
-
-    // DEMO - Add a demo block to the screen
-    this.demoBlock = new SimDemoBlock(this.scene, this.world);
-    this.demoBlock.addToScene();
   }
 
   onresize(): void {
@@ -183,7 +186,11 @@ export class Sim3D {
   }
 
   updatePhysics(time: number): void {
-    this.demoBlock.update(time);
+    this.objects.forEach((container) => {
+      const obj = container.object;
+      obj.update(time);
+    });
+
     this.world.step(time, 10, 8);
     this.world.clearForces();
   }
@@ -208,5 +215,38 @@ export class Sim3D {
 
   stopRendering(): void {
     this.isRendering = false;
+  }
+
+  getSimObject(ref: ISimObjectRef): SimObject | undefined {
+    if (!this.objects.has(ref.guid)) {
+      return undefined;
+    }
+
+    const obj = this.objects.get(ref.guid);
+    if (obj.type !== ref.type) {
+      return undefined;
+    }
+
+    return obj.object;
+  }
+
+  // addObject(objSpec: any): ISimObjectRef | undefined {
+  //   // Factory method to generate a object
+  //   return undefined;
+  // }
+
+  addRobot(spec: ISimDemoBlockSpec): ISimObjectRef {
+    const robot = new SimDemoBlock(this.scene, this.world, spec);
+    robot.addToScene();
+
+    this.objects.set(robot.guid, {
+      type: robot.type,
+      object: robot,
+    });
+
+    return {
+      guid: robot.guid,
+      type: robot.type,
+    };
   }
 }

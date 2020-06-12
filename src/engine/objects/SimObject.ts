@@ -26,12 +26,19 @@ export abstract class SimObject {
   protected _world: World;
   protected _scene: Scene;
 
+  protected _type = "SimObject";
+
   private _guid: string;
 
-  constructor(scene: Scene, world: World) {
+  constructor(type: string, scene: Scene, world: World) {
     this._guid = uuid();
     this._world = world;
     this._scene = scene;
+    this._type = type;
+  }
+
+  get type(): string {
+    return this._type;
   }
 
   get guid(): string {
