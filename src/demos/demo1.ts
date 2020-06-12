@@ -10,7 +10,7 @@ window.onresize = () => {
 };
 
 function main() {
-  const canvas = <HTMLCanvasElement>document.getElementById("render-area");
+  const canvas = <HTMLCanvasElement>document.getElementById("demo1");
 
   simulator = new Sim3D(canvas, {
     defaultWorld: {
