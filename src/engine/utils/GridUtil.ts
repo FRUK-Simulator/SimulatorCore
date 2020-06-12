@@ -1,9 +1,9 @@
 import * as THREE from "three";
 
 export enum GridPlane {
-    XY,
-    XZ,
-    YZ
+  XY,
+  XZ,
+  YZ
 };
 
 /**
@@ -21,91 +21,91 @@ export enum GridPlane {
  * @param color Grid color
  */
 export function makeGrid(plane: GridPlane,
-                          axis1HalfLength: number,
-                          axis2HalfLength: number,
-                          numLinesAxis1: number,
-                          numLinesAxis2: number,
-                          color: number = 0xCCCCCC): THREE.Object3D {
+                        axis1HalfLength: number,
+                        axis2HalfLength: number,
+                        numLinesAxis1: number,
+                        numLinesAxis2: number,
+                        color: number = 0xCCCCCC): THREE.Object3D {
 
-    const material = new THREE.LineBasicMaterial({
-        color,
-        opacity: 0.2
-    });
+  const material = new THREE.LineBasicMaterial({
+    color,
+    opacity: 0.2
+  });
 
-    const gridObject = new THREE.Object3D();
-    const gridGeom = new THREE.Geometry();
-    const stepAxis1 = 2 * axis1HalfLength / numLinesAxis1;
-    const stepAxis2 = 2 * axis2HalfLength / numLinesAxis2;
+  const gridObject = new THREE.Object3D();
+  const gridGeom = new THREE.Geometry();
+  const stepAxis1 = 2 * axis1HalfLength / numLinesAxis1;
+  const stepAxis2 = 2 * axis2HalfLength / numLinesAxis2;
 
-    for (let i = -axis1HalfLength; i <= axis1HalfLength; i += stepAxis1) {
-        let xVal = 0;
-        let yVal = 0;
-        let zVal = 0;
+  for (let i = -axis1HalfLength; i <= axis1HalfLength; i += stepAxis1) {
+    let xVal = 0;
+    let yVal = 0;
+    let zVal = 0;
 
-        switch (plane) {
-            case GridPlane.XY:
-                xVal = i;
-                yVal = axis2HalfLength;
-                break;
-            case GridPlane.XZ:
-                xVal = i;
-                zVal = axis2HalfLength;
-                break;
-            case GridPlane.YZ:
-                yVal = i;
-                zVal = axis2HalfLength;
-        }
-        gridGeom.vertices.push(new THREE.Vector3(xVal, yVal, zVal));
+    switch (plane) {
+      case GridPlane.XY:
+        xVal = i;
+        yVal = axis2HalfLength;
+        break;
+      case GridPlane.XZ:
+        xVal = i;
+        zVal = axis2HalfLength;
+        break;
+      case GridPlane.YZ:
+        yVal = i;
+        zVal = axis2HalfLength;
+    }
+    gridGeom.vertices.push(new THREE.Vector3(xVal, yVal, zVal));
 
-        switch (plane) {
-            case GridPlane.XY:
-                yVal = -axis2HalfLength;
-                break;
-            case GridPlane.XZ:
-                zVal = -axis2HalfLength;
-                break;
-            case GridPlane.YZ:
-                zVal = -axis2HalfLength;
-        }
-        gridGeom.vertices.push(new THREE.Vector3(xVal, yVal, zVal));
+    switch (plane) {
+      case GridPlane.XY:
+        yVal = -axis2HalfLength;
+        break;
+      case GridPlane.XZ:
+        zVal = -axis2HalfLength;
+        break;
+      case GridPlane.YZ:
+        zVal = -axis2HalfLength;
+    }
+    gridGeom.vertices.push(new THREE.Vector3(xVal, yVal, zVal));
+  }
+
+  for (let i = -axis2HalfLength; i <= axis2HalfLength; i += stepAxis2) {
+    let xVal = 0;
+    let yVal = 0;
+    let zVal = 0;
+
+    switch (plane) {
+      case GridPlane.XY:
+        xVal = axis1HalfLength;
+        yVal = i;
+        break;
+      case GridPlane.XZ:
+        xVal = axis1HalfLength;
+        zVal = i;
+        break;
+      case GridPlane.YZ:
+        yVal = axis1HalfLength;
+        zVal = i;
     }
 
-    for (let i = -axis2HalfLength; i <= axis2HalfLength; i += stepAxis2) {
-        let xVal = 0;
-        let yVal = 0;
-        let zVal = 0;
+    gridGeom.vertices.push(new THREE.Vector3(xVal, yVal, zVal));
 
-        switch (plane) {
-            case GridPlane.XY:
-                xVal = axis1HalfLength;
-                yVal = i;
-                break;
-            case GridPlane.XZ:
-                xVal = axis1HalfLength;
-                zVal = i;
-                break;
-            case GridPlane.YZ:
-                yVal = axis1HalfLength;
-                zVal = i;
-        }
-
-        gridGeom.vertices.push(new THREE.Vector3(xVal, yVal, zVal));
-
-        switch (plane) {
-            case GridPlane.XY:
-                xVal = -axis1HalfLength;
-                break;
-            case GridPlane.XZ:
-                xVal = -axis1HalfLength;
-                break;
-            case GridPlane.YZ:
-                yVal = -axis1HalfLength;
-        }
-        gridGeom.vertices.push(new THREE.Vector3(xVal, yVal, zVal));
+    switch (plane) {
+      case GridPlane.XY:
+        xVal = -axis1HalfLength;
+        break;
+      case GridPlane.XZ:
+        xVal = -axis1HalfLength;
+        break;
+      case GridPlane.YZ:
+        yVal = -axis1HalfLength;
     }
+    gridGeom.vertices.push(new THREE.Vector3(xVal, yVal, zVal));
+  }
 
-    const line = new THREE.LineSegments(gridGeom, material);
-    gridObject.add(line);
+  const line = new THREE.LineSegments(gridGeom, material);
+  gridObject.add(line);
 
-    return gridObject;
+  return gridObject;
 }
