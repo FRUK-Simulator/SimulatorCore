@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc",
     "build+watch": "tsc -w",
-    "build:netlify": "sh netlify_build.sh",
+    "build:netlify": "webpack --progress -p",
     "start-web": "webpack-dev-server",
     "postinstall": "tsc",
     "format": "prettier --write src",

@@ -2,7 +2,7 @@ const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 const webConfig = {
-  entry: "./src/demos/demo1.ts",
+  entry: { demo1: "./src/demos/demo1.ts" },
   mode: "development",
   devtool: "inline-source-map",
   module: {
@@ -19,7 +19,7 @@ const webConfig = {
   },
   output: {
     filename: "[name].bundle.js",
-    path: path.resolve(__dirname, "dist"),
+    path: path.resolve(__dirname, "public"),
   },
   plugins: [
     new HtmlWebpackPlugin({
@@ -29,7 +29,7 @@ const webConfig = {
   ],
   devServer: {
     writeToDisk: true,
-    contentBase: __dirname,
+    contentBase: path.resolve(__dirname, "public"),
     compress: true,
     port: 8080,
     hot: true,
