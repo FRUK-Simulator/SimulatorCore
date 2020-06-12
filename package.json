@@ -2,7 +2,7 @@
   "name": "@fruk/simulator-core",
   "version": "1.0.0",
   "description": "FIRST Robotics Simulator Core",
-  "main": "dist/package.js",
+  "main": "dist/index.js",
   "scripts": {
     "build": "tsc",
     "build+watch": "tsc -w",
