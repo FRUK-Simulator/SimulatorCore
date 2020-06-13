@@ -7,6 +7,8 @@ import { World, Vec2 } from "planck-js";
 import { SimDemoBlock, ISimDemoBlockSpec } from "./objects/SimDemoBlock";
 import { ISimObjectRef } from "./SimTypes";
 import { SimObject } from "./objects/SimObject";
+import { IBaseSimObjectSpec, isBallSpec, isBoxSpec } from "./specs/CoreSpecs";
+import { SimBall } from "./objects/SimBall";
 
 const DEFAULT_CONFIG: SimulatorConfig = {
   defaultWorld: {
@@ -228,6 +230,40 @@ export class Sim3D {
     }
 
     return obj.object;
+  }
+
+  addGameObject(spec: IBaseSimObjectSpec): ISimObjectRef | undefined {
+    let obj: SimObject;
+
+    if (isBallSpec(spec)) {
+      obj = new SimBall(this.scene, this.world, {
+        static: spec.isStatic,
+        radius: spec.ballSpec.radius,
+        startingPosition: spec.startingPosition,
+        color: spec.color,
+      });
+    } else if (isBoxSpec(spec)) {
+      obj = new SimDemoBlock(this.scene, this.world, {
+        startingPosition: spec.startingPosition,
+        dimensions: spec.boxSpec.dimensions,
+        color: spec.color,
+      });
+    }
+
+    if (obj === undefined) {
+      return obj;
+    }
+
+    obj.addToScene();
+    this.objects.set(obj.guid, {
+      type: obj.type,
+      object: obj,
+    });
+
+    return {
+      guid: obj.guid,
+      type: obj.type,
+    };
   }
 
   // addObject(objSpec: any): ISimObjectRef | undefined {

@@ -1,5 +1,6 @@
 import { Sim3D } from "../engine/Sim3D";
 import { DemoBlockHandle } from "../engine/handles/DemoBlockHandle";
+import { IBallSpec } from "../engine/specs/CoreSpecs";
 
 let simulator: Sim3D;
 
@@ -32,12 +33,23 @@ function main() {
   simulator.beginRendering();
 
   const block1Ref = simulator.addRobot({
-    startingPosition: { x: -2, y: -2 },
+    startingPosition: { x: 0, y: -5 },
     dimensions: { x: 1, y: 1, z: 1 },
     color: 0xff00ff,
   });
 
   const block1Handle = new DemoBlockHandle(block1Ref, simulator);
+
+  const ball1Spec: IBallSpec = {
+    isStatic: false,
+    startingPosition: { x: 0, y: 0 },
+    ballSpec: {
+      radius: 0.25,
+    },
+  };
+
+  const ball1Ref = simulator.addGameObject(ball1Spec);
+  console.log("Ball1 Ref: ", ball1Ref);
 
   let force = 5;
   block1Handle.applyForce(force);

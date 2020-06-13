@@ -13,6 +13,7 @@ export class DemoBlockHandle extends ObjectHandle {
     this._demoBlockObj = <SimDemoBlock>this._rootObject;
   }
 
+  // External interfaces
   applyForce(magnitude: number): void {
     this._demoBlockObj.setForce(magnitude);
   }
