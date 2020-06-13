@@ -4,11 +4,12 @@ import { SimulatorConfig, WorldConfig } from "./SimulatorConfig";
 import { makeGrid, GridPlane } from "./utils/GridUtil";
 import { SimWall } from "./objects/SimWall";
 import { World, Vec2 } from "planck-js";
-import { SimDemoBlock, ISimDemoBlockSpec } from "./objects/SimDemoBlock";
+import { SimDemoBlock } from "./objects/SimDemoBlock";
 import { ISimObjectRef } from "./SimTypes";
 import { SimObject } from "./objects/SimObject";
 import { IBaseSimObjectSpec, isBallSpec, isBoxSpec } from "./specs/CoreSpecs";
 import { SimBall } from "./objects/SimBall";
+import { SimRobot, ISimRobotSpec } from "./objects/SimRobot";
 
 const DEFAULT_CONFIG: SimulatorConfig = {
   defaultWorld: {
@@ -166,14 +167,6 @@ export class Sim3D {
     walls.forEach((wall) => {
       wall.addToScene();
     });
-
-    // DEMO - Add an angled wall to the scene
-    const angleWall = new SimWall(this.scene, this.world, {
-      start: { x: -5, y: 6 },
-      end: { x: 5, y: 8 },
-    });
-
-    angleWall.addToScene();
   }
 
   onresize(): void {
@@ -271,8 +264,8 @@ export class Sim3D {
   //   return undefined;
   // }
 
-  addRobot(spec: ISimDemoBlockSpec): ISimObjectRef {
-    const robot = new SimDemoBlock(this.scene, this.world, spec);
+  addRobot(spec: ISimRobotSpec): ISimObjectRef {
+    const robot = new SimRobot(this.scene, this.world, spec);
     robot.addToScene();
 
     this.objects.set(robot.guid, {

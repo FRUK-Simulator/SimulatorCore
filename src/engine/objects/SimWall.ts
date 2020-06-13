@@ -62,7 +62,7 @@ export class SimWall extends SimObject {
     // Physics
     this._body = world.createBody({
       type: "static",
-      angle: wallAngleRadians,
+      angle: -wallAngleRadians,
       position: new Vec2(wallMidpoint.x, wallMidpoint.y),
     });
 

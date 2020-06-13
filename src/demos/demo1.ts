@@ -1,6 +1,6 @@
 import { Sim3D } from "../engine/Sim3D";
-import { DemoBlockHandle } from "../engine/handles/DemoBlockHandle";
-import { IBallSpec } from "../engine/specs/CoreSpecs";
+import { WheelMountingPoint } from "..//engine/objects/MountPoints";
+import { RobotHandle } from "../engine/handles/RobotHandle";
 
 let simulator: Sim3D;
 
@@ -32,29 +32,84 @@ function main() {
   simulator.onresize();
   simulator.beginRendering();
 
-  const block1Ref = simulator.addRobot({
-    startingPosition: { x: 0, y: -5 },
-    dimensions: { x: 1, y: 1, z: 1 },
-    color: 0xff00ff,
+  const robotRef = simulator.addRobot({
+    dimensions: { x: 2, y: 1, z: 3 },
+    startingPosition: { x: 0, y: 0, z: 0 },
+    motorGroups: [
+      {
+        wheelGroupId: "left-drive",
+        motors: [
+          {
+            channel: 0,
+            maxPower: 5,
+          },
+          {
+            channel: 1,
+            maxPower: 5,
+          },
+        ],
+      },
+      {
+        wheelGroupId: "right-drive",
+        motors: [
+          {
+            channel: 2,
+            maxPower: 5,
+          },
+          {
+            channel: 3,
+            maxPower: 5,
+          },
+        ],
+      },
+    ],
+    wheelGroups: [
+      {
+        id: "left-drive",
+        wheelSpecs: [
+          {
+            radius: 0.5,
+            thickness: 0.15,
+            mountPosition: {
+              mountPoint: WheelMountingPoint.LEFT_FRONT,
+              offset: { x: -0.075, y: -0.25, z: 0.5 },
+            },
+          },
+          {
+            radius: 0.5,
+            thickness: 0.15,
+            mountPosition: {
+              mountPoint: WheelMountingPoint.LEFT_REAR,
+              offset: { x: -0.075, y: -0.25, z: -0.5 },
+            },
+          },
+        ],
+      },
+      {
+        id: "right-drive",
+        wheelSpecs: [
+          {
+            radius: 0.5,
+            thickness: 0.15,
+            mountPosition: {
+              mountPoint: WheelMountingPoint.RIGHT_FRONT,
+              offset: { x: 0.075, y: -0.25, z: 0.5 },
+            },
+          },
+          {
+            radius: 0.5,
+            thickness: 0.15,
+            mountPosition: {
+              mountPoint: WheelMountingPoint.RIGHT_REAR,
+              offset: { x: 0.075, y: -0.25, z: -0.5 },
+            },
+          },
+        ],
+      },
+    ],
   });
 
-  const block1Handle = new DemoBlockHandle(block1Ref, simulator);
-
-  const ball1Spec: IBallSpec = {
-    isStatic: false,
-    startingPosition: { x: 0, y: 0 },
-    ballSpec: {
-      radius: 0.25,
-    },
-  };
-
-  const ball1Ref = simulator.addGameObject(ball1Spec);
-  console.log("Ball1 Ref: ", ball1Ref);
-
-  let force = 5;
-  block1Handle.applyForce(force);
-  setInterval(() => {
-    force = -force;
-    block1Handle.applyForce(force);
-  }, 1000);
+  const robotHandle = new RobotHandle(robotRef, simulator);
+  robotHandle.setMotorPower(0, 0.3);
+  robotHandle.setMotorPower(2, -0.3);
 }
