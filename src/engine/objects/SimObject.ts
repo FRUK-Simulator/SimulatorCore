@@ -1,18 +1,7 @@
 import { Body, World } from "planck-js";
 import { v4 as uuid } from "uuid";
 import * as THREE from "three";
-import { Vector3d, Extents3d } from "../SimTypes";
 import { Scene } from "three";
-
-/**
- * Basic interface defining an object (right now it assumes a box)
- * Basic positional + sizing data
- */
-export interface ISimObjectSpec {
-  position: Vector3d;
-  rotation: Vector3d;
-  extents: Extents3d;
-}
 
 /**
  * Base class representing an object that can be rendered in a scene
@@ -26,12 +15,19 @@ export abstract class SimObject {
   protected _world: World;
   protected _scene: Scene;
 
+  protected _type = "SimObject";
+
   private _guid: string;
 
-  constructor(scene: Scene, world: World) {
+  constructor(type: string, scene: Scene, world: World) {
     this._guid = uuid();
     this._world = world;
     this._scene = scene;
+    this._type = type;
+  }
+
+  get type(): string {
+    return this._type;
   }
 
   get guid(): string {

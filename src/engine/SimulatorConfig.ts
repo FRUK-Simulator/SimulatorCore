@@ -1,5 +1,5 @@
 import { Vector3d } from "./SimTypes";
-import { ISimWallSpec } from "./objects/SimWall";
+import { IWallSpec } from "./specs/CoreSpecs";
 
 export interface SimulatorConfig {
   defaultWorld: WorldConfig;
@@ -8,7 +8,7 @@ export interface SimulatorConfig {
 export interface WorldConfig {
   xLength: number;
   zLength: number;
-  walls?: ISimWallSpec[];
+  walls?: IWallSpec[];
 
   camera?: {
     position: Vector3d;
