@@ -7,6 +7,8 @@ import { ISimObjectRef } from "./SimTypes";
 import { SimObject } from "./objects/SimObject";
 import { SimObjectSpec } from "./specs/CoreSpecs";
 import { ObjectFactories } from "./objects/ObjectFactories";
+import { ObjectHandle } from "./handles/ObjectHandle";
+import { WallHandle } from "./handles/WallHandle";
 
 interface ISimObjectContainer {
   type: string;
@@ -139,31 +141,43 @@ export class Sim3D {
       // We want walls
       if (worldConfig.walls.length === 0) {
         // // Empty array, generate the default set of walls (perimeter)
-        this.addGameObject({
-          type: "wall",
-          start: { x: -worldConfig.xLength / 2, y: -worldConfig.zLength / 2 },
-          end: { x: worldConfig.xLength / 2, y: -worldConfig.zLength / 2 },
-          baseColor: 0x00ff00,
-        });
-        this.addGameObject({
-          type: "wall",
-          start: { x: -worldConfig.xLength / 2, y: worldConfig.zLength / 2 },
-          end: { x: worldConfig.xLength / 2, y: worldConfig.zLength / 2 },
-          baseColor: 0xff0000,
-        });
-        this.addGameObject({
-          type: "wall",
-          start: { x: -worldConfig.xLength / 2, y: -worldConfig.zLength / 2 },
-          end: { x: -worldConfig.xLength / 2, y: worldConfig.zLength / 2 },
-        });
-        this.addGameObject({
-          type: "wall",
-          start: { x: worldConfig.xLength / 2, y: -worldConfig.zLength / 2 },
-          end: { x: worldConfig.xLength / 2, y: worldConfig.zLength / 2 },
-        });
+        this.addGameObject(
+          {
+            type: "wall",
+            start: { x: -worldConfig.xLength / 2, y: -worldConfig.zLength / 2 },
+            end: { x: worldConfig.xLength / 2, y: -worldConfig.zLength / 2 },
+            baseColor: 0x00ff00,
+          },
+          WallHandle
+        );
+        this.addGameObject(
+          {
+            type: "wall",
+            start: { x: -worldConfig.xLength / 2, y: worldConfig.zLength / 2 },
+            end: { x: worldConfig.xLength / 2, y: worldConfig.zLength / 2 },
+            baseColor: 0xff0000,
+          },
+          WallHandle
+        );
+        this.addGameObject(
+          {
+            type: "wall",
+            start: { x: -worldConfig.xLength / 2, y: -worldConfig.zLength / 2 },
+            end: { x: -worldConfig.xLength / 2, y: worldConfig.zLength / 2 },
+          },
+          WallHandle
+        );
+        this.addGameObject(
+          {
+            type: "wall",
+            start: { x: worldConfig.xLength / 2, y: -worldConfig.zLength / 2 },
+            end: { x: worldConfig.xLength / 2, y: worldConfig.zLength / 2 },
+          },
+          WallHandle
+        );
       } else {
         worldConfig.walls.forEach((wallSpec) => {
-          this.addGameObject(wallSpec);
+          this.addGameObject(wallSpec, WallHandle);
         });
       }
     }
@@ -224,21 +238,47 @@ export class Sim3D {
     return obj.object;
   }
 
-  addGameObject(spec: SimObjectSpec): ISimObjectRef | undefined {
+  addGameObject<T1>(
+    spec: SimObjectSpec,
+    typeT: { new (simObject: SimObject, rootObject: SimObject): T1 }
+  ): T1 | undefined {
     const obj = this.objectFactories.makeObject(spec);
     if (obj === undefined) {
-      return obj;
+      return undefined;
     }
+    let body = this.world.createBody(obj.getBodySpecs());
+    obj.setBody(body);
+    body.createFixture(obj.getFixtureDef());
 
-    obj.addToScene();
+    this.addToScene(obj);
     this.simObjects.set(obj.guid, {
       type: obj.type,
       object: obj,
     });
 
-    return {
+    let simObjectRef = {
       guid: obj.guid,
       type: obj.type,
     };
+
+    let rootObject = (this.getSimObject(simObjectRef) as unknown) as SimObject;
+    if (!rootObject) {
+      throw new Error(
+        `Unable to get SimObject with guid "${simObjectRef.guid}"`
+      );
+    }
+
+    let handle = new typeT(obj, rootObject);
+    return handle;
+  }
+
+  /**
+   * Add this object (and any children) to the scene
+   */
+  private addToScene(simObject: SimObject): void {
+    this.scene.add(simObject.mesh);
+    simObject.children.forEach((simObj) => {
+      this.addToScene(simObj);
+    });
   }
 }

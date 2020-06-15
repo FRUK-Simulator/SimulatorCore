@@ -6,9 +6,9 @@ import {
   getMidpoint2d,
   getAngleRadians2d,
 } from "../utils/Geom2dUtil";
-import { World, Vec2, Box } from "planck-js";
-import { Scene } from "three";
+import { Vec2, Box } from "planck-js";
 import { IWallSpec } from "../specs/CoreSpecs";
+import { FixtureDef } from "planck-js";
 
 const DEFAULT_WALL_THICKNESS = 0.1;
 const DEFAULT_WALL_HEIGHT = 1;
@@ -16,21 +16,18 @@ const DEFAULT_WALL_COLOR = 0x226622;
 
 /**
  * Factory method for creating a SimWall
- * @param scene
- * @param world
  * @param spec
  */
-export function makeSimWall(
-  scene: THREE.Scene,
-  world: World,
-  spec: IWallSpec
-): SimWall {
-  return new SimWall(scene, world, spec);
+export function makeSimWall(spec: IWallSpec): SimWall {
+  return new SimWall(spec);
 }
 
 export class SimWall extends SimObject {
-  constructor(scene: Scene, world: World, spec: IWallSpec) {
-    super("SimWall", scene, world);
+  private bodySpecs: {};
+  private fixtureSpecs: FixtureDef;
+
+  constructor(spec: IWallSpec) {
+    super("SimWall");
 
     const wallLength: number = getLineLength2d(spec.start, spec.end);
     const wallMidpoint: Vector2d = getMidpoint2d(spec.start, spec.end);
@@ -67,21 +64,29 @@ export class SimWall extends SimObject {
     this._mesh = wallMesh;
 
     // Physics
-    this._body = world.createBody({
+    this.bodySpecs = {
       type: "static",
       angle: wallAngleRadians,
       position: new Vec2(wallMidpoint.x, wallMidpoint.y),
-    });
+    };
 
-    this._body.createFixture({
+    this.fixtureSpecs = {
       shape: new Box(wallLength / 2, wallThickness / 2),
       density: 1,
       isSensor: false,
-    });
+    };
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   public update(ms: number): void {
     // noop
+  }
+
+  getBodySpecs(): {} {
+    return this.bodySpecs;
+  }
+
+  getFixtureDef(): FixtureDef {
+    return this.fixtureSpecs;
   }
 }

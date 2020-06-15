@@ -26,23 +26,15 @@ export class ObjectFactories {
 
   private registerFactory(
     type: string,
-    factoryFunc: (
-      scene: THREE.Scene,
-      world: World,
-      spec: SimObjectSpec
-    ) => SimObject
+    factoryFunc: (spec: SimObjectSpec) => SimObject
   ) {
-    this._factories.set(
-      type,
-      factoryFunc.bind(undefined, this._scene, this._world)
-    );
+    this._factories.set(type, factoryFunc.bind(undefined));
   }
 
   public makeObject(spec: SimObjectSpec): SimObject | undefined {
     if (!this._factories.has(spec.type)) {
       return undefined;
     }
-
     return this._factories.get(spec.type)(spec);
   }
 }

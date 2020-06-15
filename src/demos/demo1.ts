@@ -2,6 +2,7 @@ import { Sim3D } from "../engine/Sim3D";
 import { IBallSpec, IBoxSpec } from "../engine/specs/CoreSpecs";
 import { SimulatorConfig } from "../engine/SimulatorConfig";
 import { BallHandle } from "../engine/handles/BallHandle";
+import { BoxHandle } from "../engine/handles/BoxHandle";
 
 let simulator: Sim3D;
 
@@ -40,7 +41,7 @@ function main() {
     radius: 1,
     initialPosition: { x: 2, y: 2 },
   };
-  simulator.addGameObject(ballSpec);
+  simulator.addGameObject(ballSpec, BallHandle);
 
   const box1Spec: IBoxSpec = {
     type: "box",
@@ -54,8 +55,7 @@ function main() {
       y: 5,
     },
   };
-  const box1spec = simulator.addGameObject(box1Spec);
-  const box1 = new BallHandle(box1spec, simulator);
+  const box1 = simulator.addGameObject(box1Spec, BoxHandle);
 
   let switchColor = false;
   setInterval(() => {

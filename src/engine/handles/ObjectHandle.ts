@@ -1,18 +1,12 @@
 import { ISimObjectRef } from "../SimTypes";
-import { Sim3D } from "../Sim3D";
+import { SimObject } from "../objects/SimObject";
 
-export abstract class ObjectHandle<T> {
+export abstract class ObjectHandle<T extends SimObject> {
   protected _rootObject: T;
   protected _objectRef: ISimObjectRef;
-  protected _simulator: Sim3D;
 
-  constructor(ref: ISimObjectRef, sim: Sim3D) {
+  constructor(ref: ISimObjectRef, rootObject: T) {
     this._objectRef = ref;
-    this._simulator = sim;
-
-    this._rootObject = (sim.getSimObject(ref) as unknown) as T;
-    if (!this._rootObject) {
-      throw new Error(`Unable to get SimObject with guid "${ref.guid}"`);
-    }
+    this._rootObject = rootObject;
   }
 }
