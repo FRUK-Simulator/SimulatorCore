@@ -8,22 +8,29 @@ import {
 } from "../utils/Geom2dUtil";
 import { World, Vec2, Box } from "planck-js";
 import { Scene } from "three";
+import { IWallSpec } from "../specs/CoreSpecs";
 
 const DEFAULT_WALL_THICKNESS = 0.1;
 const DEFAULT_WALL_HEIGHT = 1;
 const DEFAULT_WALL_COLOR = 0x226622;
 
-export interface ISimWallSpec {
-  start: Vector2d;
-  end: Vector2d;
-  thickness?: number;
-  height?: number;
-  color?: number;
+/**
+ * Factory method for creating a SimWall
+ * @param scene
+ * @param world
+ * @param spec
+ */
+export function makeSimWall(
+  scene: THREE.Scene,
+  world: World,
+  spec: IWallSpec
+): SimWall {
+  return new SimWall(scene, world, spec);
 }
 
 export class SimWall extends SimObject {
-  constructor(scene: Scene, world: World, spec: ISimWallSpec) {
-    super(scene, world);
+  constructor(scene: Scene, world: World, spec: IWallSpec) {
+    super("SimWall", scene, world);
 
     const wallLength: number = getLineLength2d(spec.start, spec.end);
     const wallMidpoint: Vector2d = getMidpoint2d(spec.start, spec.end);
@@ -34,7 +41,7 @@ export class SimWall extends SimObject {
     const wallHeight =
       spec.height !== undefined ? spec.height : DEFAULT_WALL_HEIGHT;
     const wallColor =
-      spec.color !== undefined ? spec.color : DEFAULT_WALL_COLOR;
+      spec.baseColor !== undefined ? spec.baseColor : DEFAULT_WALL_COLOR;
 
     // Build the wall in the X direction, thickness in Z and height in Y
     const meshGeom = new THREE.BoxGeometry(
