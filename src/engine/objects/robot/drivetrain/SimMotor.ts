@@ -1,5 +1,5 @@
-import { IMotorSpec } from "../../specs/RobotSpecs";
-import { clamp } from "../../utils/MathUtil";
+import { IMotorSpec } from "../../../specs/RobotSpecs";
+import { clamp } from "../../../utils/MathUtil";
 
 /**
  * Class representing a single controllable motor

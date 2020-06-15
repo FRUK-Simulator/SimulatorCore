@@ -10,6 +10,27 @@ export enum WheelMountingPoint {
   RIGHT_REAR,
 }
 
+export enum SensorMountingFace {
+  FRONT,
+  LEFT,
+  RIGHT,
+  REAR,
+  TOP,
+  BOTTOM,
+}
+
+export enum SensorMountingPoint {
+  TOP_LEFT,
+  TOP_MIDDLE,
+  TOP_RIGHT,
+  CENTER_LEFT,
+  CENTER_MIDDLE,
+  CENTER_RIGHT,
+  BOTTOM_LEFT,
+  BOTTOM_MIDDLE,
+  BOTTOM_RIGHT,
+}
+
 export interface IRobotWheelSpec extends IBaseSimObjectSpec {
   type: "robot-wheel";
   radius: number;

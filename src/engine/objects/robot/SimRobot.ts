@@ -1,6 +1,6 @@
 import * as THREE from "three";
 import { SimObject } from "../SimObject";
-import { SimRobotDrivetrain } from "./SimRobotDrivetrain";
+import { SimRobotDrivetrain } from "./drivetrain/SimRobotDrivetrain";
 import { World, Vec2, Box } from "planck-js";
 import { IRobotSpec } from "../../specs/RobotSpecs";
 
