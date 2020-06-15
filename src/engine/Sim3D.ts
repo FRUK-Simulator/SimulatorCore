@@ -7,6 +7,8 @@ import { ISimObjectRef } from "./SimTypes";
 import { SimObject } from "./objects/SimObject";
 import { SimObjectSpec } from "./specs/CoreSpecs";
 import { ObjectFactories } from "./objects/ObjectFactories";
+import { IRobotSpec } from "./specs/RobotSpecs";
+import { SimRobot } from "./objects/robot/SimRobot";
 
 interface ISimObjectContainer {
   type: string;
@@ -229,6 +231,21 @@ export class Sim3D {
     if (obj === undefined) {
       return obj;
     }
+
+    obj.addToScene();
+    this.simObjects.set(obj.guid, {
+      type: obj.type,
+      object: obj,
+    });
+
+    return {
+      guid: obj.guid,
+      type: obj.type,
+    };
+  }
+
+  addRobot(spec: IRobotSpec): ISimObjectRef | undefined {
+    const obj = new SimRobot(this.scene, this.world, spec);
 
     obj.addToScene();
     this.simObjects.set(obj.guid, {
