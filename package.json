@@ -1,6 +1,6 @@
 {
   "name": "@fruk/simulator-core",
-  "version": "1.0.0",
+  "version": "1.0.0-testrc",
   "description": "FIRST Robotics Simulator Core",
   "main": "dist/index.js",
   "scripts": {
@@ -8,7 +8,6 @@
     "build+watch": "tsc -w",
     "build:netlify": "webpack --progress -p",
     "start-web": "webpack-dev-server",
-    "postinstall": "tsc",
     "format": "prettier --write src",
     "checkFormat": "prettier --check src",
     "lint": "eslint ./src --ext .js,.jsx,.ts,.tsx",
