@@ -87,6 +87,8 @@ export interface IDrivetrainSpec {
   motorGroups: IMotorGroup[];
 }
 
+export interface ISensorSpec {}
+
 export interface IRobotSpec extends IBaseSimObjectSpec {
   type: "robot";
   dimensions: Vector3d;

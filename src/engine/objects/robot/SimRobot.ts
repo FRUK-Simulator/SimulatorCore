@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { SimObject } from "../SimObject";
 import { SimRobotDrivetrain } from "./drivetrain/SimRobotDrivetrain";
-import { World, Vec2, Box } from "planck-js";
+import { World, Vec2, Box, PrismaticJoint } from "planck-js";
 import { IRobotSpec } from "../../specs/RobotSpecs";
 
 const ROBOT_DEFAULT_COLOR = 0x00ff00;
@@ -46,6 +46,66 @@ export class SimRobot extends SimObject {
       friction: 0.3,
       restitution: 0.4,
     });
+
+    // Experimental
+    const frontSensor = world.createBody({
+      type: "dynamic",
+      position: new Vec2(bodyPos.x, bodyPos.y + spec.dimensions.z / 2),
+      angle: 0,
+    });
+
+    const frontSensorFixture = frontSensor.createFixture({
+      shape: new Box(spec.dimensions.x / 2, 0.01),
+      density: 1,
+      isSensor: true,
+      userData: {
+        type: "front-sensor",
+      },
+    });
+
+    const rearSensor = world.createBody({
+      type: "dynamic",
+      position: new Vec2(bodyPos.x, bodyPos.y - spec.dimensions.z / 2),
+      angle: 0,
+    });
+
+    const rearSensorFixture = rearSensor.createFixture({
+      shape: new Box(spec.dimensions.x / 2, 0.01),
+      density: 1,
+      isSensor: true,
+      userData: {
+        type: "rear-sensor",
+      },
+    });
+
+    // Connect:
+    this._world.createJoint(
+      new PrismaticJoint(
+        {
+          enableLimit: true,
+          lowerTranslation: 0,
+          upperTranslation: 0,
+        },
+        this._body,
+        frontSensor,
+        frontSensor.getWorldCenter(),
+        new Vec2(1, 0)
+      )
+    );
+
+    this._world.createJoint(
+      new PrismaticJoint(
+        {
+          enableLimit: true,
+          lowerTranslation: 0,
+          upperTranslation: 0,
+        },
+        this._body,
+        rearSensor,
+        rearSensor.getWorldCenter(),
+        new Vec2(1, 0)
+      )
+    );
 
     // Configure the drivetrain
     this._drivetrain = new SimRobotDrivetrain(scene, world, spec, this._body);

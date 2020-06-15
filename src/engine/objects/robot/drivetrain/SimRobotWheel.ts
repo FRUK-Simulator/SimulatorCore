@@ -62,6 +62,9 @@ export class SimRobotWheel extends SimObject {
       isSensor: false,
       friction: 0.3,
       restitution: 0.4,
+      userData: {
+        type: "robot-wheel",
+      },
     });
   }
 

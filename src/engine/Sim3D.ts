@@ -85,6 +85,10 @@ export class Sim3D {
     // Axes
     const axesHelper = new THREE.AxesHelper(1);
     scene.add(axesHelper);
+
+    this.world.on("begin-contact", (contact) => {
+      console.log("Contact!", contact);
+    });
   }
 
   private resetScene(config: WorldConfig) {

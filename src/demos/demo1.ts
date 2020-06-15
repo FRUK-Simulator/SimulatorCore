@@ -5,6 +5,8 @@ import { BallHandle } from "../engine/handles/BallHandle";
 import { IRobotSpec, WheelMountingPoint } from "..//engine/specs/RobotSpecs";
 import { RobotHandle } from "../engine/handles/RobotHandle";
 
+import { CoreSpecs } from "../index";
+
 let simulator: Sim3D;
 
 const simConfig: SimulatorConfig = {
@@ -137,5 +139,5 @@ function main() {
   const robotHandle = new RobotHandle(robotRef, simulator);
 
   robotHandle.setMotorPower(0, 0.5);
-  robotHandle.setMotorPower(1, -0.5);
+  robotHandle.setMotorPower(1, 0.5);
 }
