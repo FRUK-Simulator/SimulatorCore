@@ -8,7 +8,6 @@
     "build+watch": "tsc -w",
     "build:netlify": "webpack --progress -p",
     "start-web": "webpack-dev-server",
-    "postinstall": "tsc",
     "format": "prettier --write src",
     "checkFormat": "prettier --check src",
     "lint": "eslint ./src --ext .js,.jsx,.ts,.tsx",
