@@ -2,9 +2,16 @@ import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { SimulatorConfig, WorldConfig } from "./SimulatorConfig";
 import { makeGrid, GridPlane } from "./utils/GridUtil";
-import { SimWall } from "./objects/SimWall";
 import { World, Vec2 } from "planck-js";
-import { SimDemoBlock } from "./objects/SimDemoBlock";
+import { ISimObjectRef } from "./SimTypes";
+import { SimObject } from "./objects/SimObject";
+import { SimObjectSpec } from "./specs/CoreSpecs";
+import { ObjectFactories } from "./objects/ObjectFactories";
+
+interface ISimObjectContainer {
+  type: string;
+  object: SimObject;
+}
 
 const DEFAULT_CONFIG: SimulatorConfig = {
   defaultWorld: {
@@ -33,11 +40,11 @@ export class Sim3D {
 
   private config: SimulatorConfig;
 
+  private simObjects: Map<string, ISimObjectContainer>;
+  private objectFactories: ObjectFactories;
+
   // Physics!
   private world: World;
-
-  // DEMO
-  private demoBlock: SimDemoBlock;
 
   private lastAnimateTime = 0;
 
@@ -47,6 +54,9 @@ export class Sim3D {
     }
 
     this.config = config;
+
+    // SimObject registry
+    this.simObjects = new Map<string, ISimObjectContainer>();
 
     // Physics Setup
     const gravity = new Vec2(0, 0);
@@ -62,6 +72,9 @@ export class Sim3D {
       canvas: canvas,
     }));
     renderer.setSize(canvas.width, canvas.height);
+
+    // Set up our object factories
+    this.objectFactories = new ObjectFactories(this.scene, this.world);
 
     // If a default world is specified, configure it now
     // The reset method runs when configureWorld is called
@@ -122,53 +135,38 @@ export class Sim3D {
     );
     this.scene.add(grid);
 
-    let walls: SimWall[] = [];
     if (worldConfig.walls) {
       // We want walls
       if (worldConfig.walls.length === 0) {
-        // Empty array, generate the default set of walls (perimeter)
-        walls = [
-          new SimWall(this.scene, this.world, {
-            start: { x: -worldConfig.xLength / 2, y: -worldConfig.zLength / 2 },
-            end: { x: worldConfig.xLength / 2, y: -worldConfig.zLength / 2 },
-            color: 0x00ff00,
-          }),
-          new SimWall(this.scene, this.world, {
-            start: { x: -worldConfig.xLength / 2, y: worldConfig.zLength / 2 },
-            end: { x: worldConfig.xLength / 2, y: worldConfig.zLength / 2 },
-            color: 0xff0000,
-          }),
-          new SimWall(this.scene, this.world, {
-            start: { x: -worldConfig.xLength / 2, y: -worldConfig.zLength / 2 },
-            end: { x: -worldConfig.xLength / 2, y: worldConfig.zLength / 2 },
-          }),
-          new SimWall(this.scene, this.world, {
-            start: { x: worldConfig.xLength / 2, y: -worldConfig.zLength / 2 },
-            end: { x: worldConfig.xLength / 2, y: worldConfig.zLength / 2 },
-          }),
-        ];
+        // // Empty array, generate the default set of walls (perimeter)
+        this.addGameObject({
+          type: "wall",
+          start: { x: -worldConfig.xLength / 2, y: -worldConfig.zLength / 2 },
+          end: { x: worldConfig.xLength / 2, y: -worldConfig.zLength / 2 },
+          baseColor: 0x00ff00,
+        });
+        this.addGameObject({
+          type: "wall",
+          start: { x: -worldConfig.xLength / 2, y: worldConfig.zLength / 2 },
+          end: { x: worldConfig.xLength / 2, y: worldConfig.zLength / 2 },
+          baseColor: 0xff0000,
+        });
+        this.addGameObject({
+          type: "wall",
+          start: { x: -worldConfig.xLength / 2, y: -worldConfig.zLength / 2 },
+          end: { x: -worldConfig.xLength / 2, y: worldConfig.zLength / 2 },
+        });
+        this.addGameObject({
+          type: "wall",
+          start: { x: worldConfig.xLength / 2, y: -worldConfig.zLength / 2 },
+          end: { x: worldConfig.xLength / 2, y: worldConfig.zLength / 2 },
+        });
       } else {
         worldConfig.walls.forEach((wallSpec) => {
-          walls.push(new SimWall(this.scene, this.world, wallSpec));
+          this.addGameObject(wallSpec);
         });
       }
     }
-
-    walls.forEach((wall) => {
-      wall.addToScene();
-    });
-
-    // DEMO - Add an angled wall to the scene
-    const angleWall = new SimWall(this.scene, this.world, {
-      start: { x: -5, y: 6 },
-      end: { x: 5, y: 8 },
-    });
-
-    angleWall.addToScene();
-
-    // DEMO - Add a demo block to the screen
-    this.demoBlock = new SimDemoBlock(this.scene, this.world);
-    this.demoBlock.addToScene();
   }
 
   onresize(): void {
@@ -183,7 +181,9 @@ export class Sim3D {
   }
 
   updatePhysics(time: number): void {
-    this.demoBlock.update(time);
+    this.simObjects.forEach((simObject) => {
+      simObject.object.update(time);
+    });
     this.world.step(time, 10, 8);
     this.world.clearForces();
   }
@@ -208,5 +208,37 @@ export class Sim3D {
 
   stopRendering(): void {
     this.isRendering = false;
+  }
+
+  // Sim Object methods
+  getSimObject(ref: ISimObjectRef): SimObject | undefined {
+    if (!this.simObjects.has(ref.guid)) {
+      return undefined;
+    }
+
+    const obj = this.simObjects.get(ref.guid);
+    if (obj.type !== ref.type) {
+      return undefined;
+    }
+
+    return obj.object;
+  }
+
+  addGameObject(spec: SimObjectSpec): ISimObjectRef | undefined {
+    const obj = this.objectFactories.makeObject(spec);
+    if (obj === undefined) {
+      return obj;
+    }
+
+    obj.addToScene();
+    this.simObjects.set(obj.guid, {
+      type: obj.type,
+      object: obj,
+    });
+
+    return {
+      guid: obj.guid,
+      type: obj.type,
+    };
   }
 }
