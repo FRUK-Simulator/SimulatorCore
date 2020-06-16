@@ -2,10 +2,12 @@ import { Sim3D } from "../engine/Sim3D";
 import { IBallSpec, IBoxSpec } from "../engine/specs/CoreSpecs";
 import { SimulatorConfig } from "../engine/SimulatorConfig";
 import { BallHandle } from "../engine/handles/BallHandle";
-import { IRobotSpec, WheelMountingPoint } from "..//engine/specs/RobotSpecs";
+import {
+  IRobotSpec,
+  WheelMountingPoint,
+  SensorMountingFace,
+} from "..//engine/specs/RobotSpecs";
 import { RobotHandle } from "../engine/handles/RobotHandle";
-
-import { CoreSpecs } from "../index";
 
 let simulator: Sim3D;
 
@@ -74,6 +76,15 @@ function main() {
   const robotSpec: IRobotSpec = {
     type: "robot",
     dimensions: { x: 2, y: 1, z: 3 },
+    basicSensors: [
+      {
+        type: "contact-sensor",
+        width: 0.25,
+        range: 0.05,
+        channel: 0,
+        mountFace: SensorMountingFace.FRONT,
+      },
+    ],
     drivetrain: {
       motorGroups: [
         {
@@ -140,4 +151,16 @@ function main() {
 
   robotHandle.setMotorPower(0, 0.5);
   robotHandle.setMotorPower(1, 0.5);
+
+  let motorPower = 0.5;
+  setInterval(() => {
+    if (motorPower > 0 && robotHandle.getDigitalInput(1)) {
+      motorPower = -0.5;
+    } else if (motorPower < 0 && robotHandle.getDigitalInput(0)) {
+      motorPower = 0.5;
+    }
+
+    robotHandle.setMotorPower(0, motorPower);
+    robotHandle.setMotorPower(1, motorPower);
+  }, 100);
 }

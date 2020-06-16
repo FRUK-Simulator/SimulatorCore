@@ -87,12 +87,38 @@ export interface IDrivetrainSpec {
   motorGroups: IMotorGroup[];
 }
 
-export interface ISensorSpec {}
+export enum SensorOutputChannelType {
+  DIGITAL = "Digital",
+  ANALOG = "Analog",
+}
+
+export interface IBasicSensorSpec {
+  type: string;
+  channel: number;
+  mountFace: SensorMountingFace;
+  mountOffset?: Vector3d;
+}
+
+export interface IContactSensorSpec extends IBasicSensorSpec {
+  type: "contact-sensor";
+  width: number;
+  range: number;
+}
+
+export interface IDistanceSensorSpec extends IBasicSensorSpec {
+  type: "distance-sensor";
+  minRange: number;
+  maxRange: number;
+  detectAngle: number; // The detection cone
+}
+
+export type BasicSensor = IContactSensorSpec | IDistanceSensorSpec;
 
 export interface IRobotSpec extends IBaseSimObjectSpec {
   type: "robot";
   dimensions: Vector3d;
   drivetrain: IDrivetrainSpec;
+  basicSensors?: BasicSensor[];
   // TODO as we add more features to the robot (e.g. sensors or mechanisms)
   // they can get added as properties here
 }
