@@ -56,13 +56,13 @@ export class SimBox extends SimObject {
       angularDamping: 0.3,
     };
 
-    this._body.createFixture({
+    this.fixtureSpecs = {
       shape: new Box(spec.dimensions.x / 2, spec.dimensions.z / 2),
       density: 1,
       isSensor: false,
       friction: 0.3,
       restitution: 0.4,
-    });
+    };
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
