@@ -57,8 +57,8 @@ export class SimContactSensor extends SimBasicSensor {
       angle: 0,
     });
 
-    let fixtureX: number = 0;
-    let fixtureY: number = 0;
+    let fixtureX = 0;
+    let fixtureY = 0;
 
     switch (spec.mountFace) {
       case SensorMountingFace.LEFT:

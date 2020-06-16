@@ -54,8 +54,8 @@ export class BasicSensorRegistry {
     this._sensors.set(sensor.identifier, sensor);
   }
 
-  onContactBegin(contact: Contact) {
-    let sensorIdentifier: string = "";
+  onContactBegin(contact: Contact): void {
+    let sensorIdentifier = "";
     const userdataA: any = contact.getFixtureA().getUserData() as any;
     const userdataB: any = contact.getFixtureB().getUserData() as any;
 
@@ -74,8 +74,8 @@ export class BasicSensorRegistry {
     }
   }
 
-  onContactEnd(contact: Contact) {
-    let sensorIdentifier: string = "";
+  onContactEnd(contact: Contact): void {
+    let sensorIdentifier = "";
     const userdataA: any = contact.getFixtureA().getUserData() as any;
     const userdataB: any = contact.getFixtureB().getUserData() as any;
 

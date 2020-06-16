@@ -1,6 +1,5 @@
 import {
   SensorOutputChannelType,
-  BasicSensor,
   IBasicSensorSpec,
 } from "../../../specs/RobotSpecs";
 

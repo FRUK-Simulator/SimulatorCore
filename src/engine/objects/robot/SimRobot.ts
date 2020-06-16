@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { SimObject } from "../SimObject";
 import { SimRobotDrivetrain } from "./drivetrain/SimRobotDrivetrain";
-import { World, Vec2, Box, PrismaticJoint } from "planck-js";
+import { World, Vec2, Box } from "planck-js";
 import { IRobotSpec, SensorMountingFace } from "../../specs/RobotSpecs";
 import { BasicSensorRegistry } from "./sensors/BasicSensorRegistry";
 
