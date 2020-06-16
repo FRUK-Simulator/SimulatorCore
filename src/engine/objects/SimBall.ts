@@ -1,28 +1,27 @@
 import * as THREE from "three";
 import { SimObject } from "./SimObject";
-import { World, Vec2, Circle } from "planck-js";
+import { Vec2, Circle } from "planck-js";
 import { IBallSpec } from "../specs/CoreSpecs";
 import { Vector2d } from "../SimTypes";
+import { FixtureDef } from "planck-js";
+import { BodyDef } from "planck-js";
 
 const DEFAULT_BALL_COLOR = 0x0000ff;
 
 /**
  * Factory method for creating a SimBall
- * @param scene
- * @param world
  * @param spec
  */
-export function makeSimBall(
-  scene: THREE.Scene,
-  world: World,
-  spec: IBallSpec
-): SimBall {
-  return new SimBall(scene, world, spec);
+export function makeSimBall(spec: IBallSpec): SimBall {
+  return new SimBall(spec);
 }
 
 export class SimBall extends SimObject {
-  constructor(scene: THREE.Scene, world: World, spec: IBallSpec) {
-    super("SimBall", scene, world);
+  private bodySpecs: BodyDef;
+  private fixtureSpecs: FixtureDef;
+
+  constructor(spec: IBallSpec) {
+    super("SimBall");
 
     const color = spec.baseColor ? spec.baseColor : DEFAULT_BALL_COLOR;
     const initialPosition: Vector2d = { x: 0, y: 0 };
@@ -46,22 +45,22 @@ export class SimBall extends SimObject {
     // Set up the physics body
     // NOTE: We will need to set sane defaults for physics properties in the event
     // that they are not provided by the spec
-    this._body = world.createBody({
+    this.bodySpecs = {
       type: spec.isStatic ? "static" : "dynamic",
       position: new Vec2(initialPosition.x, initialPosition.y),
       angle: 0,
       linearDamping: 0.5,
       bullet: true,
       angularDamping: 0.3,
-    });
+    };
 
-    this._body.createFixture({
+    this.fixtureSpecs = {
       shape: new Circle(spec.radius),
       density: 1,
       isSensor: false,
       friction: 0.3,
       restitution: 0.4,
-    });
+    };
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -75,5 +74,13 @@ export class SimBall extends SimObject {
 
   setBaseColor(color: number): void {
     (<THREE.MeshStandardMaterial>this._mesh.material).color.set(color);
+  }
+
+  getBodySpecs(): BodyDef {
+    return this.bodySpecs;
+  }
+
+  getFixtureDef(): FixtureDef {
+    return this.fixtureSpecs;
   }
 }

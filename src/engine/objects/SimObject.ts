@@ -1,7 +1,6 @@
-import { Body, World } from "planck-js";
+import { Body, FixtureDef, BodyDef } from "planck-js";
 import { v4 as uuid } from "uuid";
 import * as THREE from "three";
-import { Scene } from "three";
 
 /**
  * Base class representing an object that can be rendered in a scene
@@ -12,17 +11,12 @@ export abstract class SimObject {
   protected _body: Body;
   protected _children: SimObject[] = [];
 
-  protected _world: World;
-  protected _scene: Scene;
-
   protected _type = "SimObject";
 
   private _guid: string;
 
-  constructor(type: string, scene: Scene, world: World) {
+  constructor(type: string) {
     this._guid = uuid();
-    this._world = world;
-    this._scene = scene;
     this._type = type;
   }
 
@@ -40,6 +34,10 @@ export abstract class SimObject {
 
   get body(): Body {
     return this._body;
+  }
+
+  get children(): SimObject[] {
+    return this._children;
   }
 
   protected addChild(child: SimObject): void {
@@ -60,14 +58,8 @@ export abstract class SimObject {
     }
   }
 
-  /**
-   * Add this object (and any children) to the scene
-   */
-  public addToScene(): void {
-    this._scene.add(this._mesh);
-    this._children.forEach((simObj) => {
-      simObj.addToScene();
-    });
+  public setBody(body: Body): void {
+    this._body = body;
   }
 
   /**
@@ -75,4 +67,10 @@ export abstract class SimObject {
    * @param ms Time delta between now and the last time this function was run
    */
   public abstract update(ms: number): void;
+
+  /**
+   * returns the specification for the world's body
+   */
+  public abstract getBodySpecs(): BodyDef;
+  public abstract getFixtureDef(): FixtureDef;
 }

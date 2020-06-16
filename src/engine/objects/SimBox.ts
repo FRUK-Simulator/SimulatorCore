@@ -1,28 +1,27 @@
 import * as THREE from "three";
 import { SimObject } from "./SimObject";
-import { World, Box, Vec2 } from "planck-js";
+import { Box, Vec2 } from "planck-js";
 import { IBoxSpec } from "../specs/CoreSpecs";
 import { Vector2d } from "../SimTypes";
+import { FixtureDef } from "planck-js";
+import { BodyDef } from "planck-js";
 
 const DEFAULT_BOX_COLOR = 0xff00ff;
 
 /**
  * Factory method for creating a SimBox
- * @param scene
- * @param world
  * @param spec
  */
-export function makeSimBox(
-  scene: THREE.Scene,
-  world: World,
-  spec: IBoxSpec
-): SimBox {
-  return new SimBox(scene, world, spec);
+export function makeSimBox(spec: IBoxSpec): SimBox {
+  return new SimBox(spec);
 }
 
 export class SimBox extends SimObject {
-  constructor(scene: THREE.Scene, world: World, spec: IBoxSpec) {
-    super("SimBox", scene, world);
+  private bodySpecs: BodyDef;
+  private fixtureSpecs: FixtureDef;
+
+  constructor(spec: IBoxSpec) {
+    super("SimBox");
 
     const color = spec.baseColor ? spec.baseColor : DEFAULT_BOX_COLOR;
     const initialPosition: Vector2d = { x: 0, y: 0 };
@@ -48,22 +47,22 @@ export class SimBox extends SimObject {
     this._mesh = boxMesh;
 
     // Set up the physics body
-    this._body = world.createBody({
+    this.bodySpecs = {
       type: spec.isStatic ? "static" : "dynamic",
       position: new Vec2(initialPosition.x, initialPosition.y),
       angle: 0,
       linearDamping: 0.5,
       bullet: true,
       angularDamping: 0.3,
-    });
+    };
 
-    this._body.createFixture({
+    this.fixtureSpecs = {
       shape: new Box(spec.dimensions.x / 2, spec.dimensions.z / 2),
       density: 1,
       isSensor: false,
       friction: 0.3,
       restitution: 0.4,
-    });
+    };
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -77,5 +76,13 @@ export class SimBox extends SimObject {
 
   setBaseColor(color: number): void {
     (<THREE.MeshStandardMaterial>this._mesh.material).color.set(color);
+  }
+
+  getBodySpecs(): BodyDef {
+    return this.bodySpecs;
+  }
+
+  getFixtureDef(): FixtureDef {
+    return this.fixtureSpecs;
   }
 }
