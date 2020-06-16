@@ -233,18 +233,6 @@ export class Sim3D {
     return obj.object;
   }
 
-  addBall(spec: IBallSpec): BallHandle | undefined {
-    return this.addGameObject<BallHandle>(spec, BallHandle);
-  }
-
-  addBox(spec: IBoxSpec): BoxHandle | undefined {
-    return this.addGameObject<BoxHandle>(spec, BoxHandle);
-  }
-
-  addWall(spec: IWallSpec): WallHandle | undefined {
-    return this.addGameObject<WallHandle>(spec, WallHandle);
-  }
-
   private addGameObject<T1>(
     spec: SimObjectSpec,
     typeT: { new (simObject: SimObject, rootObject: SimObject): T1 }
@@ -277,6 +265,18 @@ export class Sim3D {
 
     let handle = new typeT(obj, rootObject);
     return handle;
+  }
+
+  addBall(spec: IBallSpec): BallHandle | undefined {
+    return this.addGameObject<BallHandle>(spec, BallHandle);
+  }
+
+  addBox(spec: IBoxSpec): BoxHandle | undefined {
+    return this.addGameObject<BoxHandle>(spec, BoxHandle);
+  }
+
+  addWall(spec: IWallSpec): WallHandle | undefined {
+    return this.addGameObject<WallHandle>(spec, WallHandle);
   }
 
   /**
