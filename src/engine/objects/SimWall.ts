@@ -9,6 +9,7 @@ import {
 import { Vec2, Box } from "planck-js";
 import { IWallSpec } from "../specs/CoreSpecs";
 import { FixtureDef } from "planck-js";
+import { BodyDef } from "planck-js";
 
 const DEFAULT_WALL_THICKNESS = 0.1;
 const DEFAULT_WALL_HEIGHT = 1;
@@ -23,7 +24,7 @@ export function makeSimWall(spec: IWallSpec): SimWall {
 }
 
 export class SimWall extends SimObject {
-  private bodySpecs: {};
+  private bodySpecs: BodyDef;
   private fixtureSpecs: FixtureDef;
 
   constructor(spec: IWallSpec) {
@@ -82,7 +83,7 @@ export class SimWall extends SimObject {
     // noop
   }
 
-  getBodySpecs(): {} {
+  getBodySpecs(): BodyDef {
     return this.bodySpecs;
   }
 

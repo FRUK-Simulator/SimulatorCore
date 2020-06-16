@@ -12,7 +12,6 @@ import {
   IWallSpec,
 } from "./specs/CoreSpecs";
 import { ObjectFactories } from "./objects/ObjectFactories";
-import { ObjectHandle } from "./handles/ObjectHandle";
 import { BallHandle } from "./handles/BallHandle";
 import { BoxHandle } from "./handles/BoxHandle";
 import { WallHandle } from "./handles/WallHandle";
@@ -241,7 +240,7 @@ export class Sim3D {
     if (obj === undefined) {
       return undefined;
     }
-    let body = this.world.createBody(obj.getBodySpecs());
+    const body = this.world.createBody(obj.getBodySpecs());
     obj.setBody(body);
     body.createFixture(obj.getFixtureDef());
 
@@ -251,19 +250,21 @@ export class Sim3D {
       object: obj,
     });
 
-    let simObjectRef = {
+    const simObjectRef = {
       guid: obj.guid,
       type: obj.type,
     };
 
-    let rootObject = (this.getSimObject(simObjectRef) as unknown) as SimObject;
+    const rootObject = (this.getSimObject(
+      simObjectRef
+    ) as unknown) as SimObject;
     if (!rootObject) {
       throw new Error(
         `Unable to get SimObject with guid "${simObjectRef.guid}"`
       );
     }
 
-    let handle = new typeT(obj, rootObject);
+    const handle = new typeT(obj, rootObject);
     return handle;
   }
 

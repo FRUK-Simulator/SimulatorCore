@@ -4,6 +4,7 @@ import { Box, Vec2 } from "planck-js";
 import { IBoxSpec } from "../specs/CoreSpecs";
 import { Vector2d } from "../SimTypes";
 import { FixtureDef } from "planck-js";
+import { BodyDef } from "planck-js";
 
 const DEFAULT_BOX_COLOR = 0xff00ff;
 
@@ -16,7 +17,7 @@ export function makeSimBox(spec: IBoxSpec): SimBox {
 }
 
 export class SimBox extends SimObject {
-  private bodySpecs: {};
+  private bodySpecs: BodyDef;
   private fixtureSpecs: FixtureDef;
 
   constructor(spec: IBoxSpec) {
@@ -77,7 +78,7 @@ export class SimBox extends SimObject {
     (<THREE.MeshStandardMaterial>this._mesh.material).color.set(color);
   }
 
-  getBodySpecs(): {} {
+  getBodySpecs(): BodyDef {
     return this.bodySpecs;
   }
 

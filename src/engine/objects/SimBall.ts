@@ -4,6 +4,7 @@ import { Vec2, Circle } from "planck-js";
 import { IBallSpec } from "../specs/CoreSpecs";
 import { Vector2d } from "../SimTypes";
 import { FixtureDef } from "planck-js";
+import { BodyDef } from "planck-js";
 
 const DEFAULT_BALL_COLOR = 0x0000ff;
 
@@ -16,7 +17,7 @@ export function makeSimBall(spec: IBallSpec): SimBall {
 }
 
 export class SimBall extends SimObject {
-  private bodySpecs: {};
+  private bodySpecs: BodyDef;
   private fixtureSpecs: FixtureDef;
 
   constructor(spec: IBallSpec) {
@@ -75,7 +76,7 @@ export class SimBall extends SimObject {
     (<THREE.MeshStandardMaterial>this._mesh.material).color.set(color);
   }
 
-  getBodySpecs(): {} {
+  getBodySpecs(): BodyDef {
     return this.bodySpecs;
   }
 
