@@ -5,9 +5,16 @@ import { makeGrid, GridPlane } from "./utils/GridUtil";
 import { World, Vec2 } from "planck-js";
 import { ISimObjectRef } from "./SimTypes";
 import { SimObject } from "./objects/SimObject";
-import { SimObjectSpec } from "./specs/CoreSpecs";
+import {
+  SimObjectSpec,
+  IBallSpec,
+  IBoxSpec,
+  IWallSpec,
+} from "./specs/CoreSpecs";
 import { ObjectFactories } from "./objects/ObjectFactories";
 import { ObjectHandle } from "./handles/ObjectHandle";
+import { BallHandle } from "./handles/BallHandle";
+import { BoxHandle } from "./handles/BoxHandle";
 import { WallHandle } from "./handles/WallHandle";
 
 interface ISimObjectContainer {
@@ -141,40 +148,28 @@ export class Sim3D {
       // We want walls
       if (worldConfig.walls.length === 0) {
         // // Empty array, generate the default set of walls (perimeter)
-        this.addGameObject(
-          {
-            type: "wall",
-            start: { x: -worldConfig.xLength / 2, y: -worldConfig.zLength / 2 },
-            end: { x: worldConfig.xLength / 2, y: -worldConfig.zLength / 2 },
-            baseColor: 0x00ff00,
-          },
-          WallHandle
-        );
-        this.addGameObject(
-          {
-            type: "wall",
-            start: { x: -worldConfig.xLength / 2, y: worldConfig.zLength / 2 },
-            end: { x: worldConfig.xLength / 2, y: worldConfig.zLength / 2 },
-            baseColor: 0xff0000,
-          },
-          WallHandle
-        );
-        this.addGameObject(
-          {
-            type: "wall",
-            start: { x: -worldConfig.xLength / 2, y: -worldConfig.zLength / 2 },
-            end: { x: -worldConfig.xLength / 2, y: worldConfig.zLength / 2 },
-          },
-          WallHandle
-        );
-        this.addGameObject(
-          {
-            type: "wall",
-            start: { x: worldConfig.xLength / 2, y: -worldConfig.zLength / 2 },
-            end: { x: worldConfig.xLength / 2, y: worldConfig.zLength / 2 },
-          },
-          WallHandle
-        );
+        this.addWall({
+          type: "wall",
+          start: { x: -worldConfig.xLength / 2, y: -worldConfig.zLength / 2 },
+          end: { x: worldConfig.xLength / 2, y: -worldConfig.zLength / 2 },
+          baseColor: 0x00ff00,
+        });
+        this.addWall({
+          type: "wall",
+          start: { x: -worldConfig.xLength / 2, y: worldConfig.zLength / 2 },
+          end: { x: worldConfig.xLength / 2, y: worldConfig.zLength / 2 },
+          baseColor: 0xff0000,
+        });
+        this.addWall({
+          type: "wall",
+          start: { x: -worldConfig.xLength / 2, y: -worldConfig.zLength / 2 },
+          end: { x: -worldConfig.xLength / 2, y: worldConfig.zLength / 2 },
+        });
+        this.addWall({
+          type: "wall",
+          start: { x: worldConfig.xLength / 2, y: -worldConfig.zLength / 2 },
+          end: { x: worldConfig.xLength / 2, y: worldConfig.zLength / 2 },
+        });
       } else {
         worldConfig.walls.forEach((wallSpec) => {
           this.addGameObject(wallSpec, WallHandle);
@@ -238,7 +233,19 @@ export class Sim3D {
     return obj.object;
   }
 
-  addGameObject<T1>(
+  addBall(spec: IBallSpec): BallHandle | undefined {
+    return this.addGameObject<BallHandle>(spec, BallHandle);
+  }
+
+  addBox(spec: IBoxSpec): BoxHandle | undefined {
+    return this.addGameObject<BoxHandle>(spec, BoxHandle);
+  }
+
+  addWall(spec: IWallSpec): WallHandle | undefined {
+    return this.addGameObject<WallHandle>(spec, WallHandle);
+  }
+
+  private addGameObject<T1>(
     spec: SimObjectSpec,
     typeT: { new (simObject: SimObject, rootObject: SimObject): T1 }
   ): T1 | undefined {
