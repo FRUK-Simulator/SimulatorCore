@@ -171,7 +171,7 @@ export class Sim3D {
         });
       } else {
         worldConfig.walls.forEach((wallSpec) => {
-          this.addGameObject(wallSpec, WallHandle);
+          this.addWall(wallSpec);
         });
       }
     }

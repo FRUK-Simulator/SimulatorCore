@@ -1,4 +1,4 @@
-import { Body, FixtureDef } from "planck-js";
+import { Body, FixtureDef, BodyDef } from "planck-js";
 import { v4 as uuid } from "uuid";
 import * as THREE from "three";
 
