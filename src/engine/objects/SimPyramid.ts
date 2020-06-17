@@ -27,13 +27,13 @@ export class SimPyramid extends SimObject {
     const initialPosition: Vector2d = { x: 0, y: 0 };
 
     const pyramidGeom = new THREE.Geometry();
-    const halfX = spec.baseDimensions.x / 2;
-    const halfZ = spec.baseDimensions.y / 2;
+    const x = spec.baseDimensions.x;
+    const z = spec.baseDimensions.y;
     pyramidGeom.vertices = [
-      new THREE.Vector3(-halfX, 0, -halfZ),
-      new THREE.Vector3(-halfX, 0, halfZ),
-      new THREE.Vector3(halfX, 0, halfZ),
-      new THREE.Vector3(halfX, 0, -halfZ),
+      new THREE.Vector3(-x, 0, -z),
+      new THREE.Vector3(-x, 0, z),
+      new THREE.Vector3(x, 0, z),
+      new THREE.Vector3(x, 0, -z),
       new THREE.Vector3(0, spec.height, 0),
     ];
     pyramidGeom.faces = [

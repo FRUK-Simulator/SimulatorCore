@@ -391,10 +391,14 @@ export class Sim3D {
   renderWireframes(): void {
     const height = 3;
 
+<<<<<<< HEAD
     const geom = (this.debugMesh.geometry = new THREE.Geometry());
 
     while (geom.vertices.length > 0) geom.vertices.pop();
     while (geom.faces.length > 0) geom.faces.pop();
+=======
+    const geom = new THREE.Geometry();
+>>>>>>> c22a7e1... Fix the pyramid
 
     for (let body = this.world.getBodyList(); body; body = body.getNext()) {
       for (
@@ -404,52 +408,52 @@ export class Sim3D {
       ) {
         const shape = fixture.getShape();
         const type = shape.getType();
+        const offset = geom.vertices.length;
 
         if (type === "circle") {
-          const circleShape = <planck.CircleShape>shape;
-
-          const radius = circleShape.getRadius();
-          const geom = new THREE.CylinderGeometry(radius, radius, height);
-          const mesh = new THREE.Mesh(geom, material);
-
-          mesh.position.setX(body.getPosition().x);
-          mesh.position.setY(height / 2);
-          mesh.position.setZ(body.getPosition().y);
-          mesh.rotateY(body.getAngle());
-          debugScene.add(mesh);
+          // const circleShape = <planck.CircleShape>shape;
+          // const radius = circleShape.getRadius();
+          // const geom = new THREE.CylinderGeometry(radius, radius, height);
+          // const mesh = new THREE.Mesh(geom, material);
+          // mesh.position.setX(body.getPosition().x);
+          // mesh.position.setY(height / 2);
+          // mesh.position.setZ(body.getPosition().y);
+          // mesh.rotateY(body.getAngle());
+          // debugScene.add(mesh);
         } else if (type == "polygon") {
           const polygonShape = <planck.PolygonShape>shape;
           const vertices = polygonShape.m_vertices;
 
-          const geom = new THREE.Geometry();
           const l = 2 * vertices.length;
           vertices.forEach((vertex, index) => {
-            geom.vertices.push(new THREE.Vector3(vertex.x, 0, vertex.y));
-            geom.vertices.push(new THREE.Vector3(vertex.x, height, vertex.y));
+            let translation = body.getPosition();
+            let rotation = body.getAngle();
+
+            let x =
+              vertex.x * Math.cos(rotation) -
+              vertex.y * Math.sin(rotation) +
+              translation.x;
+            let z =
+              vertex.x * Math.sin(rotation) +
+              vertex.y * Math.cos(rotation) +
+              translation.y;
+
+            geom.vertices.push(new THREE.Vector3(x, 0, z));
+            geom.vertices.push(new THREE.Vector3(x, height, z));
 
             geom.faces.push(
               new THREE.Face3(
-                (2 * index) % l,
-                (2 * index + 1) % l,
-                (2 * index + 2) % l
-              )
-            );
-            geom.faces.push(
+                offset + ((2 * index) % l),
+                offset + ((2 * index + 1) % l),
+                offset + ((2 * index + 2) % l)
+              ),
               new THREE.Face3(
-                (2 * index + 2) % l,
-                (2 * index + 1) % l,
-                (2 * index + 3) % l
+                offset + ((2 * index + 2) % l),
+                offset + ((2 * index + 1) % l),
+                offset + ((2 * index + 3) % l)
               )
             );
           });
-          geom.computeFaceNormals();
-
-          const lines = new THREE.Mesh(geom, material);
-
-          lines.position.setX(body.getPosition().x);
-          lines.position.setZ(body.getPosition().y);
-          lines.rotateY(-body.getAngle());
-          debugScene.add(lines);
         }
       }
     }
