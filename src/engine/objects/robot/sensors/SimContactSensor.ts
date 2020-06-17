@@ -7,12 +7,13 @@ import {
   IRobotSpec,
   SensorMountingFace,
   ISimUserData,
+  IBasicSensorValue,
 } from "../../../specs/RobotSpecs";
-import { Body, World, Vec2, Box } from "planck-js";
+import { Vec2, Box } from "planck-js";
 import { getSensorMountPosition } from "../../../utils/RobotUtils";
 
-const SENSOR_INACTIVE_COLOR: number = 0xaaaaaa;
-const SENSOR_ACTIVE_COLOR: number = 0xff0000;
+const SENSOR_INACTIVE_COLOR = 0xaaaaaa;
+const SENSOR_ACTIVE_COLOR = 0xff0000;
 
 export class SimContactSensor extends SimBasicSensor {
   constructor(
@@ -31,19 +32,19 @@ export class SimContactSensor extends SimBasicSensor {
     );
 
     let sensorDimensionX = 0;
-    let sensorDimensionY = 0.05; // Arbitrary
+    const sensorDimensionY = 0.05; // Arbitrary
     let sensorDimensionZ = 0;
 
     switch (spec.mountFace) {
       case SensorMountingFace.LEFT:
       case SensorMountingFace.RIGHT:
-        sensorDimensionX = spec.range;
+        sensorDimensionX = spec.range * 2;
         sensorDimensionZ = spec.width;
         break;
       case SensorMountingFace.FRONT:
       case SensorMountingFace.REAR:
         sensorDimensionX = spec.width;
-        sensorDimensionZ = spec.range;
+        sensorDimensionZ = spec.range * 2;
         break;
     }
 
@@ -73,6 +74,7 @@ export class SimContactSensor extends SimBasicSensor {
       type: "dynamic", // sensors are always dynamic
       position: new Vec2(sensorPosition.x, sensorPosition.z),
       angle: 0,
+      bullet: true,
     };
 
     const userData: ISimUserData = {
@@ -91,11 +93,25 @@ export class SimContactSensor extends SimBasicSensor {
     };
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   update(ms: number): void {
+    const material = <THREE.MeshStandardMaterial>this._mesh.material;
+    if (this._value) {
+      if (this._value.value > 0.0) {
+        material.color.set(SENSOR_ACTIVE_COLOR);
+      } else {
+        material.color.set(SENSOR_INACTIVE_COLOR);
+      }
+    }
+
     const bodyCenter = this._body.getWorldCenter();
     this._mesh.position.x = bodyCenter.x;
     this._mesh.position.z = bodyCenter.y;
 
     this._mesh.rotation.y = -this._body.getAngle();
+  }
+
+  onSensorEvent(val: IBasicSensorValue): void {
+    this.setValue(val);
   }
 }

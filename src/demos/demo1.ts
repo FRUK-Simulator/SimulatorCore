@@ -102,8 +102,16 @@ function main() {
         channel: 0,
         mountFace: RobotSpecs.SensorMountingFace.FRONT,
         render: true,
-        width: 1,
-        range: 0.5,
+        width: 1.75,
+        range: 0.1,
+      },
+      {
+        type: "contact-sensor",
+        channel: 1,
+        mountFace: RobotSpecs.SensorMountingFace.REAR,
+        render: true,
+        width: 1.75,
+        range: 0.1,
       },
     ],
     drivetrain: {
@@ -169,6 +177,21 @@ function main() {
   };
   const robot = simulator.addRobot(robotSpec);
 
+  let isGoingForward = true;
   robot.setMotorPower(0, 0.5);
-  robot.setMotorPower(1, -0.5);
+  robot.setMotorPower(1, 0.5);
+
+  setInterval(() => {
+    if (isGoingForward && robot.getDigitalInput(0)) {
+      isGoingForward = false;
+      robot.setMotorPower(0, -0.5);
+      robot.setMotorPower(1, -0.5);
+    }
+
+    if (!isGoingForward && robot.getDigitalInput(1)) {
+      isGoingForward = true;
+      robot.setMotorPower(0, 0.5);
+      robot.setMotorPower(1, 0.5);
+    }
+  }, 100);
 }

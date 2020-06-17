@@ -24,6 +24,7 @@ import { WallHandle } from "./handles/WallHandle";
 import { IRobotSpec } from "./specs/RobotSpecs";
 import { SimRobot } from "./objects/robot/SimRobot";
 import { RobotHandle } from "./handles/RobotHandle";
+import { EventRegistry } from "./EventRegistry";
 
 interface ISimObjectContainer {
   type: string;
@@ -65,6 +66,9 @@ export class Sim3D {
 
   private lastAnimateTime = 0;
 
+  // Events
+  private eventRegistry: EventRegistry;
+
   constructor(private canvas: HTMLCanvasElement, config?: SimulatorConfig) {
     if (!config) {
       config = DEFAULT_CONFIG;
@@ -92,6 +96,9 @@ export class Sim3D {
 
     // Set up our object factories
     this.objectFactories = new ObjectFactories(this.scene, this.world);
+
+    // Set up the Event Registry
+    this.eventRegistry = new EventRegistry(this.world);
 
     // If a default world is specified, configure it now
     // The reset method runs when configureWorld is called
@@ -327,6 +334,9 @@ export class Sim3D {
 
     // Tell the robot to configure the joints appropriately
     robot.configureFixtureLinks(this.world);
+
+    // Register with the event system
+    robot.registerWithEventSystem(this.eventRegistry);
 
     this.addToScene(robot);
     this.simObjects.set(robot.guid, {

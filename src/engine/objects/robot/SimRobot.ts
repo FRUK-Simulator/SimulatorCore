@@ -11,6 +11,7 @@ import {
 } from "planck-js";
 import { IRobotSpec } from "../../specs/RobotSpecs";
 import { BasicSensorManager } from "./sensors/BasicSensorManager";
+import { EventRegistry } from "../../EventRegistry";
 
 const ROBOT_DEFAULT_COLOR = 0x00ff00;
 
@@ -143,9 +144,17 @@ export class SimRobot extends SimObject {
     });
   }
 
+  registerWithEventSystem(eventRegistry: EventRegistry): void {
+    this._basicSensors.registerWithEventSystem(this.guid, eventRegistry);
+  }
+
   // External facing API
   setMotorPower(channel: number, value: number): void {
     this._drivetrain.setMotorPower(channel, value);
+  }
+
+  getDigitalInput(channel: number): boolean {
+    return this._basicSensors.getDigitalInput(channel);
   }
 
   getBodySpecs(): BodyDef {

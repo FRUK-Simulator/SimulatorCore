@@ -1,6 +1,10 @@
 import { SimBasicSensor } from "./SimBasicSensor";
-import { IRobotSpec } from "../../../specs/RobotSpecs";
+import {
+  IRobotSpec,
+  BasicSensorOutputChannelType,
+} from "../../../specs/RobotSpecs";
 import { SimContactSensor } from "./SimContactSensor";
+import { EventRegistry } from "../../../EventRegistry";
 
 /**
  * Class representing a collection of robot sensors
@@ -46,5 +50,23 @@ export class BasicSensorManager {
     });
 
     return result;
+  }
+
+  getDigitalInput(channel: number): boolean {
+    const ident = `${BasicSensorOutputChannelType.DIGITAL}-${channel}`;
+    if (!this._sensors.has(ident)) {
+      return false;
+    }
+
+    return this._sensors.get(ident).value > 0.0;
+  }
+
+  registerWithEventSystem(
+    robotGuid: string,
+    eventRegistry: EventRegistry
+  ): void {
+    this.sensors.forEach((sensor) => {
+      sensor.registerWithEventSystem(robotGuid, eventRegistry);
+    });
   }
 }

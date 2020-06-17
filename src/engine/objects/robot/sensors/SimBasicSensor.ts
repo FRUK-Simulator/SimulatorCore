@@ -5,6 +5,7 @@ import {
 } from "../../../specs/RobotSpecs";
 import { SimObject } from "../../SimObject";
 import { BodyDef, FixtureDef } from "planck-js";
+import { EventRegistry } from "../../../EventRegistry";
 
 export abstract class SimBasicSensor extends SimObject {
   protected _channel: number;
@@ -25,6 +26,7 @@ export abstract class SimBasicSensor extends SimObject {
     this._channel = spec.channel;
     this._channelType = channelType;
     this._sensorType = type;
+    this._value = { value: 0.0 };
   }
 
   get sensorType(): string {
@@ -47,7 +49,7 @@ export abstract class SimBasicSensor extends SimObject {
     return this._value.value;
   }
 
-  setValue(val: IBasicSensorValue) {
+  setValue(val: IBasicSensorValue): void {
     this._value = val;
   }
 
@@ -57,5 +59,18 @@ export abstract class SimBasicSensor extends SimObject {
 
   getFixtureDef(): FixtureDef {
     return this._fixtureSpecs;
+  }
+
+  protected abstract onSensorEvent(val: IBasicSensorValue): void;
+
+  registerWithEventSystem(
+    robotGuid: string,
+    eventRegistry: EventRegistry
+  ): void {
+    eventRegistry.registerSensor(
+      robotGuid,
+      this.identifier,
+      this.onSensorEvent.bind(this)
+    );
   }
 }

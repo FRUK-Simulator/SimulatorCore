@@ -10,7 +10,7 @@ type SensorRegisty = Map<string, SensorCallback[]>;
 
 function getSensorDescriptors(a: Fixture, b: Fixture): ISimSensorDescriptor[] {
   const aUserData: ISimUserData | null = a.getUserData() as ISimUserData;
-  const bUserData: ISimUserData | null = a.getUserData() as ISimUserData;
+  const bUserData: ISimUserData | null = b.getUserData() as ISimUserData;
 
   const result: ISimSensorDescriptor[] = [];
 
