@@ -45,11 +45,11 @@ function main() {
       x: 2,
       y: 2,
     },
-    initialPosition: {
-      x: -3, 
-      y: 6
-    },
     height: 3,
+    initialPosition: {
+      x: -2.5,
+      y: 7,
+    },
   };
   simulator.addPyramid(pyramidSpec);
 
