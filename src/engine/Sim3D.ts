@@ -15,6 +15,9 @@ import { ObjectFactories } from "./objects/ObjectFactories";
 import { BallHandle } from "./handles/BallHandle";
 import { BoxHandle } from "./handles/BoxHandle";
 import { WallHandle } from "./handles/WallHandle";
+import { IRobotSpec } from "./specs/RobotSpecs";
+import { SimRobot } from "./objects/robot/SimRobot";
+import { RobotHandle } from "./handles/RobotHandle";
 
 interface ISimObjectContainer {
   type: string;
@@ -288,5 +291,44 @@ export class Sim3D {
     simObject.children.forEach((simObj) => {
       this.addToScene(simObj);
     });
+  }
+
+  addRobot(spec: IRobotSpec): RobotHandle | undefined {
+    const robot = new SimRobot(spec);
+
+    const robotBody = this.world.createBody(robot.getBodySpecs());
+    robot.setBody(robotBody);
+    robotBody.createFixture(robot.getFixtureDef());
+
+    // Create bodies and fixtures for the children
+    robot.children.forEach((child) => {
+      const childBody = this.world.createBody(child.getBodySpecs());
+      child.setBody(childBody);
+      childBody.createFixture(child.getFixtureDef());
+    });
+
+    // Tell the robot to configure the joints appropriately
+    robot.configureFixtureLinks(this.world);
+
+    this.addToScene(robot);
+    this.simObjects.set(robot.guid, {
+      type: robot.type,
+      object: robot,
+    });
+
+    const simObjectRef = {
+      guid: robot.guid,
+      type: robot.type,
+    };
+
+    const robotRoot = (this.getSimObject(simObjectRef) as unknown) as SimRobot;
+    if (!robotRoot) {
+      throw new Error(
+        `Unable to get SimObject with guid "${simObjectRef.guid}"`
+      );
+    }
+
+    const handle = new RobotHandle(robot, robotRoot);
+    return handle;
   }
 }

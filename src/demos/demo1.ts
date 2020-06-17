@@ -1,6 +1,7 @@
 import { Sim3D } from "../engine/Sim3D";
 import { IBallSpec, IBoxSpec } from "../engine/specs/CoreSpecs";
 import { SimulatorConfig } from "../engine/SimulatorConfig";
+import { IRobotSpec, WheelMountingPoint } from "..//engine/specs/RobotSpecs";
 
 let simulator: Sim3D;
 
@@ -64,4 +65,73 @@ function main() {
       box1.setBaseColor(0xff00ff);
     }
   }, 2000);
+
+  const robotSpec: IRobotSpec = {
+    type: "robot",
+    dimensions: { x: 2, y: 1, z: 3 },
+    drivetrain: {
+      motorGroups: [
+        {
+          wheelGroup: "left-drive",
+          motors: [{ channel: 0, maxForce: 5 }],
+        },
+        {
+          wheelGroup: "right-drive",
+          motors: [{ channel: 1, maxForce: 5 }],
+        },
+      ],
+      wheelGroups: [
+        {
+          id: "left-drive",
+          wheels: [
+            {
+              wheel: {
+                type: "robot-wheel",
+                radius: 0.5,
+                thickness: 0.15,
+              },
+              mountPoint: WheelMountingPoint.LEFT_FRONT,
+              offset: { x: -0.075, y: -0.25, z: 0.5 },
+            },
+            {
+              wheel: {
+                type: "robot-wheel",
+                radius: 0.5,
+                thickness: 0.15,
+              },
+              mountPoint: WheelMountingPoint.LEFT_REAR,
+              offset: { x: -0.075, y: -0.25, z: -0.5 },
+            },
+          ],
+        },
+        {
+          id: "right-drive",
+          wheels: [
+            {
+              wheel: {
+                type: "robot-wheel",
+                radius: 0.5,
+                thickness: 0.15,
+              },
+              mountPoint: WheelMountingPoint.RIGHT_FRONT,
+              offset: { x: 0.075, y: -0.25, z: 0.5 },
+            },
+            {
+              wheel: {
+                type: "robot-wheel",
+                radius: 0.5,
+                thickness: 0.15,
+              },
+              mountPoint: WheelMountingPoint.RIGHT_REAR,
+              offset: { x: 0.075, y: -0.25, z: -0.5 },
+            },
+          ],
+        },
+      ],
+    },
+  };
+  const robot = simulator.addRobot(robotSpec);
+
+  robot.setMotorPower(0, 0.5);
+  robot.setMotorPower(1, -0.5);
 }
