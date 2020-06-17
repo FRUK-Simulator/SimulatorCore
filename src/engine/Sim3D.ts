@@ -49,7 +49,8 @@ const DEFAULT_CONFIG: SimulatorConfig = {
 
 export class Sim3D {
   private scene: THREE.Scene;
-  private renderer: THREE.Renderer;
+
+  private renderer: THREE.WebGLRenderer;
 
   private camera: THREE.PerspectiveCamera;
   private cameraControls: OrbitControls;
@@ -60,6 +61,8 @@ export class Sim3D {
 
   private simObjects: Map<string, ISimObjectContainer>;
   private objectFactories: ObjectFactories;
+
+  private debugMode = false;
 
   // Physics!
   private world: World;
@@ -202,6 +205,9 @@ export class Sim3D {
   render(): void {
     this.cameraControls.update();
     this.renderer.render(this.scene, this.camera);
+    if (this.debugMode) {
+      this.renderWireframes();
+    }
   }
 
   updatePhysics(time: number): void {
@@ -360,5 +366,83 @@ export class Sim3D {
 
     const handle = new RobotHandle(robot, robotRoot);
     return handle;
+  }
+
+  isDebugMode(): boolean {
+    return this.debugMode;
+  }
+
+  setDebugFlag(debug: boolean): void {
+    this.debugMode = debug;
+  }
+
+  renderWireframes(): void {
+    const debugScene = new THREE.Scene();
+    const height = 3;
+    const material = new THREE.MeshBasicMaterial();
+    material.wireframe = true;
+    material.color = new THREE.Color("black");
+
+    for (let body = this.world.getBodyList(); body; body = body.getNext()) {
+      for (
+        let fixture = body.getFixtureList();
+        fixture;
+        fixture = fixture.getNext()
+      ) {
+        const shape = fixture.getShape();
+        const type = shape.getType();
+
+        if (type === "circle") {
+          const circleShape = <planck.CircleShape>shape;
+
+          const radius = circleShape.getRadius();
+          const geom = new THREE.CylinderGeometry(radius, radius, height);
+          const mesh = new THREE.Mesh(geom, material);
+
+          mesh.position.setX(body.getPosition().x);
+          mesh.position.setY(height / 2);
+          mesh.position.setZ(body.getPosition().y);
+          mesh.rotateY(body.getAngle());
+          debugScene.add(mesh);
+        } else if (type == "polygon") {
+          const polygonShape = <planck.PolygonShape>shape;
+          const vertices = polygonShape.m_vertices;
+
+          const geom = new THREE.Geometry();
+          const l = 2 * vertices.length;
+          vertices.forEach((vertex, index) => {
+            geom.vertices.push(new THREE.Vector3(vertex.x, 0, vertex.y));
+            geom.vertices.push(new THREE.Vector3(vertex.x, height, vertex.y));
+
+            geom.faces.push(
+              new THREE.Face3(
+                (2 * index) % l,
+                (2 * index + 1) % l,
+                (2 * index + 2) % l
+              )
+            );
+            geom.faces.push(
+              new THREE.Face3(
+                (2 * index + 2) % l,
+                (2 * index + 1) % l,
+                (2 * index + 3) % l
+              )
+            );
+          });
+          geom.computeFaceNormals();
+
+          const lines = new THREE.Mesh(geom, material);
+
+          lines.position.setX(body.getPosition().x);
+          lines.position.setZ(body.getPosition().y);
+          lines.rotateY(-body.getAngle());
+          debugScene.add(lines);
+        }
+      }
+    }
+
+    this.renderer.autoClear = false;
+    this.renderer.render(debugScene, this.camera);
+    this.renderer.autoClear = true;
   }
 }

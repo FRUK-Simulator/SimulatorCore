@@ -153,7 +153,6 @@ function main() {
       robot.setMotorPower(0, -0.5);
       robot.setMotorPower(1, -0.5);
     }
-
     if (
       !isGoingForward &&
       robot.getAnalogInput(1) > 0 &&
@@ -164,4 +163,13 @@ function main() {
       robot.setMotorPower(1, 0.5);
     }
   }, 100);
+
+  const button = document.createElement("button");
+  button.textContent = "Toggle wirefraeme";
+  button.addEventListener("click", (ev) => {
+    simulator.setDebugFlag(!simulator.isDebugMode());
+    ev.stopPropagation();
+    ev.preventDefault();
+  });
+  document.body.appendChild(button);
 }
