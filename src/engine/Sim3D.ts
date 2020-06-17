@@ -294,7 +294,7 @@ export class Sim3D {
   }
 
   addRobot(spec: IRobotSpec): RobotHandle | undefined {
-    const robot = new SimRobot(this.world, spec);
+    const robot = new SimRobot(spec);
 
     const robotBody = this.world.createBody(robot.getBodySpecs());
     robot.setBody(robotBody);
@@ -331,19 +331,4 @@ export class Sim3D {
     const handle = new RobotHandle(robot, robotRoot);
     return handle;
   }
-
-  // addRobot(spec: IRobotSpec): ISimObjectRef | undefined {
-  //   const obj = new SimRobot(this.scene, this.world, spec);
-
-  //   obj.addToScene();
-  //   this.simObjects.set(obj.guid, {
-  //     type: obj.type,
-  //     object: obj,
-  //   });
-
-  //   return {
-  //     guid: obj.guid,
-  //     type: obj.type,
-  //   };
-  // }
 }

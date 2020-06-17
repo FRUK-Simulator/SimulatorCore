@@ -19,7 +19,7 @@ export class SimRobot extends SimObject {
 
   private _drivetrain: SimRobotDrivetrain;
 
-  constructor(world: World, spec: IRobotSpec) {
+  constructor(spec: IRobotSpec) {
     super("SimRobot");
 
     const color =
