@@ -1,7 +1,4 @@
-import { Sim3D } from "../engine/Sim3D";
-import { IBallSpec, IBoxSpec } from "../engine/specs/CoreSpecs";
-import { SimulatorConfig } from "../engine/SimulatorConfig";
-import { IRobotSpec, WheelMountingPoint } from "..//engine/specs/RobotSpecs";
+import { Sim3D, CoreSpecs, SimulatorConfig, RobotSpecs } from "../index";
 
 let simulator: Sim3D;
 
@@ -35,14 +32,14 @@ function main() {
   simulator.onresize();
   simulator.beginRendering();
 
-  const ballSpec: IBallSpec = {
+  const ballSpec: CoreSpecs.IBallSpec = {
     type: "ball",
     radius: 1,
     initialPosition: { x: 2, y: 2 },
   };
   simulator.addBall(ballSpec);
 
-  const box1Spec: IBoxSpec = {
+  const box1Spec: CoreSpecs.IBoxSpec = {
     type: "box",
     dimensions: {
       x: 1,
@@ -66,7 +63,7 @@ function main() {
     }
   }, 2000);
 
-  const robotSpec: IRobotSpec = {
+  const robotSpec: RobotSpecs.IRobotSpec = {
     type: "robot",
     dimensions: { x: 2, y: 1, z: 3 },
     drivetrain: {
@@ -90,7 +87,7 @@ function main() {
                 radius: 0.5,
                 thickness: 0.15,
               },
-              mountPoint: WheelMountingPoint.LEFT_FRONT,
+              mountPoint: RobotSpecs.WheelMountingPoint.LEFT_FRONT,
               offset: { x: -0.075, y: -0.25, z: 0.5 },
             },
             {
@@ -99,7 +96,7 @@ function main() {
                 radius: 0.5,
                 thickness: 0.15,
               },
-              mountPoint: WheelMountingPoint.LEFT_REAR,
+              mountPoint: RobotSpecs.WheelMountingPoint.LEFT_REAR,
               offset: { x: -0.075, y: -0.25, z: -0.5 },
             },
           ],
@@ -113,7 +110,7 @@ function main() {
                 radius: 0.5,
                 thickness: 0.15,
               },
-              mountPoint: WheelMountingPoint.RIGHT_FRONT,
+              mountPoint: RobotSpecs.WheelMountingPoint.RIGHT_FRONT,
               offset: { x: 0.075, y: -0.25, z: 0.5 },
             },
             {
@@ -122,7 +119,7 @@ function main() {
                 radius: 0.5,
                 thickness: 0.15,
               },
-              mountPoint: WheelMountingPoint.RIGHT_REAR,
+              mountPoint: RobotSpecs.WheelMountingPoint.RIGHT_REAR,
               offset: { x: 0.075, y: -0.25, z: -0.5 },
             },
           ],

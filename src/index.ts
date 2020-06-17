@@ -1,9 +1,14 @@
 export { Sim3D } from "./engine/Sim3D";
 export { SimulatorConfig, WorldConfig } from "./engine/SimulatorConfig";
 
-export * as CoreSimTypes from "./engine/SimTypes";
+import * as CoreSimTypes from "./engine/SimTypes";
+export { CoreSimTypes };
 
-export * as Handles from "./engine/handles";
+import * as Handles from "./engine/handles";
+export { Handles };
 
-export * as CoreSpecs from "./engine/specs/CoreSpecs";
-export * as RobotSpecs from "./engine/specs/RobotSpecs";
+import * as CoreSpecs from "./engine/specs/CoreSpecs";
+export { CoreSpecs };
+
+import * as RobotSpecs from "./engine/specs/RobotSpecs";
+export { RobotSpecs };
