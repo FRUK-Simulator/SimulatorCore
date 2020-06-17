@@ -10,6 +10,7 @@ import {
   PrismaticJoint,
 } from "planck-js";
 import { IRobotSpec } from "../../specs/RobotSpecs";
+import { BasicSensorManager } from "./sensors/BasicSensorManager";
 
 const ROBOT_DEFAULT_COLOR = 0x00ff00;
 
@@ -27,6 +28,7 @@ export class SimRobot extends SimObject {
   private _fixtureSpecs: FixtureDef;
 
   private _drivetrain: SimRobotDrivetrain;
+  private _basicSensors: BasicSensorManager;
 
   constructor(spec: IRobotSpec) {
     super("SimRobot");
@@ -74,6 +76,18 @@ export class SimRobot extends SimObject {
       this.addChild(wheel);
     });
 
+    // Configure Basic Sensors
+    this._basicSensors = new BasicSensorManager(spec, this.guid);
+
+    // Add the created sensors as children
+    this._basicSensors.sensors.forEach((sensor) => {
+      this.addChild(sensor);
+
+      if (sensor.mesh) {
+        sensor.mesh.translateY(-this._drivetrain.yOffset);
+      }
+    });
+
     // Adjust our base mesh up
     this._mesh.translateY(-this._drivetrain.yOffset);
   }
@@ -106,6 +120,23 @@ export class SimRobot extends SimObject {
           this._body,
           wheel.body,
           wheel.body.getWorldCenter(),
+          new Vec2(1, 0)
+        )
+      );
+    });
+
+    // Configure the basic sensors
+    this._basicSensors.sensors.forEach((sensor) => {
+      world.createJoint(
+        new PrismaticJoint(
+          {
+            enableLimit: true,
+            lowerTranslation: 0,
+            upperTranslation: 0,
+          },
+          this._body,
+          sensor.body,
+          sensor.body.getWorldCenter(),
           new Vec2(1, 0)
         )
       );

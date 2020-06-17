@@ -15,8 +15,6 @@ export enum SensorMountingFace {
   LEFT,
   RIGHT,
   REAR,
-  TOP,
-  BOTTOM,
 }
 
 export interface IRobotWheelSpec extends IBaseSimObjectSpec {
@@ -131,6 +129,7 @@ export interface IBasicSensorSpec {
   channel: number;
   mountFace: SensorMountingFace;
   mountOffset?: Vector3d;
+  render?: boolean;
 }
 
 /**

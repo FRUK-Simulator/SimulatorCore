@@ -96,6 +96,16 @@ function main() {
   const robotSpec: RobotSpecs.IRobotSpec = {
     type: "robot",
     dimensions: { x: 2, y: 1, z: 3 },
+    basicSensors: [
+      {
+        type: "contact-sensor",
+        channel: 0,
+        mountFace: RobotSpecs.SensorMountingFace.FRONT,
+        render: true,
+        width: 1,
+        range: 0.05,
+      },
+    ],
     drivetrain: {
       motorGroups: [
         {
