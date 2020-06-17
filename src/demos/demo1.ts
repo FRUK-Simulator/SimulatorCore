@@ -35,9 +35,23 @@ function main() {
   const ballSpec: CoreSpecs.IBallSpec = {
     type: "ball",
     radius: 1,
-    initialPosition: { x: 2, y: 2 },
+    initialPosition: { x: 5, y: 2 },
   };
   simulator.addBall(ballSpec);
+
+  const pyramidSpec: CoreSpecs.IPyramidSpec = {
+    type: "pyramid",
+    baseDimensions: {
+      x: 2,
+      y: 2,
+    },
+    initialPosition: {
+      x: -3, 
+      y: 6
+    },
+    height: 3,
+  };
+  simulator.addPyramid(pyramidSpec);
 
   const box1Spec: CoreSpecs.IBoxSpec = {
     type: "box",
