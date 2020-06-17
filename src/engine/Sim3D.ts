@@ -9,11 +9,13 @@ import {
   SimObjectSpec,
   IBallSpec,
   IBoxSpec,
+  IPyramidSpec,
   IWallSpec,
 } from "./specs/CoreSpecs";
 import { ObjectFactories } from "./objects/ObjectFactories";
 import { BallHandle } from "./handles/BallHandle";
 import { BoxHandle } from "./handles/BoxHandle";
+import { PyramidHandle } from "./handles/PyramidHandle";
 import { WallHandle } from "./handles/WallHandle";
 import { IRobotSpec } from "./specs/RobotSpecs";
 import { SimRobot } from "./objects/robot/SimRobot";
@@ -281,6 +283,10 @@ export class Sim3D {
 
   addWall(spec: IWallSpec): WallHandle | undefined {
     return this.addGameObject<WallHandle>(spec, WallHandle);
+  }
+
+  addPyramid(spec: IPyramidSpec): PyramidHandle | undefined {
+    return this.addGameObject<PyramidHandle>(spec, PyramidHandle);
   }
 
   /**
