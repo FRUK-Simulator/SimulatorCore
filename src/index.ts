@@ -6,3 +6,4 @@ export * as CoreSimTypes from "./engine/SimTypes";
 export * as Handles from "./engine/handles";
 
 export * as CoreSpecs from "./engine/specs/CoreSpecs";
+export * as RobotSpecs from "./engine/specs/RobotSpecs";
