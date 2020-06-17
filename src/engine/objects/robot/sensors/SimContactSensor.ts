@@ -18,12 +18,10 @@ export class SimContactSensor extends SimBasicSensor {
   constructor(
     spec: IContactSensorSpec,
     robotGuid: string,
-    robotSpec: IRobotSpec,
-    render?: boolean
+    robotSpec: IRobotSpec
   ) {
     super("ContactSensor", BasicSensorOutputChannelType.DIGITAL, spec);
-
-    render = !!render;
+    const render = !!spec.render;
 
     // Get mount positions
     const sensorPosition = getSensorMountPosition(
@@ -60,6 +58,7 @@ export class SimContactSensor extends SimBasicSensor {
     });
 
     sensorMaterial.transparent = !render;
+    sensorMaterial.opacity = render ? 1 : 0;
 
     const sensorMesh = new THREE.Mesh(sensorGeom, sensorMaterial);
 

@@ -27,12 +27,7 @@ export class BasicSensorManager {
       let sensor: SimBasicSensor;
       // TODO move this to a factory
       if (sensorSpec.type === "contact-sensor") {
-        sensor = new SimContactSensor(
-          sensorSpec,
-          robotGuid,
-          robotSpec,
-          sensorSpec.render
-        );
+        sensor = new SimContactSensor(sensorSpec, robotGuid, robotSpec);
       }
 
       if (this._sensors.has(sensor.identifier)) {

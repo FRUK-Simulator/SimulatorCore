@@ -103,7 +103,7 @@ function main() {
         mountFace: RobotSpecs.SensorMountingFace.FRONT,
         render: true,
         width: 1,
-        range: 0.05,
+        range: 0.5,
       },
     ],
     drivetrain: {
