@@ -1,4 +1,4 @@
-import { Sim3D, SimulatorConfig, RobotSpecs } from "../index";
+import { Sim3D, SimulatorConfig, RobotSpecs, RobotBuilder } from "../index";
 
 let simulator: Sim3D;
 
@@ -93,122 +93,72 @@ function main() {
   //   }
   // }, 2000);
 
-  const robotSpec: RobotSpecs.IRobotSpec = {
-    type: "robot",
-    dimensions: { x: 2, y: 1, z: 3 },
-    basicSensors: [
-      // {
-      //   type: "contact-sensor",
-      //   channel: 0,
-      //   mountFace: RobotSpecs.SensorMountingFace.FRONT,
-      //   render: true,
-      //   width: 1.75,
-      //   range: 0.1,
-      // },
-      // {
-      //   type: "contact-sensor",
-      //   channel: 1,
-      //   mountFace: RobotSpecs.SensorMountingFace.REAR,
-      //   render: true,
-      //   width: 1.75,
-      //   range: 0.1,
-      // },
-      {
-        type: "distance-sensor",
-        channel: 0,
-        mountFace: RobotSpecs.SensorMountingFace.FRONT,
-        minRange: 0,
-        maxRange: 10,
-      },
-      {
-        type: "distance-sensor",
-        channel: 1,
-        mountFace: RobotSpecs.SensorMountingFace.REAR,
-        minRange: 0,
-        maxRange: 10,
-      },
-    ],
-    drivetrain: {
-      motorGroups: [
-        {
-          wheelGroup: "left-drive",
-          motors: [{ channel: 0, maxForce: 5 }],
-        },
-        {
-          wheelGroup: "right-drive",
-          motors: [{ channel: 1, maxForce: 5 }],
-        },
-      ],
-      wheelGroups: [
-        {
-          id: "left-drive",
-          wheels: [
-            {
-              wheel: {
-                type: "robot-wheel",
-                radius: 0.5,
-                thickness: 0.15,
-              },
-              mountPoint: RobotSpecs.WheelMountingPoint.LEFT_FRONT,
-              offset: { x: -0.075, y: -0.25, z: 0.5 },
-            },
-            {
-              wheel: {
-                type: "robot-wheel",
-                radius: 0.5,
-                thickness: 0.15,
-              },
-              mountPoint: RobotSpecs.WheelMountingPoint.LEFT_REAR,
-              offset: { x: -0.075, y: -0.25, z: -0.5 },
-            },
-          ],
-        },
-        {
-          id: "right-drive",
-          wheels: [
-            {
-              wheel: {
-                type: "robot-wheel",
-                radius: 0.5,
-                thickness: 0.15,
-              },
-              mountPoint: RobotSpecs.WheelMountingPoint.RIGHT_FRONT,
-              offset: { x: 0.075, y: -0.25, z: 0.5 },
-            },
-            {
-              wheel: {
-                type: "robot-wheel",
-                radius: 0.5,
-                thickness: 0.15,
-              },
-              mountPoint: RobotSpecs.WheelMountingPoint.RIGHT_REAR,
-              offset: { x: 0.075, y: -0.25, z: -0.5 },
-            },
-          ],
-        },
-      ],
-    },
-  };
-  const robot = simulator.addRobot(robotSpec);
+  const robotBuilder = new RobotBuilder.Builder();
+  const wheel = new RobotBuilder.WheelBuilder(1)
+    .setMountPoint(RobotSpecs.WheelMountingPoint.LEFT_FRONT)
+    .setMountOffset({ x: -0.075, y: -0.25, z: 0.5 });
+  const motor = new RobotBuilder.MotorBuilder().setChannel(0).setMaxForce(5);
+
+  const distanceSensor = new RobotBuilder.DistanceSensorBuilder(0)
+    .setMountFace(RobotSpecs.SensorMountingFace.FRONT)
+    .setMaxRange(5);
+
+  robotBuilder
+    .setDimensions({ x: 2, y: 1, z: 3 })
+    .addBasicSensor(distanceSensor)
+    .addBasicSensor(
+      distanceSensor
+        .copy()
+        .setChannel(1)
+        .setMountFace(RobotSpecs.SensorMountingFace.REAR)
+    )
+    .addWheel("left-drive", wheel)
+    .addWheel(
+      "left-drive",
+      wheel
+        .copy()
+        .setMountPoint(RobotSpecs.WheelMountingPoint.LEFT_REAR)
+        .setMountOffset({ x: -0.075, y: -0.25, z: -0.5 })
+    )
+    .addWheel(
+      "right-drive",
+      wheel
+        .copy()
+        .setMountPoint(RobotSpecs.WheelMountingPoint.RIGHT_FRONT)
+        .setMountOffset({ x: 0.075, y: -0.25, z: 0.5 })
+    )
+    .addWheel(
+      "right-drive",
+      wheel
+        .copy()
+        .setMountPoint(RobotSpecs.WheelMountingPoint.RIGHT_REAR)
+        .setMountOffset({ x: 0.075, y: -0.25, z: -0.5 })
+    )
+    .addMotor("left-drive", motor)
+    .addMotor("right-drive", motor.copy().setChannel(1));
+
+  const robot = simulator.addRobot(robotBuilder.generateSpec());
 
   let isGoingForward = true;
-  // robot.setMotorPower(0, -0.2);
-  // robot.setMotorPower(1, 0.2);
-
-  // setInterval(() => {
-  //   console.log("Distance: ", robot.getAnalogInput(0));
-  // }, 200);
   robot.setMotorPower(0, 0.5);
   robot.setMotorPower(1, 0.5);
 
   setInterval(() => {
-    if (isGoingForward && robot.getAnalogInput(0) < 0.15) {
+    if (
+      isGoingForward &&
+      robot.getAnalogInput(0) > 0 &&
+      robot.getAnalogInput(0) < 0.15
+    ) {
       isGoingForward = false;
       robot.setMotorPower(0, -0.5);
       robot.setMotorPower(1, -0.5);
     }
 
-    if (!isGoingForward && robot.getAnalogInput(1) < 0.15) {
+    if (
+      !isGoingForward &&
+      robot.getAnalogInput(1) > 0 &&
+      robot.getAnalogInput(1) < 0.15
+    ) {
       isGoingForward = true;
       robot.setMotorPower(0, 0.5);
       robot.setMotorPower(1, 0.5);
