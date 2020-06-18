@@ -11,7 +11,8 @@
     "format": "prettier --write src",
     "checkFormat": "prettier --check src",
     "lint": "eslint ./src --ext .js,.jsx,.ts,.tsx",
-    "lint:fix": "npm run lint -- --fix"
+    "lint:fix": "npm run lint -- --fix",
+    "docs": "npx typedoc --plugin typedoc-plugin-markdown --mode file ./src"
   },
   "repository": {
     "type": "git",
@@ -41,6 +42,8 @@
     "lint-staged": "^10.2.10",
     "prettier": "^2.0.5",
     "ts-loader": "^7.0.5",
+    "typedoc": "^0.17.7",
+    "typedoc-plugin-markdown": "^2.3.1",
     "webpack": "^4.43.0",
     "webpack-cli": "^3.3.11",
     "webpack-dev-server": "^3.11.0"
