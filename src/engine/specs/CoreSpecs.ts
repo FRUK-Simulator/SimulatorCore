@@ -5,7 +5,12 @@
 import { Vector2d, Vector3d } from "../SimTypes";
 
 // As we define more game object types, add their specs to this union
-export type SimObjectSpec = IBallSpec | IBoxSpec | IWallSpec | IPyramidSpec;
+export type SimObjectSpec =
+  | IBallSpec
+  | IBoxSpec
+  | IWallSpec
+  | IPyramidSpec
+  | IConeSpec;
 
 export interface IPhysicsProperties {
   linearDamping?: number;
@@ -44,6 +49,15 @@ export interface IBallSpec extends IBaseSimObjectSpec {
 export interface IBoxSpec extends IBaseSimObjectSpec {
   type: "box";
   dimensions: Vector3d;
+}
+
+/**
+ * Spec for a Simple Cone
+ */
+export interface IConeSpec extends IBaseSimObjectSpec {
+  type: "cone";
+  radius: number;
+  height: number;
 }
 
 /**

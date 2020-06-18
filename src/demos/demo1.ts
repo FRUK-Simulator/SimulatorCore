@@ -39,6 +39,14 @@ function main() {
   };
   simulator.addBall(ballSpec);
 
+  const coneSpec: CoreSpecs.IConeSpec = {
+    type: "cone",
+    radius: 1,
+    height: 3,
+    initialPosition: { x: 1, y: 0 },
+  };
+  simulator.addCone(coneSpec);
+
   const pyramidSpec: CoreSpecs.IPyramidSpec = {
     type: "pyramid",
     baseDimensions: {
