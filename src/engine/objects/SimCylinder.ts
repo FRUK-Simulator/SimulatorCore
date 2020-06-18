@@ -6,7 +6,7 @@ import { Vector2d } from "../SimTypes";
 import { FixtureDef } from "planck-js";
 import { BodyDef } from "planck-js";
 
-const DEFAULT_CYLINDER_COLOR = 0x0000ff;
+const DEFAULT_CYLINDER_COLOR = 0xffff00;
 
 /**
  * Factory method for creating a SimCylinder
@@ -26,7 +26,7 @@ export class SimCylinder extends SimObject {
     const color = spec.baseColor ? spec.baseColor : DEFAULT_CYLINDER_COLOR;
     const initialPosition: Vector2d = { x: 0, y: 0 };
 
-    const cylinderGeom = new THREE.SphereGeometry(
+    const cylinderGeom = new THREE.CylinderGeometry(
       spec.radius,
       spec.radius,
       spec.height
@@ -40,7 +40,7 @@ export class SimCylinder extends SimObject {
     }
 
     // Set initial starting positions
-    cylinderMesh.position.y = spec.radius; // Ensure the cylinder is sitting on the field
+    cylinderMesh.position.y = spec.height / 2; // Ensure the cylinder is sitting on the field
     cylinderMesh.position.x = initialPosition.x;
     cylinderMesh.position.z = initialPosition.y;
 

@@ -61,6 +61,14 @@ function main() {
   };
   simulator.addPyramid(pyramidSpec);
 
+  const cylinderSpec: CoreSpecs.ICylinderSpec = {
+    type: "cylinder",
+    radius: 1,
+    height: 2,
+    initialPosition: { x: 5, y: 2 },
+  };
+  simulator.addCylinder(cylinderSpec);
+
   const box1Spec: CoreSpecs.IBoxSpec = {
     type: "box",
     dimensions: {
