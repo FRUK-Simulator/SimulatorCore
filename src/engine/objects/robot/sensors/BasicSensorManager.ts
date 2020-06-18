@@ -43,6 +43,9 @@ export class BasicSensorManager {
     });
   }
 
+  /**
+   * List of all currently registered {@link SimBasicSensor}s
+   */
   get sensors(): SimBasicSensor[] {
     const result: SimBasicSensor[] = [];
     this._sensors.forEach((sensor) => {
@@ -52,6 +55,12 @@ export class BasicSensorManager {
     return result;
   }
 
+  /**
+   * Query a digital sensor for its current state.
+   *
+   * @param channel
+   * @returns `true` if the sensor is active, `false` if inactive or unregistered
+   */
   getDigitalInput(channel: number): boolean {
     const ident = `${BasicSensorOutputChannelType.DIGITAL}-${channel}`;
     if (!this._sensors.has(ident)) {

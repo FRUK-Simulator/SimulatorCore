@@ -15,6 +15,23 @@ import { getSensorMountPosition } from "../../../utils/RobotUtils";
 const SENSOR_INACTIVE_COLOR = 0xaaaaaa;
 const SENSOR_ACTIVE_COLOR = 0xff0000;
 
+/**
+ * Simulated Contact/Touch Sensor
+ *
+ * This is a {@link SimBasicSensor} that returns a binary value, representing
+ * whether or not it has been triggered. Contact sensors are usually short range
+ * and can only tell if something is in range or not.
+ *
+ * As part of the {@link IContactSensorSpec | spec}, a `width` and `range` can be
+ * specified. Range represents how far out from its mounting face the sensor can
+ * detect. Width represents how wide the sensing area is. This is used to
+ * simulate a full width bumper backed by contact sensors, where even though
+ * the contact sensor (in real life) is small, the sensing area can be very large.
+ *
+ * If the `render` flag is passed in the spec, a visual representation of the
+ * sensor will be shown on the robot. This visual representation will turn red
+ * when it is active (currently touching something).
+ */
 export class SimContactSensor extends SimBasicSensor {
   constructor(
     spec: IContactSensorSpec,

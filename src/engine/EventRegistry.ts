@@ -25,12 +25,24 @@ function getSensorDescriptors(a: Fixture, b: Fixture): ISimSensorDescriptor[] {
   return result;
 }
 
+/**
+ * Simulator-wide Event Registry
+ *
+ * This class hooks into the currently loaded simulated world and listens
+ * out for collision events. When events of interest are detected, the
+ * registry will notify the appropriately subscribed {@link SimBasicSensor}
+ * instance.
+ */
 export class EventRegistry {
   private _sensors: Map<string, SensorRegisty> = new Map<
     string,
     SensorRegisty
   >();
 
+  /**
+   * Create a new EventRegistry and connect it to the provided world
+   * @param world Currently loaded physics world
+   */
   constructor(world: World) {
     // Hook up the event listeners for the physics engine
     // This is for collisions
@@ -39,14 +51,30 @@ export class EventRegistry {
   }
 
   // World event handlers
+  /**
+   * Event handler when a collision begins to occur (shapes overlapping)
+   * @private
+   * @param contact
+   */
   private onBeginContact(contact: Contact): void {
     this.updateContactSensors(contact, true);
   }
 
+  /**
+   * Event handler when a collisions stops occuring (shapes have stopped overlapping)
+   * @private
+   * @param contact
+   */
   private onEndContact(contact: Contact): void {
     this.updateContactSensors(contact, false);
   }
 
+  /**
+   * Broadcast a collision event to appropriate {@link SimContactSensor} instances
+   * @private
+   * @param contact
+   * @param hasContact
+   */
   private updateContactSensors(contact: Contact, hasContact: boolean): void {
     // Ensure that at least one of the fixtures has a ISimFixtureUserData
     if (
@@ -71,6 +99,12 @@ export class EventRegistry {
     });
   }
 
+  /**
+   * Inform {@link SimContactSensor}s of an update in their state
+   * @private
+   * @param sensor
+   * @param hasContact
+   */
   private broadcastContact(
     sensor: ISimSensorDescriptor,
     hasContact: boolean
@@ -90,6 +124,15 @@ export class EventRegistry {
     });
   }
 
+  /**
+   * Register a sensor callback
+   *
+   * This will end up getting called by a {@link SimRobot} instance as part
+   * of its initialization routines
+   * @param robotGuid
+   * @param sensorIdent
+   * @param callback
+   */
   registerSensor(
     robotGuid: string,
     sensorIdent: string,
