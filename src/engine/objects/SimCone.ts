@@ -26,7 +26,7 @@ export class SimCone extends SimObject {
     const color = spec.baseColor ? spec.baseColor : DEFAULT_CONE_COLOR;
     const initialPosition: Vector2d = { x: 0, y: 0 };
 
-    const coneGeom = new THREE.ConeGeometry(spec.radius, spec.height, 32);
+    const coneGeom = new THREE.ConeGeometry(spec.radius, spec.height);
     const coneMaterial = new THREE.MeshStandardMaterial({ color });
     const coneMesh = new THREE.Mesh(coneGeom, coneMaterial);
 
@@ -36,7 +36,7 @@ export class SimCone extends SimObject {
     }
 
     // Set initial starting positions
-    coneMesh.position.y = spec.radius; // Ensure the cone is sitting on the field
+    coneMesh.position.y = spec.height / 2; // Ensure the cone is sitting on the field
     coneMesh.position.x = initialPosition.x;
     coneMesh.position.z = initialPosition.y;
 

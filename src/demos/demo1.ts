@@ -42,8 +42,8 @@ function main() {
   const coneSpec: CoreSpecs.IConeSpec = {
     type: "cone",
     radius: 1,
-    height: 3,
-    initialPosition: { x: 1, y: 0 },
+    height: 4,
+    initialPosition: { x: -2.5, y: 7 },
   };
   simulator.addCone(coneSpec);
 
