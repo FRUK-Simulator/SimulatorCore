@@ -9,4 +9,8 @@ export class RobotHandle extends ObjectHandle<SimRobot> {
   getDigitalInput(channel: number): boolean {
     return this._rootObject.getDigitalInput(channel);
   }
+
+  getAnalogInput(channel: number): number {
+    return this._rootObject.getAnalogInput(channel);
+  }
 }

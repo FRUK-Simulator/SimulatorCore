@@ -1,12 +1,9 @@
-import { World, Contact, Fixture } from "planck-js";
-import {
-  IBasicSensorValue,
-  ISimUserData,
-  ISimSensorDescriptor,
-} from "./specs/RobotSpecs";
+import { World, Contact, Fixture, Vec2 } from "planck-js";
+import { ISimUserData, ISimSensorDescriptor } from "./specs/RobotSpecs";
+import { SimBasicSensor } from "./objects/robot/sensors/SimBasicSensor";
+import { SimDistanceSensor } from "./objects/robot/sensors/SimDistanceSensor";
 
-type SensorCallback = (val: IBasicSensorValue) => void;
-type SensorRegisty = Map<string, SensorCallback[]>;
+type SensorRegisty = Map<string, SimBasicSensor>;
 
 function getSensorDescriptors(a: Fixture, b: Fixture): ISimSensorDescriptor[] {
   const aUserData: ISimUserData | null = a.getUserData() as ISimUserData;
@@ -25,6 +22,8 @@ function getSensorDescriptors(a: Fixture, b: Fixture): ISimSensorDescriptor[] {
   return result;
 }
 
+const RAYCAST_UPDATE_INTERVAL_MS = 50;
+
 /**
  * Simulator-wide Event Registry
  *
@@ -39,6 +38,10 @@ export class EventRegistry {
     SensorRegisty
   >();
 
+  private _world: World;
+
+  private _timeSinceLastUpdate = 0;
+
   /**
    * Create a new EventRegistry and connect it to the provided world
    * @param world Currently loaded physics world
@@ -48,6 +51,8 @@ export class EventRegistry {
     // This is for collisions
     world.on("begin-contact", this.onBeginContact.bind(this));
     world.on("end-contact", this.onEndContact.bind(this));
+
+    this._world = world;
   }
 
   // World event handlers
@@ -119,9 +124,9 @@ export class EventRegistry {
       return;
     }
 
-    robotSensors.get(sensor.sensorIdent).forEach((cb) => {
-      cb({ value: hasContact ? 1.0 : 0.0 });
-    });
+    robotSensors
+      .get(sensor.sensorIdent)
+      .onSensorEvent({ value: hasContact ? 1.0 : 0.0 });
   }
 
   /**
@@ -133,22 +138,76 @@ export class EventRegistry {
    * @param sensorIdent
    * @param callback
    */
-  registerSensor(
-    robotGuid: string,
-    sensorIdent: string,
-    callback: SensorCallback
-  ): void {
+  registerSensor(robotGuid: string, sensor: SimBasicSensor): void {
     if (!this._sensors.has(robotGuid)) {
-      this._sensors.set(robotGuid, new Map<string, SensorCallback[]>());
+      this._sensors.set(robotGuid, new Map<string, SimBasicSensor>());
     }
 
     const robotSensors: SensorRegisty = this._sensors.get(robotGuid);
 
-    if (!robotSensors.has(sensorIdent)) {
-      robotSensors.set(sensorIdent, []);
+    if (!robotSensors.has(sensor.identifier)) {
+      robotSensors.set(sensor.identifier, sensor);
+    }
+  }
+
+  update(dtS: number): void {
+    dtS *= 1000;
+    this._timeSinceLastUpdate += dtS;
+    if (this._timeSinceLastUpdate < RAYCAST_UPDATE_INTERVAL_MS) {
+      return;
     }
 
-    const callbackList = robotSensors.get(sensorIdent);
-    callbackList.push(callback);
+    this._timeSinceLastUpdate = 0;
+
+    // TODO we might want to throttle this...
+    // Go through every current distance sensor
+    this._sensors.forEach((sensorRegistry, robotGuid) => {
+      sensorRegistry.forEach((sensor) => {
+        // For each sensor...
+        if (sensor.sensorType === "DistanceSensor") {
+          const distSensor = <SimDistanceSensor>sensor;
+          const angle = -distSensor.body.getAngle();
+          const bodyCenter = distSensor.body.getWorldCenter();
+
+          const p1 = new Vec2(
+            bodyCenter.x + Math.sin(angle) * distSensor.minRange,
+            bodyCenter.y + Math.cos(angle) * distSensor.minRange
+          );
+
+          // TODO this should do a sweep
+          const p2 = new Vec2(
+            bodyCenter.x + Math.sin(angle) * distSensor.maxRange,
+            bodyCenter.y + Math.cos(angle) * distSensor.maxRange
+          );
+
+          const detectionRange = distSensor.maxRange - distSensor.minRange;
+
+          this._world.rayCast(
+            p1,
+            p2,
+            (
+              fixture: Fixture,
+              p: Vec2,
+              normal: Vec2,
+              fraction: number
+            ): number => {
+              // Ignore everything that is part of the robot that this sensor is
+              // attached to
+              if (fixture.getUserData()) {
+                const userData = fixture.getUserData() as ISimUserData;
+                if (userData.robotGuid === robotGuid) {
+                  return -1;
+                }
+              }
+
+              sensor.onSensorEvent({
+                value: fraction * detectionRange,
+              });
+              return fraction;
+            }
+          );
+        }
+      });
+    });
   }
 }

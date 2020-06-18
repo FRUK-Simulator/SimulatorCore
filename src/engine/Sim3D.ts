@@ -218,11 +218,13 @@ export class Sim3D {
         return;
       }
 
+      // dt here is in seconds
       const dt = (time - this.lastAnimateTime) / 1000;
       this.lastAnimateTime = time;
 
       window.requestAnimationFrame(r);
       this.updatePhysics(dt);
+      this.eventRegistry.update(dt);
       this.render();
     };
 

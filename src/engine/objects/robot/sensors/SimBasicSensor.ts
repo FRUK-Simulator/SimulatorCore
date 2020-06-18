@@ -100,7 +100,7 @@ export abstract class SimBasicSensor extends SimObject {
    * Callback triggered whenever a sensor event happens
    * @param val
    */
-  protected abstract onSensorEvent(val: IBasicSensorValue): void;
+  abstract onSensorEvent(val: IBasicSensorValue): void;
 
   /**
    * Register this sensor with the simulator wide {@link EventRegistry}
@@ -111,10 +111,6 @@ export abstract class SimBasicSensor extends SimObject {
     robotGuid: string,
     eventRegistry: EventRegistry
   ): void {
-    eventRegistry.registerSensor(
-      robotGuid,
-      this.identifier,
-      this.onSensorEvent.bind(this)
-    );
+    eventRegistry.registerSensor(robotGuid, this);
   }
 }

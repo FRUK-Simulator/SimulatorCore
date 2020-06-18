@@ -92,6 +92,7 @@ export interface IRobotSpec extends IBaseSimObjectSpec {
  */
 export interface ISimUserData {
   sensor?: ISimSensorDescriptor;
+  robotGuid?: string;
 }
 
 // Sensors
@@ -141,5 +142,12 @@ export interface IContactSensorSpec extends IBasicSensorSpec {
   range: number;
 }
 
+export interface IDistanceSensorSpec extends IBasicSensorSpec {
+  type: "distance-sensor";
+  minRange?: number;
+  maxRange: number;
+  detectionAngle?: number;
+}
+
 // Add additional basic sensor types to this union
-export type BasicSensorSpec = IContactSensorSpec;
+export type BasicSensorSpec = IContactSensorSpec | IDistanceSensorSpec;

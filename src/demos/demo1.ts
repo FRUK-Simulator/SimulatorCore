@@ -32,86 +32,100 @@ function main() {
   simulator.onresize();
   simulator.beginRendering();
 
-  const ballSpec: CoreSpecs.IBallSpec = {
-    type: "ball",
-    radius: 1,
-    initialPosition: { x: 5, y: 2 },
-  };
-  simulator.addBall(ballSpec);
+  // const ballSpec: CoreSpecs.IBallSpec = {
+  //   type: "ball",
+  //   radius: 1,
+  //   initialPosition: { x: 5, y: 2 },
+  // };
+  // simulator.addBall(ballSpec);
 
-  const coneSpec: CoreSpecs.IConeSpec = {
-    type: "cone",
-    radius: 1,
-    height: 4,
-    initialPosition: { x: -2.5, y: 7 },
-  };
-  simulator.addCone(coneSpec);
+  // const coneSpec: CoreSpecs.IConeSpec = {
+  //   type: "cone",
+  //   radius: 1,
+  //   height: 4,
+  //   initialPosition: { x: -2.5, y: 7 },
+  // };
+  // simulator.addCone(coneSpec);
 
-  const pyramidSpec: CoreSpecs.IPyramidSpec = {
-    type: "pyramid",
-    baseDimensions: {
-      x: 2,
-      y: 2,
-    },
-    height: 3,
-    initialPosition: {
-      x: -2.5,
-      y: 7,
-    },
-  };
-  simulator.addPyramid(pyramidSpec);
+  // const pyramidSpec: CoreSpecs.IPyramidSpec = {
+  //   type: "pyramid",
+  //   baseDimensions: {
+  //     x: 2,
+  //     y: 2,
+  //   },
+  //   height: 3,
+  //   initialPosition: {
+  //     x: -2.5,
+  //     y: 7,
+  //   },
+  // };
+  // simulator.addPyramid(pyramidSpec);
 
-  const cylinderSpec: CoreSpecs.ICylinderSpec = {
-    type: "cylinder",
-    radius: 1,
-    height: 2,
-    initialPosition: { x: 5, y: 2 },
-  };
-  simulator.addCylinder(cylinderSpec);
+  // const cylinderSpec: CoreSpecs.ICylinderSpec = {
+  //   type: "cylinder",
+  //   radius: 1,
+  //   height: 2,
+  //   initialPosition: { x: 5, y: 2 },
+  // };
+  // simulator.addCylinder(cylinderSpec);
 
-  const box1Spec: CoreSpecs.IBoxSpec = {
-    type: "box",
-    dimensions: {
-      x: 1,
-      y: 1,
-      z: 1,
-    },
-    initialPosition: {
-      x: 0,
-      y: 5,
-    },
-  };
-  const box1 = simulator.addBox(box1Spec);
+  // const box1Spec: CoreSpecs.IBoxSpec = {
+  //   type: "box",
+  //   dimensions: {
+  //     x: 1,
+  //     y: 1,
+  //     z: 1,
+  //   },
+  //   initialPosition: {
+  //     x: 0,
+  //     y: 5,
+  //   },
+  // };
+  // const box1 = simulator.addBox(box1Spec);
 
-  let switchColor = false;
-  setInterval(() => {
-    switchColor = !switchColor;
-    if (switchColor) {
-      box1.setBaseColor(0xff0000);
-    } else {
-      box1.setBaseColor(0xff00ff);
-    }
-  }, 2000);
+  // let switchColor = false;
+  // setInterval(() => {
+  //   switchColor = !switchColor;
+  //   if (switchColor) {
+  //     box1.setBaseColor(0xff0000);
+  //   } else {
+  //     box1.setBaseColor(0xff00ff);
+  //   }
+  // }, 2000);
 
   const robotSpec: RobotSpecs.IRobotSpec = {
     type: "robot",
     dimensions: { x: 2, y: 1, z: 3 },
     basicSensors: [
+      // {
+      //   type: "contact-sensor",
+      //   channel: 0,
+      //   mountFace: RobotSpecs.SensorMountingFace.FRONT,
+      //   render: true,
+      //   width: 1.75,
+      //   range: 0.1,
+      // },
+      // {
+      //   type: "contact-sensor",
+      //   channel: 1,
+      //   mountFace: RobotSpecs.SensorMountingFace.REAR,
+      //   render: true,
+      //   width: 1.75,
+      //   range: 0.1,
+      // },
       {
-        type: "contact-sensor",
+        type: "distance-sensor",
         channel: 0,
         mountFace: RobotSpecs.SensorMountingFace.FRONT,
-        render: true,
-        width: 1.75,
-        range: 0.1,
+        minRange: 0,
+        maxRange: 10,
       },
       {
-        type: "contact-sensor",
+        type: "distance-sensor",
         channel: 1,
         mountFace: RobotSpecs.SensorMountingFace.REAR,
-        render: true,
-        width: 1.75,
-        range: 0.1,
+        minRange: 0,
+        maxRange: 10,
       },
     ],
     drivetrain: {
@@ -178,17 +192,23 @@ function main() {
   const robot = simulator.addRobot(robotSpec);
 
   let isGoingForward = true;
+  // robot.setMotorPower(0, -0.2);
+  // robot.setMotorPower(1, 0.2);
+
+  // setInterval(() => {
+  //   console.log("Distance: ", robot.getAnalogInput(0));
+  // }, 200);
   robot.setMotorPower(0, 0.5);
   robot.setMotorPower(1, 0.5);
 
   setInterval(() => {
-    if (isGoingForward && robot.getDigitalInput(0)) {
+    if (isGoingForward && robot.getAnalogInput(0) < 1.5) {
       isGoingForward = false;
       robot.setMotorPower(0, -0.5);
       robot.setMotorPower(1, -0.5);
     }
 
-    if (!isGoingForward && robot.getDigitalInput(1)) {
+    if (!isGoingForward && robot.getAnalogInput(1) < 1.5) {
       isGoingForward = true;
       robot.setMotorPower(0, 0.5);
       robot.setMotorPower(1, 0.5);

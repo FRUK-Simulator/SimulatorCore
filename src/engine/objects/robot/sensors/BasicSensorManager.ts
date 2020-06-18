@@ -5,6 +5,7 @@ import {
 } from "../../../specs/RobotSpecs";
 import { SimContactSensor } from "./SimContactSensor";
 import { EventRegistry } from "../../../EventRegistry";
+import { SimDistanceSensor } from "./SimDistanceSensor";
 
 /**
  * Class representing a collection of robot sensors
@@ -32,6 +33,8 @@ export class BasicSensorManager {
       // TODO move this to a factory
       if (sensorSpec.type === "contact-sensor") {
         sensor = new SimContactSensor(sensorSpec, robotGuid, robotSpec);
+      } else if (sensorSpec.type === "distance-sensor") {
+        sensor = new SimDistanceSensor(sensorSpec, robotGuid, robotSpec);
       }
 
       if (this._sensors.has(sensor.identifier)) {
@@ -68,6 +71,15 @@ export class BasicSensorManager {
     }
 
     return this._sensors.get(ident).value > 0.0;
+  }
+
+  getAnalogInput(channel: number): number {
+    const ident = `${BasicSensorOutputChannelType.ANALOG}-${channel}`;
+    if (!this._sensors.has(ident)) {
+      return 0.0;
+    }
+
+    return this._sensors.get(ident).value;
   }
 
   registerWithEventSystem(

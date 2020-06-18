@@ -9,7 +9,7 @@ import {
   FixtureDef,
   PrismaticJoint,
 } from "planck-js";
-import { IRobotSpec } from "../../specs/RobotSpecs";
+import { IRobotSpec, ISimUserData } from "../../specs/RobotSpecs";
 import { BasicSensorManager } from "./sensors/BasicSensorManager";
 import { EventRegistry } from "../../EventRegistry";
 
@@ -61,16 +61,21 @@ export class SimRobot extends SimObject {
       angularDamping: 0.3,
     };
 
+    const userData: ISimUserData = {
+      robotGuid: this.guid,
+    };
+
     this._fixtureSpecs = {
       shape: new Box(spec.dimensions.x / 2, spec.dimensions.z / 2),
       density: 1,
       isSensor: false,
       friction: 0.3,
       restitution: 0.4,
+      userData: userData,
     };
 
     // Configure the drivetrain
-    this._drivetrain = new SimRobotDrivetrain(spec);
+    this._drivetrain = new SimRobotDrivetrain(spec, this.guid);
 
     // Add the created wheels as children
     this._drivetrain.wheelObjects.forEach((wheel) => {
@@ -155,6 +160,10 @@ export class SimRobot extends SimObject {
 
   getDigitalInput(channel: number): boolean {
     return this._basicSensors.getDigitalInput(channel);
+  }
+
+  getAnalogInput(channel: number): number {
+    return this._basicSensors.getAnalogInput(channel);
   }
 
   getBodySpecs(): BodyDef {
