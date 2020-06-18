@@ -10,7 +10,8 @@ export type SimObjectSpec =
   | IBoxSpec
   | IWallSpec
   | IPyramidSpec
-  | IConeSpec;
+  | IConeSpec
+  | ICylinderSpec;
 
 export interface IPhysicsProperties {
   linearDamping?: number;
@@ -66,6 +67,15 @@ export interface IConeSpec extends IBaseSimObjectSpec {
 export interface IPyramidSpec extends IBaseSimObjectSpec {
   type: "pyramid";
   baseDimensions: Vector2d;
+  height: number;
+}
+
+/**
+ * Spec for a Simple Cone
+ */
+export interface ICylinderSpec extends IBaseSimObjectSpec {
+  type: "cylinder";
+  radius: number;
   height: number;
 }
 

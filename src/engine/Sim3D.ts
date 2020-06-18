@@ -12,12 +12,14 @@ import {
   IPyramidSpec,
   IWallSpec,
   IConeSpec,
+  ICylinderSpec,
 } from "./specs/CoreSpecs";
 import { ObjectFactories } from "./objects/ObjectFactories";
 import { BallHandle } from "./handles/BallHandle";
 import { BoxHandle } from "./handles/BoxHandle";
 import { PyramidHandle } from "./handles/PyramidHandle";
 import { ConeHandle } from "./handles/ConeHandle";
+import { CylinderHandle } from "./handles/CylinderHandle";
 import { WallHandle } from "./handles/WallHandle";
 import { IRobotSpec } from "./specs/RobotSpecs";
 import { SimRobot } from "./objects/robot/SimRobot";
@@ -293,6 +295,10 @@ export class Sim3D {
 
   addCone(spec: IConeSpec): ConeHandle | undefined {
     return this.addGameObject<ConeHandle>(spec, ConeHandle);
+  }
+
+  addCylinder(spec: ICylinderSpec): CylinderHandle | undefined {
+    return this.addGameObject<CylinderHandle>(spec, CylinderHandle);
   }
 
   /**
