@@ -41,15 +41,16 @@ instance, SimWheel objects.
 
 ###  constructor
 
-\+ **new SimRobotDrivetrain**(`spec`: [IRobotSpec](../interfaces/irobotspec.md)): *[SimRobotDrivetrain](simrobotdrivetrain.md)*
+\+ **new SimRobotDrivetrain**(`spec`: [IRobotSpec](../interfaces/irobotspec.md), `robotGuid`: string): *[SimRobotDrivetrain](simrobotdrivetrain.md)*
 
-*Defined in [engine/objects/robot/SimRobotDrivetrain.ts:86](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/objects/robot/SimRobotDrivetrain.ts#L86)*
+*Defined in [engine/objects/robot/SimRobotDrivetrain.ts:86](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/objects/robot/SimRobotDrivetrain.ts#L86)*
 
 **Parameters:**
 
 Name | Type |
 ------ | ------ |
 `spec` | [IRobotSpec](../interfaces/irobotspec.md) |
+`robotGuid` | string |
 
 **Returns:** *[SimRobotDrivetrain](simrobotdrivetrain.md)*
 
@@ -59,7 +60,7 @@ Name | Type |
 
 • **_motors**: *Map‹number, [SimMotor](simmotor.md)›* = new Map<number, SimMotor>()
 
-*Defined in [engine/objects/robot/SimRobotDrivetrain.ts:78](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/objects/robot/SimRobotDrivetrain.ts#L78)*
+*Defined in [engine/objects/robot/SimRobotDrivetrain.ts:78](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/objects/robot/SimRobotDrivetrain.ts#L78)*
 
 ___
 
@@ -70,7 +71,7 @@ ___
     number[]
   >()
 
-*Defined in [engine/objects/robot/SimRobotDrivetrain.ts:79](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/objects/robot/SimRobotDrivetrain.ts#L79)*
+*Defined in [engine/objects/robot/SimRobotDrivetrain.ts:79](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/objects/robot/SimRobotDrivetrain.ts#L79)*
 
 ___
 
@@ -81,7 +82,7 @@ ___
     SimRobotWheel[]
   >()
 
-*Defined in [engine/objects/robot/SimRobotDrivetrain.ts:74](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/objects/robot/SimRobotDrivetrain.ts#L74)*
+*Defined in [engine/objects/robot/SimRobotDrivetrain.ts:74](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/objects/robot/SimRobotDrivetrain.ts#L74)*
 
 ___
 
@@ -89,7 +90,7 @@ ___
 
 • **_yOffset**: *number* = 0
 
-*Defined in [engine/objects/robot/SimRobotDrivetrain.ts:86](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/objects/robot/SimRobotDrivetrain.ts#L86)*
+*Defined in [engine/objects/robot/SimRobotDrivetrain.ts:86](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/objects/robot/SimRobotDrivetrain.ts#L86)*
 
 ## Accessors
 
@@ -97,7 +98,7 @@ ___
 
 • **get wheelObjects**(): *[SimRobotWheel](simrobotwheel.md)[]*
 
-*Defined in [engine/objects/robot/SimRobotDrivetrain.ts:166](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/objects/robot/SimRobotDrivetrain.ts#L166)*
+*Defined in [engine/objects/robot/SimRobotDrivetrain.ts:167](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/objects/robot/SimRobotDrivetrain.ts#L167)*
 
 **Returns:** *[SimRobotWheel](simrobotwheel.md)[]*
 
@@ -107,7 +108,7 @@ ___
 
 • **get yOffset**(): *number*
 
-*Defined in [engine/objects/robot/SimRobotDrivetrain.ts:177](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/objects/robot/SimRobotDrivetrain.ts#L177)*
+*Defined in [engine/objects/robot/SimRobotDrivetrain.ts:178](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/objects/robot/SimRobotDrivetrain.ts#L178)*
 
 **Returns:** *number*
 
@@ -117,7 +118,7 @@ ___
 
 ▸ **adjustWheelPositions**(): *void*
 
-*Defined in [engine/objects/robot/SimRobotDrivetrain.ts:159](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/objects/robot/SimRobotDrivetrain.ts#L159)*
+*Defined in [engine/objects/robot/SimRobotDrivetrain.ts:160](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/objects/robot/SimRobotDrivetrain.ts#L160)*
 
 **Returns:** *void*
 
@@ -127,7 +128,7 @@ ___
 
 ▸ **configureMotors**(`robotSpec`: [IRobotSpec](../interfaces/irobotspec.md)): *void*
 
-*Defined in [engine/objects/robot/SimRobotDrivetrain.ts:132](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/objects/robot/SimRobotDrivetrain.ts#L132)*
+*Defined in [engine/objects/robot/SimRobotDrivetrain.ts:133](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/objects/robot/SimRobotDrivetrain.ts#L133)*
 
 Sets up the Motors
 
@@ -143,9 +144,9 @@ ___
 
 ### `Private` configureWheels
 
-▸ **configureWheels**(`robotSpec`: [IRobotSpec](../interfaces/irobotspec.md)): *void*
+▸ **configureWheels**(`robotSpec`: [IRobotSpec](../interfaces/irobotspec.md), `robotGuid`: string): *void*
 
-*Defined in [engine/objects/robot/SimRobotDrivetrain.ts:101](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/objects/robot/SimRobotDrivetrain.ts#L101)*
+*Defined in [engine/objects/robot/SimRobotDrivetrain.ts:101](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/objects/robot/SimRobotDrivetrain.ts#L101)*
 
 Sets up the SimWheel objects
 
@@ -154,6 +155,7 @@ Sets up the SimWheel objects
 Name | Type | Description |
 ------ | ------ | ------ |
 `robotSpec` | [IRobotSpec](../interfaces/irobotspec.md) |   |
+`robotGuid` | string | - |
 
 **Returns:** *void*
 
@@ -163,7 +165,7 @@ ___
 
 ▸ **setMotorPower**(`channel`: number, `value`: number): *void*
 
-*Defined in [engine/objects/robot/SimRobotDrivetrain.ts:181](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/objects/robot/SimRobotDrivetrain.ts#L181)*
+*Defined in [engine/objects/robot/SimRobotDrivetrain.ts:182](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/objects/robot/SimRobotDrivetrain.ts#L182)*
 
 **Parameters:**
 
@@ -180,6 +182,6 @@ ___
 
 ▸ **update**(): *void*
 
-*Defined in [engine/objects/robot/SimRobotDrivetrain.ts:191](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/objects/robot/SimRobotDrivetrain.ts#L191)*
+*Defined in [engine/objects/robot/SimRobotDrivetrain.ts:192](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/objects/robot/SimRobotDrivetrain.ts#L192)*
 
 **Returns:** *void*

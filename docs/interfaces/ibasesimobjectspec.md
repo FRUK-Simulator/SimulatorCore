@@ -44,7 +44,7 @@ defined by each subclassing spec
 
 • **baseColor**? : *number*
 
-*Defined in [engine/specs/CoreSpecs.ts:36](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/specs/CoreSpecs.ts#L36)*
+*Defined in [engine/specs/CoreSpecs.ts:36](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/specs/CoreSpecs.ts#L36)*
 
 ___
 
@@ -52,7 +52,7 @@ ___
 
 • **initialPosition**? : *[Vector2d](../globals.md#vector2d)*
 
-*Defined in [engine/specs/CoreSpecs.ts:34](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/specs/CoreSpecs.ts#L34)*
+*Defined in [engine/specs/CoreSpecs.ts:34](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/specs/CoreSpecs.ts#L34)*
 
 ___
 
@@ -60,7 +60,7 @@ ___
 
 • **isStatic**? : *boolean*
 
-*Defined in [engine/specs/CoreSpecs.ts:33](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/specs/CoreSpecs.ts#L33)*
+*Defined in [engine/specs/CoreSpecs.ts:33](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/specs/CoreSpecs.ts#L33)*
 
 ___
 
@@ -68,7 +68,7 @@ ___
 
 • **physicsProperties**? : *[IPhysicsProperties](iphysicsproperties.md)*
 
-*Defined in [engine/specs/CoreSpecs.ts:35](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/specs/CoreSpecs.ts#L35)*
+*Defined in [engine/specs/CoreSpecs.ts:35](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/specs/CoreSpecs.ts#L35)*
 
 ___
 
@@ -76,4 +76,4 @@ ___
 
 • **type**: *string*
 
-*Defined in [engine/specs/CoreSpecs.ts:32](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/specs/CoreSpecs.ts#L32)*
+*Defined in [engine/specs/CoreSpecs.ts:32](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/specs/CoreSpecs.ts#L32)*

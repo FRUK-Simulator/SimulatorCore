@@ -11,6 +11,23 @@ import {
 import { getSensorMountPosition } from "../../../utils/RobotUtils";
 import { Vec2, Box } from "planck-js";
 
+/**
+ * Simulated Distance Sensor
+ *
+ * This is a {@link SimBasicSensor} that returns a numeric value, representing
+ * a voltage percentage to the distance that it has measured. A percentage is
+ * returned so that multiple use cases can be supported (i.e. "robots" running
+ * at different voltages).
+ *
+ * Simply put, the sensor return represents a percentage of V<sub>ref</sub>, the
+ * reference voltage that a robot controller (in real life) uses for analog inputs.
+ *
+ * As part of the {@link IDistanceSensorSpec | spec}, a `maxRange` must be specified.
+ * Optionally, a `minRange` can be provided as well. The ranges represent the valid
+ * distances in which an object can be detected by the sensor. Anything falling under
+ * the minimum range will register as 0%, and anything outside of detection range
+ * will register at 100%.
+ */
 export class SimDistanceSensor extends SimBasicSensor {
   private _minRange = 0;
   private _maxRange = 0;
@@ -81,14 +98,23 @@ export class SimDistanceSensor extends SimBasicSensor {
     };
   }
 
+  /**
+   * Minimum range that this sensor supports (defaults to 0)
+   */
   get minRange(): number {
     return this._minRange;
   }
 
+  /**
+   * Maximum range that this sensor supports
+   */
   get maxRange(): number {
     return this._maxRange;
   }
 
+  /**
+   * Total angle coverage of the detection cone
+   */
   get detectionAngle(): number {
     return this._detectAngle;
   }
@@ -103,6 +129,14 @@ export class SimDistanceSensor extends SimBasicSensor {
   }
 
   onSensorEvent(val: IBasicSensorValue): void {
-    this._value = val;
+    // TODO We can add support for more creative methods of
+    // adjusting values (e.g. some Sharp IR sensors have a
+    // non-linear response curve)
+
+    // For now, return a straight percentage of range
+    const pct = (val.value - this.minRange) / (this.maxRange - this.minRange);
+    this._value = {
+      value: pct,
+    };
   }
 }

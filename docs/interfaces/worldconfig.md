@@ -21,7 +21,7 @@
 
 • **camera**? : *object*
 
-*Defined in [engine/SimulatorConfig.ts:13](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/SimulatorConfig.ts#L13)*
+*Defined in [engine/SimulatorConfig.ts:13](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/SimulatorConfig.ts#L13)*
 
 #### Type declaration:
 
@@ -33,7 +33,7 @@ ___
 
 • **walls**? : *[IWallSpec](iwallspec.md)[]*
 
-*Defined in [engine/SimulatorConfig.ts:11](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/SimulatorConfig.ts#L11)*
+*Defined in [engine/SimulatorConfig.ts:11](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/SimulatorConfig.ts#L11)*
 
 ___
 
@@ -41,7 +41,7 @@ ___
 
 • **xLength**: *number*
 
-*Defined in [engine/SimulatorConfig.ts:9](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/SimulatorConfig.ts#L9)*
+*Defined in [engine/SimulatorConfig.ts:9](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/SimulatorConfig.ts#L9)*
 
 ___
 
@@ -49,4 +49,4 @@ ___
 
 • **zLength**: *number*
 
-*Defined in [engine/SimulatorConfig.ts:10](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/SimulatorConfig.ts#L10)*
+*Defined in [engine/SimulatorConfig.ts:10](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/SimulatorConfig.ts#L10)*

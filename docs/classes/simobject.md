@@ -23,6 +23,8 @@ and take part in physics simulation.
 
   ↳ [SimRobotWheel](simrobotwheel.md)
 
+  ↳ [SimBasicSensor](simbasicsensor.md)
+
   ↳ [SimRobot](simrobot.md)
 
 ## Index
@@ -62,7 +64,7 @@ and take part in physics simulation.
 
 \+ **new SimObject**(`type`: string): *[SimObject](simobject.md)*
 
-*Defined in [engine/objects/SimObject.ts:16](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/objects/SimObject.ts#L16)*
+*Defined in [engine/objects/SimObject.ts:16](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/objects/SimObject.ts#L16)*
 
 **Parameters:**
 
@@ -78,7 +80,7 @@ Name | Type |
 
 • **_body**: *Body*
 
-*Defined in [engine/objects/SimObject.ts:11](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/objects/SimObject.ts#L11)*
+*Defined in [engine/objects/SimObject.ts:11](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/objects/SimObject.ts#L11)*
 
 ___
 
@@ -86,7 +88,7 @@ ___
 
 • **_children**: *[SimObject](simobject.md)[]* = []
 
-*Defined in [engine/objects/SimObject.ts:12](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/objects/SimObject.ts#L12)*
+*Defined in [engine/objects/SimObject.ts:12](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/objects/SimObject.ts#L12)*
 
 ___
 
@@ -94,7 +96,7 @@ ___
 
 • **_guid**: *string*
 
-*Defined in [engine/objects/SimObject.ts:16](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/objects/SimObject.ts#L16)*
+*Defined in [engine/objects/SimObject.ts:16](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/objects/SimObject.ts#L16)*
 
 ___
 
@@ -102,7 +104,7 @@ ___
 
 • **_mesh**: *Mesh*
 
-*Defined in [engine/objects/SimObject.ts:10](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/objects/SimObject.ts#L10)*
+*Defined in [engine/objects/SimObject.ts:10](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/objects/SimObject.ts#L10)*
 
 ___
 
@@ -110,7 +112,7 @@ ___
 
 • **_type**: *string* = "SimObject"
 
-*Defined in [engine/objects/SimObject.ts:14](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/objects/SimObject.ts#L14)*
+*Defined in [engine/objects/SimObject.ts:14](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/objects/SimObject.ts#L14)*
 
 ## Accessors
 
@@ -118,7 +120,7 @@ ___
 
 • **get body**(): *Body*
 
-*Defined in [engine/objects/SimObject.ts:35](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/objects/SimObject.ts#L35)*
+*Defined in [engine/objects/SimObject.ts:35](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/objects/SimObject.ts#L35)*
 
 **Returns:** *Body*
 
@@ -128,7 +130,7 @@ ___
 
 • **get children**(): *[SimObject](simobject.md)[]*
 
-*Defined in [engine/objects/SimObject.ts:39](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/objects/SimObject.ts#L39)*
+*Defined in [engine/objects/SimObject.ts:39](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/objects/SimObject.ts#L39)*
 
 **Returns:** *[SimObject](simobject.md)[]*
 
@@ -138,7 +140,7 @@ ___
 
 • **get guid**(): *string*
 
-*Defined in [engine/objects/SimObject.ts:27](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/objects/SimObject.ts#L27)*
+*Defined in [engine/objects/SimObject.ts:27](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/objects/SimObject.ts#L27)*
 
 **Returns:** *string*
 
@@ -148,7 +150,7 @@ ___
 
 • **get mesh**(): *Mesh*
 
-*Defined in [engine/objects/SimObject.ts:31](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/objects/SimObject.ts#L31)*
+*Defined in [engine/objects/SimObject.ts:31](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/objects/SimObject.ts#L31)*
 
 **Returns:** *Mesh*
 
@@ -158,7 +160,7 @@ ___
 
 • **get type**(): *string*
 
-*Defined in [engine/objects/SimObject.ts:23](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/objects/SimObject.ts#L23)*
+*Defined in [engine/objects/SimObject.ts:23](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/objects/SimObject.ts#L23)*
 
 **Returns:** *string*
 
@@ -168,7 +170,7 @@ ___
 
 ▸ **addChild**(`child`: [SimObject](simobject.md)): *void*
 
-*Defined in [engine/objects/SimObject.ts:43](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/objects/SimObject.ts#L43)*
+*Defined in [engine/objects/SimObject.ts:43](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/objects/SimObject.ts#L43)*
 
 **Parameters:**
 
@@ -184,7 +186,7 @@ ___
 
 ▸ **getBodySpecs**(): *BodyDef*
 
-*Defined in [engine/objects/SimObject.ts:74](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/objects/SimObject.ts#L74)*
+*Defined in [engine/objects/SimObject.ts:74](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/objects/SimObject.ts#L74)*
 
 returns the specification for the world's body
 
@@ -196,7 +198,7 @@ ___
 
 ▸ **getFixtureDef**(): *FixtureDef*
 
-*Defined in [engine/objects/SimObject.ts:75](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/objects/SimObject.ts#L75)*
+*Defined in [engine/objects/SimObject.ts:75](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/objects/SimObject.ts#L75)*
 
 **Returns:** *FixtureDef*
 
@@ -206,7 +208,7 @@ ___
 
 ▸ **removeChild**(`child`: [SimObject](simobject.md) | string): *void*
 
-*Defined in [engine/objects/SimObject.ts:47](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/objects/SimObject.ts#L47)*
+*Defined in [engine/objects/SimObject.ts:47](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/objects/SimObject.ts#L47)*
 
 **Parameters:**
 
@@ -222,7 +224,7 @@ ___
 
 ▸ **setBody**(`body`: Body): *void*
 
-*Defined in [engine/objects/SimObject.ts:61](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/objects/SimObject.ts#L61)*
+*Defined in [engine/objects/SimObject.ts:61](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/objects/SimObject.ts#L61)*
 
 **Parameters:**
 
@@ -238,7 +240,7 @@ ___
 
 ▸ **update**(`ms`: number): *void*
 
-*Defined in [engine/objects/SimObject.ts:69](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/objects/SimObject.ts#L69)*
+*Defined in [engine/objects/SimObject.ts:69](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/objects/SimObject.ts#L69)*
 
 Update the object based on physics calculations
 

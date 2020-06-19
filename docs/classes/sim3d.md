@@ -18,6 +18,7 @@
 * [cameraControls](sim3d.md#private-cameracontrols)
 * [canvas](sim3d.md#private-canvas)
 * [config](sim3d.md#private-config)
+* [eventRegistry](sim3d.md#private-eventregistry)
 * [isRendering](sim3d.md#private-isrendering)
 * [lastAnimateTime](sim3d.md#private-lastanimatetime)
 * [objectFactories](sim3d.md#private-objectfactories)
@@ -52,7 +53,7 @@
 
 \+ **new Sim3D**(`canvas`: HTMLCanvasElement, `config?`: [SimulatorConfig](../interfaces/simulatorconfig.md)): *[Sim3D](sim3d.md)*
 
-*Defined in [engine/Sim3D.ts:66](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/Sim3D.ts#L66)*
+*Defined in [engine/Sim3D.ts:70](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/Sim3D.ts#L70)*
 
 **Parameters:**
 
@@ -69,7 +70,7 @@ Name | Type |
 
 • **camera**: *PerspectiveCamera*
 
-*Defined in [engine/Sim3D.ts:53](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/Sim3D.ts#L53)*
+*Defined in [engine/Sim3D.ts:54](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/Sim3D.ts#L54)*
 
 ___
 
@@ -77,7 +78,7 @@ ___
 
 • **cameraControls**: *OrbitControls*
 
-*Defined in [engine/Sim3D.ts:54](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/Sim3D.ts#L54)*
+*Defined in [engine/Sim3D.ts:55](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/Sim3D.ts#L55)*
 
 ___
 
@@ -85,7 +86,7 @@ ___
 
 • **canvas**: *HTMLCanvasElement*
 
-*Defined in [engine/Sim3D.ts:68](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/Sim3D.ts#L68)*
+*Defined in [engine/Sim3D.ts:72](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/Sim3D.ts#L72)*
 
 ___
 
@@ -93,7 +94,15 @@ ___
 
 • **config**: *[SimulatorConfig](../interfaces/simulatorconfig.md)*
 
-*Defined in [engine/Sim3D.ts:58](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/Sim3D.ts#L58)*
+*Defined in [engine/Sim3D.ts:59](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/Sim3D.ts#L59)*
+
+___
+
+### `Private` eventRegistry
+
+• **eventRegistry**: *[EventRegistry](eventregistry.md)*
+
+*Defined in [engine/Sim3D.ts:70](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/Sim3D.ts#L70)*
 
 ___
 
@@ -101,7 +110,7 @@ ___
 
 • **isRendering**: *boolean* = false
 
-*Defined in [engine/Sim3D.ts:56](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/Sim3D.ts#L56)*
+*Defined in [engine/Sim3D.ts:57](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/Sim3D.ts#L57)*
 
 ___
 
@@ -109,7 +118,7 @@ ___
 
 • **lastAnimateTime**: *number* = 0
 
-*Defined in [engine/Sim3D.ts:66](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/Sim3D.ts#L66)*
+*Defined in [engine/Sim3D.ts:67](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/Sim3D.ts#L67)*
 
 ___
 
@@ -117,7 +126,7 @@ ___
 
 • **objectFactories**: *[ObjectFactories](objectfactories.md)*
 
-*Defined in [engine/Sim3D.ts:61](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/Sim3D.ts#L61)*
+*Defined in [engine/Sim3D.ts:62](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/Sim3D.ts#L62)*
 
 ___
 
@@ -125,7 +134,7 @@ ___
 
 • **renderer**: *Renderer*
 
-*Defined in [engine/Sim3D.ts:51](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/Sim3D.ts#L51)*
+*Defined in [engine/Sim3D.ts:52](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/Sim3D.ts#L52)*
 
 ___
 
@@ -133,7 +142,7 @@ ___
 
 • **scene**: *Scene*
 
-*Defined in [engine/Sim3D.ts:50](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/Sim3D.ts#L50)*
+*Defined in [engine/Sim3D.ts:51](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/Sim3D.ts#L51)*
 
 ___
 
@@ -141,7 +150,7 @@ ___
 
 • **simObjects**: *Map‹string, [ISimObjectContainer](../interfaces/isimobjectcontainer.md)›*
 
-*Defined in [engine/Sim3D.ts:60](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/Sim3D.ts#L60)*
+*Defined in [engine/Sim3D.ts:61](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/Sim3D.ts#L61)*
 
 ___
 
@@ -149,7 +158,7 @@ ___
 
 • **world**: *World*
 
-*Defined in [engine/Sim3D.ts:64](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/Sim3D.ts#L64)*
+*Defined in [engine/Sim3D.ts:65](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/Sim3D.ts#L65)*
 
 ## Methods
 
@@ -157,7 +166,7 @@ ___
 
 ▸ **addBall**(`spec`: [IBallSpec](../interfaces/iballspec.md)): *[BallHandle](ballhandle.md) | undefined*
 
-*Defined in [engine/Sim3D.ts:280](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/Sim3D.ts#L280)*
+*Defined in [engine/Sim3D.ts:289](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/Sim3D.ts#L289)*
 
 **Parameters:**
 
@@ -173,7 +182,7 @@ ___
 
 ▸ **addBox**(`spec`: [IBoxSpec](../interfaces/iboxspec.md)): *[BoxHandle](boxhandle.md) | undefined*
 
-*Defined in [engine/Sim3D.ts:284](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/Sim3D.ts#L284)*
+*Defined in [engine/Sim3D.ts:293](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/Sim3D.ts#L293)*
 
 **Parameters:**
 
@@ -189,7 +198,7 @@ ___
 
 ▸ **addCone**(`spec`: [IConeSpec](../interfaces/iconespec.md)): *[ConeHandle](conehandle.md) | undefined*
 
-*Defined in [engine/Sim3D.ts:296](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/Sim3D.ts#L296)*
+*Defined in [engine/Sim3D.ts:305](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/Sim3D.ts#L305)*
 
 **Parameters:**
 
@@ -205,7 +214,7 @@ ___
 
 ▸ **addCylinder**(`spec`: [ICylinderSpec](../interfaces/icylinderspec.md)): *[CylinderHandle](cylinderhandle.md) | undefined*
 
-*Defined in [engine/Sim3D.ts:300](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/Sim3D.ts#L300)*
+*Defined in [engine/Sim3D.ts:309](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/Sim3D.ts#L309)*
 
 **Parameters:**
 
@@ -221,7 +230,7 @@ ___
 
 ▸ **addGameObject**‹**T1**›(`spec`: [SimObjectSpec](../globals.md#simobjectspec), `typeT`: object): *T1 | undefined*
 
-*Defined in [engine/Sim3D.ts:244](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/Sim3D.ts#L244)*
+*Defined in [engine/Sim3D.ts:253](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/Sim3D.ts#L253)*
 
 **Type parameters:**
 
@@ -245,7 +254,7 @@ ___
 
 ▸ **addPyramid**(`spec`: [IPyramidSpec](../interfaces/ipyramidspec.md)): *[PyramidHandle](pyramidhandle.md) | undefined*
 
-*Defined in [engine/Sim3D.ts:292](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/Sim3D.ts#L292)*
+*Defined in [engine/Sim3D.ts:301](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/Sim3D.ts#L301)*
 
 **Parameters:**
 
@@ -261,7 +270,7 @@ ___
 
 ▸ **addRobot**(`spec`: [IRobotSpec](../interfaces/irobotspec.md)): *[RobotHandle](robothandle.md) | undefined*
 
-*Defined in [engine/Sim3D.ts:314](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/Sim3D.ts#L314)*
+*Defined in [engine/Sim3D.ts:323](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/Sim3D.ts#L323)*
 
 **Parameters:**
 
@@ -277,7 +286,7 @@ ___
 
 ▸ **addToScene**(`simObject`: [SimObject](simobject.md)): *void*
 
-*Defined in [engine/Sim3D.ts:307](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/Sim3D.ts#L307)*
+*Defined in [engine/Sim3D.ts:316](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/Sim3D.ts#L316)*
 
 Add this object (and any children) to the scene
 
@@ -295,7 +304,7 @@ ___
 
 ▸ **addWall**(`spec`: [IWallSpec](../interfaces/iwallspec.md)): *[WallHandle](wallhandle.md) | undefined*
 
-*Defined in [engine/Sim3D.ts:288](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/Sim3D.ts#L288)*
+*Defined in [engine/Sim3D.ts:297](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/Sim3D.ts#L297)*
 
 **Parameters:**
 
@@ -311,7 +320,7 @@ ___
 
 ▸ **beginRendering**(): *void*
 
-*Defined in [engine/Sim3D.ts:208](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/Sim3D.ts#L208)*
+*Defined in [engine/Sim3D.ts:215](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/Sim3D.ts#L215)*
 
 **Returns:** *void*
 
@@ -321,7 +330,7 @@ ___
 
 ▸ **configureWorld**(`worldConfig`: [WorldConfig](../interfaces/worldconfig.md)): *void*
 
-*Defined in [engine/Sim3D.ts:142](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/Sim3D.ts#L142)*
+*Defined in [engine/Sim3D.ts:149](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/Sim3D.ts#L149)*
 
 Configure the world
 
@@ -341,7 +350,7 @@ ___
 
 ▸ **getSimObject**(`ref`: [ISimObjectRef](../interfaces/isimobjectref.md)): *[SimObject](simobject.md) | undefined*
 
-*Defined in [engine/Sim3D.ts:231](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/Sim3D.ts#L231)*
+*Defined in [engine/Sim3D.ts:240](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/Sim3D.ts#L240)*
 
 **Parameters:**
 
@@ -357,7 +366,7 @@ ___
 
 ▸ **onresize**(): *void*
 
-*Defined in [engine/Sim3D.ts:189](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/Sim3D.ts#L189)*
+*Defined in [engine/Sim3D.ts:196](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/Sim3D.ts#L196)*
 
 **Returns:** *void*
 
@@ -367,7 +376,7 @@ ___
 
 ▸ **render**(): *void*
 
-*Defined in [engine/Sim3D.ts:195](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/Sim3D.ts#L195)*
+*Defined in [engine/Sim3D.ts:202](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/Sim3D.ts#L202)*
 
 **Returns:** *void*
 
@@ -377,7 +386,7 @@ ___
 
 ▸ **resetScene**(`config`: [WorldConfig](../interfaces/worldconfig.md)): *void*
 
-*Defined in [engine/Sim3D.ts:105](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/Sim3D.ts#L105)*
+*Defined in [engine/Sim3D.ts:112](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/Sim3D.ts#L112)*
 
 **Parameters:**
 
@@ -393,7 +402,7 @@ ___
 
 ▸ **stopRendering**(): *void*
 
-*Defined in [engine/Sim3D.ts:226](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/Sim3D.ts#L226)*
+*Defined in [engine/Sim3D.ts:235](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/Sim3D.ts#L235)*
 
 **Returns:** *void*
 
@@ -403,7 +412,7 @@ ___
 
 ▸ **updatePhysics**(`time`: number): *void*
 
-*Defined in [engine/Sim3D.ts:200](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/Sim3D.ts#L200)*
+*Defined in [engine/Sim3D.ts:207](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/Sim3D.ts#L207)*
 
 **Parameters:**
 

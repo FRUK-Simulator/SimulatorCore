@@ -48,7 +48,7 @@
 
 *Overrides [SimObject](simobject.md).[constructor](simobject.md#constructor)*
 
-*Defined in [engine/objects/SimWall.ts:28](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/objects/SimWall.ts#L28)*
+*Defined in [engine/objects/SimWall.ts:28](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/objects/SimWall.ts#L28)*
 
 **Parameters:**
 
@@ -66,7 +66,7 @@ Name | Type |
 
 *Inherited from [SimObject](simobject.md).[_body](simobject.md#protected-_body)*
 
-*Defined in [engine/objects/SimObject.ts:11](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/objects/SimObject.ts#L11)*
+*Defined in [engine/objects/SimObject.ts:11](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/objects/SimObject.ts#L11)*
 
 ___
 
@@ -76,7 +76,7 @@ ___
 
 *Inherited from [SimObject](simobject.md).[_children](simobject.md#protected-_children)*
 
-*Defined in [engine/objects/SimObject.ts:12](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/objects/SimObject.ts#L12)*
+*Defined in [engine/objects/SimObject.ts:12](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/objects/SimObject.ts#L12)*
 
 ___
 
@@ -86,7 +86,7 @@ ___
 
 *Inherited from [SimObject](simobject.md).[_mesh](simobject.md#protected-_mesh)*
 
-*Defined in [engine/objects/SimObject.ts:10](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/objects/SimObject.ts#L10)*
+*Defined in [engine/objects/SimObject.ts:10](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/objects/SimObject.ts#L10)*
 
 ___
 
@@ -96,7 +96,7 @@ ___
 
 *Inherited from [SimObject](simobject.md).[_type](simobject.md#protected-_type)*
 
-*Defined in [engine/objects/SimObject.ts:14](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/objects/SimObject.ts#L14)*
+*Defined in [engine/objects/SimObject.ts:14](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/objects/SimObject.ts#L14)*
 
 ___
 
@@ -104,7 +104,7 @@ ___
 
 • **bodySpecs**: *BodyDef*
 
-*Defined in [engine/objects/SimWall.ts:27](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/objects/SimWall.ts#L27)*
+*Defined in [engine/objects/SimWall.ts:27](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/objects/SimWall.ts#L27)*
 
 ___
 
@@ -112,7 +112,7 @@ ___
 
 • **fixtureSpecs**: *FixtureDef*
 
-*Defined in [engine/objects/SimWall.ts:28](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/objects/SimWall.ts#L28)*
+*Defined in [engine/objects/SimWall.ts:28](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/objects/SimWall.ts#L28)*
 
 ## Accessors
 
@@ -122,7 +122,7 @@ ___
 
 *Inherited from [SimObject](simobject.md).[body](simobject.md#body)*
 
-*Defined in [engine/objects/SimObject.ts:35](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/objects/SimObject.ts#L35)*
+*Defined in [engine/objects/SimObject.ts:35](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/objects/SimObject.ts#L35)*
 
 **Returns:** *Body*
 
@@ -134,7 +134,7 @@ ___
 
 *Inherited from [SimObject](simobject.md).[children](simobject.md#children)*
 
-*Defined in [engine/objects/SimObject.ts:39](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/objects/SimObject.ts#L39)*
+*Defined in [engine/objects/SimObject.ts:39](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/objects/SimObject.ts#L39)*
 
 **Returns:** *[SimObject](simobject.md)[]*
 
@@ -146,7 +146,7 @@ ___
 
 *Inherited from [SimObject](simobject.md).[guid](simobject.md#guid)*
 
-*Defined in [engine/objects/SimObject.ts:27](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/objects/SimObject.ts#L27)*
+*Defined in [engine/objects/SimObject.ts:27](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/objects/SimObject.ts#L27)*
 
 **Returns:** *string*
 
@@ -158,7 +158,7 @@ ___
 
 *Inherited from [SimObject](simobject.md).[mesh](simobject.md#mesh)*
 
-*Defined in [engine/objects/SimObject.ts:31](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/objects/SimObject.ts#L31)*
+*Defined in [engine/objects/SimObject.ts:31](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/objects/SimObject.ts#L31)*
 
 **Returns:** *Mesh*
 
@@ -170,7 +170,7 @@ ___
 
 *Inherited from [SimObject](simobject.md).[type](simobject.md#type)*
 
-*Defined in [engine/objects/SimObject.ts:23](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/objects/SimObject.ts#L23)*
+*Defined in [engine/objects/SimObject.ts:23](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/objects/SimObject.ts#L23)*
 
 **Returns:** *string*
 
@@ -182,7 +182,7 @@ ___
 
 *Inherited from [SimObject](simobject.md).[addChild](simobject.md#protected-addchild)*
 
-*Defined in [engine/objects/SimObject.ts:43](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/objects/SimObject.ts#L43)*
+*Defined in [engine/objects/SimObject.ts:43](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/objects/SimObject.ts#L43)*
 
 **Parameters:**
 
@@ -200,7 +200,7 @@ ___
 
 *Overrides [SimObject](simobject.md).[getBodySpecs](simobject.md#abstract-getbodyspecs)*
 
-*Defined in [engine/objects/SimWall.ts:86](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/objects/SimWall.ts#L86)*
+*Defined in [engine/objects/SimWall.ts:86](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/objects/SimWall.ts#L86)*
 
 **Returns:** *BodyDef*
 
@@ -212,7 +212,7 @@ ___
 
 *Overrides [SimObject](simobject.md).[getFixtureDef](simobject.md#abstract-getfixturedef)*
 
-*Defined in [engine/objects/SimWall.ts:90](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/objects/SimWall.ts#L90)*
+*Defined in [engine/objects/SimWall.ts:90](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/objects/SimWall.ts#L90)*
 
 **Returns:** *FixtureDef*
 
@@ -224,7 +224,7 @@ ___
 
 *Inherited from [SimObject](simobject.md).[removeChild](simobject.md#protected-removechild)*
 
-*Defined in [engine/objects/SimObject.ts:47](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/objects/SimObject.ts#L47)*
+*Defined in [engine/objects/SimObject.ts:47](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/objects/SimObject.ts#L47)*
 
 **Parameters:**
 
@@ -242,7 +242,7 @@ ___
 
 *Inherited from [SimObject](simobject.md).[setBody](simobject.md#setbody)*
 
-*Defined in [engine/objects/SimObject.ts:61](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/objects/SimObject.ts#L61)*
+*Defined in [engine/objects/SimObject.ts:61](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/objects/SimObject.ts#L61)*
 
 **Parameters:**
 
@@ -260,7 +260,7 @@ ___
 
 *Overrides [SimObject](simobject.md).[update](simobject.md#abstract-update)*
 
-*Defined in [engine/objects/SimWall.ts:82](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/objects/SimWall.ts#L82)*
+*Defined in [engine/objects/SimWall.ts:82](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/objects/SimWall.ts#L82)*
 
 **Parameters:**
 

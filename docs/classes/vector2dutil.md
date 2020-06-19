@@ -22,7 +22,7 @@
 
 ▸ **add**(`a`: [Vector2d](../globals.md#vector2d), `b`: [Vector2d](../globals.md#vector2d)): *[Vector2d](../globals.md#vector2d)*
 
-*Defined in [engine/utils/VectorUtil.ts:42](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/utils/VectorUtil.ts#L42)*
+*Defined in [engine/utils/VectorUtil.ts:42](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/utils/VectorUtil.ts#L42)*
 
 **Parameters:**
 
@@ -39,7 +39,7 @@ ___
 
 ▸ **cross**(`a`: [Vector2d](../globals.md#vector2d), `b`: [Vector2d](../globals.md#vector2d)): *[Vector3d](../globals.md#vector3d)*
 
-*Defined in [engine/utils/VectorUtil.ts:63](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/utils/VectorUtil.ts#L63)*
+*Defined in [engine/utils/VectorUtil.ts:63](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/utils/VectorUtil.ts#L63)*
 
 **Parameters:**
 
@@ -56,7 +56,7 @@ ___
 
 ▸ **dot**(`a`: [Vector2d](../globals.md#vector2d), `b`: [Vector2d](../globals.md#vector2d)): *number*
 
-*Defined in [engine/utils/VectorUtil.ts:71](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/utils/VectorUtil.ts#L71)*
+*Defined in [engine/utils/VectorUtil.ts:71](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/utils/VectorUtil.ts#L71)*
 
 **Parameters:**
 
@@ -73,7 +73,7 @@ ___
 
 ▸ **multiplyScalar**(`a`: [Vector2d](../globals.md#vector2d), `mag`: number): *[Vector2d](../globals.md#vector2d)*
 
-*Defined in [engine/utils/VectorUtil.ts:56](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/utils/VectorUtil.ts#L56)*
+*Defined in [engine/utils/VectorUtil.ts:56](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/utils/VectorUtil.ts#L56)*
 
 **Parameters:**
 
@@ -90,7 +90,7 @@ ___
 
 ▸ **subtract**(`a`: [Vector2d](../globals.md#vector2d), `b`: [Vector2d](../globals.md#vector2d)): *[Vector2d](../globals.md#vector2d)*
 
-*Defined in [engine/utils/VectorUtil.ts:49](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/utils/VectorUtil.ts#L49)*
+*Defined in [engine/utils/VectorUtil.ts:49](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/utils/VectorUtil.ts#L49)*
 
 **Parameters:**
 

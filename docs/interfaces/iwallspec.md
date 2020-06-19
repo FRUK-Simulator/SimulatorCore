@@ -32,7 +32,7 @@ Spec for a Wall
 
 *Inherited from [IBaseSimObjectSpec](ibasesimobjectspec.md).[baseColor](ibasesimobjectspec.md#optional-basecolor)*
 
-*Defined in [engine/specs/CoreSpecs.ts:36](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/specs/CoreSpecs.ts#L36)*
+*Defined in [engine/specs/CoreSpecs.ts:36](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/specs/CoreSpecs.ts#L36)*
 
 ___
 
@@ -40,7 +40,7 @@ ___
 
 • **end**: *[Vector2d](../globals.md#vector2d)*
 
-*Defined in [engine/specs/CoreSpecs.ts:88](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/specs/CoreSpecs.ts#L88)*
+*Defined in [engine/specs/CoreSpecs.ts:88](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/specs/CoreSpecs.ts#L88)*
 
 ___
 
@@ -48,7 +48,7 @@ ___
 
 • **height**? : *number*
 
-*Defined in [engine/specs/CoreSpecs.ts:90](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/specs/CoreSpecs.ts#L90)*
+*Defined in [engine/specs/CoreSpecs.ts:90](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/specs/CoreSpecs.ts#L90)*
 
 ___
 
@@ -58,7 +58,7 @@ ___
 
 *Inherited from [IBaseSimObjectSpec](ibasesimobjectspec.md).[initialPosition](ibasesimobjectspec.md#optional-initialposition)*
 
-*Defined in [engine/specs/CoreSpecs.ts:34](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/specs/CoreSpecs.ts#L34)*
+*Defined in [engine/specs/CoreSpecs.ts:34](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/specs/CoreSpecs.ts#L34)*
 
 ___
 
@@ -68,7 +68,7 @@ ___
 
 *Inherited from [IBaseSimObjectSpec](ibasesimobjectspec.md).[isStatic](ibasesimobjectspec.md#optional-isstatic)*
 
-*Defined in [engine/specs/CoreSpecs.ts:33](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/specs/CoreSpecs.ts#L33)*
+*Defined in [engine/specs/CoreSpecs.ts:33](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/specs/CoreSpecs.ts#L33)*
 
 ___
 
@@ -78,7 +78,7 @@ ___
 
 *Inherited from [IBaseSimObjectSpec](ibasesimobjectspec.md).[physicsProperties](ibasesimobjectspec.md#optional-physicsproperties)*
 
-*Defined in [engine/specs/CoreSpecs.ts:35](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/specs/CoreSpecs.ts#L35)*
+*Defined in [engine/specs/CoreSpecs.ts:35](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/specs/CoreSpecs.ts#L35)*
 
 ___
 
@@ -86,7 +86,7 @@ ___
 
 • **start**: *[Vector2d](../globals.md#vector2d)*
 
-*Defined in [engine/specs/CoreSpecs.ts:87](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/specs/CoreSpecs.ts#L87)*
+*Defined in [engine/specs/CoreSpecs.ts:87](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/specs/CoreSpecs.ts#L87)*
 
 ___
 
@@ -94,7 +94,7 @@ ___
 
 • **thickness**? : *number*
 
-*Defined in [engine/specs/CoreSpecs.ts:89](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/specs/CoreSpecs.ts#L89)*
+*Defined in [engine/specs/CoreSpecs.ts:89](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/specs/CoreSpecs.ts#L89)*
 
 ___
 
@@ -104,4 +104,4 @@ ___
 
 *Overrides [IBaseSimObjectSpec](ibasesimobjectspec.md).[type](ibasesimobjectspec.md#type)*
 
-*Defined in [engine/specs/CoreSpecs.ts:86](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/specs/CoreSpecs.ts#L86)*
+*Defined in [engine/specs/CoreSpecs.ts:86](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/specs/CoreSpecs.ts#L86)*
