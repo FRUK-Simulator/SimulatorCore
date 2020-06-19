@@ -76,8 +76,10 @@ export class SimRobotWheel extends SimObject {
 
     const bodyCenter = this._body.getWorldCenter();
 
-    // Apply the force, simulating the wheel pushing against ground friction
-    this._body.applyForce(forceVector, bodyCenter);
+    if (forceVector.lengthSquared() > 0.001) {
+      // Apply the force, simulating the wheel pushing against ground friction
+      this._body.applyForce(forceVector, bodyCenter, true);
+    }
 
     // Update the mesh
     this._mesh.position.x = bodyCenter.x;
