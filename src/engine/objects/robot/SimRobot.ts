@@ -9,7 +9,9 @@ import {
   FixtureDef,
   PrismaticJoint,
 } from "planck-js";
-import { IRobotSpec } from "../../specs/RobotSpecs";
+import { IRobotSpec, ISimUserData } from "../../specs/RobotSpecs";
+import { BasicSensorManager } from "./sensors/BasicSensorManager";
+import { EventRegistry } from "../../EventRegistry";
 
 const ROBOT_DEFAULT_COLOR = 0x00ff00;
 
@@ -27,6 +29,7 @@ export class SimRobot extends SimObject {
   private _fixtureSpecs: FixtureDef;
 
   private _drivetrain: SimRobotDrivetrain;
+  private _basicSensors: BasicSensorManager;
 
   constructor(spec: IRobotSpec) {
     super("SimRobot");
@@ -58,20 +61,37 @@ export class SimRobot extends SimObject {
       angularDamping: 0.3,
     };
 
+    const userData: ISimUserData = {
+      robotGuid: this.guid,
+    };
+
     this._fixtureSpecs = {
       shape: new Box(spec.dimensions.x / 2, spec.dimensions.z / 2),
       density: 1,
       isSensor: false,
       friction: 0.3,
       restitution: 0.4,
+      userData: userData,
     };
 
     // Configure the drivetrain
-    this._drivetrain = new SimRobotDrivetrain(spec);
+    this._drivetrain = new SimRobotDrivetrain(spec, this.guid);
 
     // Add the created wheels as children
     this._drivetrain.wheelObjects.forEach((wheel) => {
       this.addChild(wheel);
+    });
+
+    // Configure Basic Sensors
+    this._basicSensors = new BasicSensorManager(spec, this.guid);
+
+    // Add the created sensors as children
+    this._basicSensors.sensors.forEach((sensor) => {
+      this.addChild(sensor);
+
+      if (sensor.mesh) {
+        sensor.mesh.translateY(-this._drivetrain.yOffset);
+      }
     });
 
     // Adjust our base mesh up
@@ -110,11 +130,40 @@ export class SimRobot extends SimObject {
         )
       );
     });
+
+    // Configure the basic sensors
+    this._basicSensors.sensors.forEach((sensor) => {
+      world.createJoint(
+        new PrismaticJoint(
+          {
+            enableLimit: true,
+            lowerTranslation: 0,
+            upperTranslation: 0,
+          },
+          this._body,
+          sensor.body,
+          sensor.body.getWorldCenter(),
+          new Vec2(1, 0)
+        )
+      );
+    });
+  }
+
+  registerWithEventSystem(eventRegistry: EventRegistry): void {
+    this._basicSensors.registerWithEventSystem(this.guid, eventRegistry);
   }
 
   // External facing API
   setMotorPower(channel: number, value: number): void {
     this._drivetrain.setMotorPower(channel, value);
+  }
+
+  getDigitalInput(channel: number): boolean {
+    return this._basicSensors.getDigitalInput(channel);
+  }
+
+  getAnalogInput(channel: number): number {
+    return this._basicSensors.getAnalogInput(channel);
   }
 
   getBodySpecs(): BodyDef {

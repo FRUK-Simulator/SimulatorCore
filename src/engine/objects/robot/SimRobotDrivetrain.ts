@@ -85,11 +85,11 @@ export class SimRobotDrivetrain {
   // does not intersect the ground plane
   private _yOffset = 0;
 
-  constructor(spec: IRobotSpec) {
+  constructor(spec: IRobotSpec, robotGuid: string) {
     // Set the low point to the chassis base to start
     this._yOffset = -spec.dimensions.y / 2;
 
-    this.configureWheels(spec);
+    this.configureWheels(spec, robotGuid);
     this.configureMotors(spec);
     this.adjustWheelPositions();
   }
@@ -98,7 +98,7 @@ export class SimRobotDrivetrain {
    * Sets up the SimWheel objects
    * @param robotSpec
    */
-  private configureWheels(robotSpec: IRobotSpec): void {
+  private configureWheels(robotSpec: IRobotSpec, robotGuid: string): void {
     robotSpec.drivetrain.wheelGroups.forEach((wheelGroup) => {
       if (this._wheelGroups.has(wheelGroup.id)) {
         throw new Error(`Wheel Group "${wheelGroup.id}" already exists`);
@@ -117,6 +117,7 @@ export class SimRobotDrivetrain {
         // Create the wheel
         const simWheel = new SimRobotWheel(
           wheelAndMountSpec.wheel,
+          robotGuid,
           wheelPosition
         );
 
