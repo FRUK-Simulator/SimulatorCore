@@ -204,7 +204,7 @@ export class SimRobotDrivetrain {
         motorChannels.forEach((channel) => {
           wheelGroupPower += this._motors.get(channel).outputForce;
         });
-        wheelGroupPower / -motorChannels.length;
+        wheelGroupPower /= motorChannels.length;
       }
 
       // Divide up the force among the wheels in the group
