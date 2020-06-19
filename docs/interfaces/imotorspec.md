@@ -2,7 +2,7 @@
 
 # Interface: IMotorSpec
 
-This interface describes a single motor
+Interface describing a single motor
 
 ## Hierarchy
 
@@ -21,7 +21,7 @@ This interface describes a single motor
 
 • **channel**: *number*
 
-*Defined in [engine/specs/RobotSpecs.ts:43](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/specs/RobotSpecs.ts#L43)*
+*Defined in [engine/specs/RobotSpecs.ts:50](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/specs/RobotSpecs.ts#L50)*
 
 ___
 
@@ -29,4 +29,4 @@ ___
 
 • **maxForce**: *number*
 
-*Defined in [engine/specs/RobotSpecs.ts:44](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/specs/RobotSpecs.ts#L44)*
+*Defined in [engine/specs/RobotSpecs.ts:51](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/specs/RobotSpecs.ts#L51)*

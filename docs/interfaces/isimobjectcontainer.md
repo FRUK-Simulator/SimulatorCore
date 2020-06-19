@@ -19,7 +19,7 @@
 
 • **object**: *[SimObject](../classes/simobject.md)*
 
-*Defined in [engine/Sim3D.ts:30](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/Sim3D.ts#L30)*
+*Defined in [engine/Sim3D.ts:31](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/Sim3D.ts#L31)*
 
 ___
 
@@ -27,4 +27,4 @@ ___
 
 • **type**: *string*
 
-*Defined in [engine/Sim3D.ts:29](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/Sim3D.ts#L29)*
+*Defined in [engine/Sim3D.ts:30](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/Sim3D.ts#L30)*

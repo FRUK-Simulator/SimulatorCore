@@ -32,7 +32,7 @@ Takes an input signal and generates a force
 
 \+ **new SimMotor**(`spec`: [IMotorSpec](../interfaces/imotorspec.md)): *[SimMotor](simmotor.md)*
 
-*Defined in [engine/objects/robot/SimMotor.ts:11](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/objects/robot/SimMotor.ts#L11)*
+*Defined in [engine/objects/robot/SimMotor.ts:11](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/objects/robot/SimMotor.ts#L11)*
 
 **Parameters:**
 
@@ -48,7 +48,7 @@ Name | Type |
 
 • **_inputSignal**: *number*
 
-*Defined in [engine/objects/robot/SimMotor.ts:11](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/objects/robot/SimMotor.ts#L11)*
+*Defined in [engine/objects/robot/SimMotor.ts:11](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/objects/robot/SimMotor.ts#L11)*
 
 ___
 
@@ -56,7 +56,7 @@ ___
 
 • **_maxForce**: *number*
 
-*Defined in [engine/objects/robot/SimMotor.ts:10](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/objects/robot/SimMotor.ts#L10)*
+*Defined in [engine/objects/robot/SimMotor.ts:10](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/objects/robot/SimMotor.ts#L10)*
 
 ## Accessors
 
@@ -64,7 +64,7 @@ ___
 
 • **get inputSignal**(): *number*
 
-*Defined in [engine/objects/robot/SimMotor.ts:29](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/objects/robot/SimMotor.ts#L29)*
+*Defined in [engine/objects/robot/SimMotor.ts:29](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/objects/robot/SimMotor.ts#L29)*
 
 Get the current input signal
 
@@ -72,7 +72,7 @@ Get the current input signal
 
 • **set inputSignal**(`val`: number): *void*
 
-*Defined in [engine/objects/robot/SimMotor.ts:33](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/objects/robot/SimMotor.ts#L33)*
+*Defined in [engine/objects/robot/SimMotor.ts:33](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/objects/robot/SimMotor.ts#L33)*
 
 Get the current input signal
 
@@ -90,7 +90,7 @@ ___
 
 • **get outputForce**(): *number*
 
-*Defined in [engine/objects/robot/SimMotor.ts:22](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/objects/robot/SimMotor.ts#L22)*
+*Defined in [engine/objects/robot/SimMotor.ts:22](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/objects/robot/SimMotor.ts#L22)*
 
 Get the currently generated force given current input signal
 

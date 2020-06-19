@@ -22,7 +22,7 @@
 
 • **angularDamping**? : *number*
 
-*Defined in [engine/specs/CoreSpecs.ts:18](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/specs/CoreSpecs.ts#L18)*
+*Defined in [engine/specs/CoreSpecs.ts:18](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/specs/CoreSpecs.ts#L18)*
 
 ___
 
@@ -30,7 +30,7 @@ ___
 
 • **density**? : *number*
 
-*Defined in [engine/specs/CoreSpecs.ts:19](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/specs/CoreSpecs.ts#L19)*
+*Defined in [engine/specs/CoreSpecs.ts:19](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/specs/CoreSpecs.ts#L19)*
 
 ___
 
@@ -38,7 +38,7 @@ ___
 
 • **friction**? : *number*
 
-*Defined in [engine/specs/CoreSpecs.ts:20](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/specs/CoreSpecs.ts#L20)*
+*Defined in [engine/specs/CoreSpecs.ts:20](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/specs/CoreSpecs.ts#L20)*
 
 ___
 
@@ -46,7 +46,7 @@ ___
 
 • **linearDamping**? : *number*
 
-*Defined in [engine/specs/CoreSpecs.ts:17](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/specs/CoreSpecs.ts#L17)*
+*Defined in [engine/specs/CoreSpecs.ts:17](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/specs/CoreSpecs.ts#L17)*
 
 ___
 
@@ -54,4 +54,4 @@ ___
 
 • **restitution**? : *number*
 
-*Defined in [engine/specs/CoreSpecs.ts:21](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/specs/CoreSpecs.ts#L21)*
+*Defined in [engine/specs/CoreSpecs.ts:21](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/specs/CoreSpecs.ts#L21)*

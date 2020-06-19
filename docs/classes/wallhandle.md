@@ -27,7 +27,7 @@
 
 *Inherited from [ObjectHandle](objecthandle.md).[constructor](objecthandle.md#constructor)*
 
-*Defined in [engine/handles/ObjectHandle.ts:6](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/handles/ObjectHandle.ts#L6)*
+*Defined in [engine/handles/ObjectHandle.ts:6](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/handles/ObjectHandle.ts#L6)*
 
 **Parameters:**
 
@@ -46,7 +46,7 @@ Name | Type |
 
 *Inherited from [ObjectHandle](objecthandle.md).[_objectRef](objecthandle.md#protected-_objectref)*
 
-*Defined in [engine/handles/ObjectHandle.ts:6](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/handles/ObjectHandle.ts#L6)*
+*Defined in [engine/handles/ObjectHandle.ts:6](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/handles/ObjectHandle.ts#L6)*
 
 ___
 
@@ -56,4 +56,4 @@ ___
 
 *Inherited from [ObjectHandle](objecthandle.md).[_rootObject](objecthandle.md#protected-_rootobject)*
 
-*Defined in [engine/handles/ObjectHandle.ts:5](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/handles/ObjectHandle.ts#L5)*
+*Defined in [engine/handles/ObjectHandle.ts:5](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/handles/ObjectHandle.ts#L5)*

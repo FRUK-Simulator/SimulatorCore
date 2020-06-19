@@ -18,4 +18,4 @@
 
 • **defaultWorld**: *[WorldConfig](worldconfig.md)*
 
-*Defined in [engine/SimulatorConfig.ts:5](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/SimulatorConfig.ts#L5)*
+*Defined in [engine/SimulatorConfig.ts:5](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/SimulatorConfig.ts#L5)*

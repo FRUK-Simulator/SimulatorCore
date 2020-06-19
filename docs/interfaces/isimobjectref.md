@@ -19,7 +19,7 @@
 
 • **guid**: *string*
 
-*Defined in [engine/SimTypes.ts:21](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/SimTypes.ts#L21)*
+*Defined in [engine/SimTypes.ts:21](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/SimTypes.ts#L21)*
 
 ___
 
@@ -27,4 +27,4 @@ ___
 
 • **type**: *string*
 
-*Defined in [engine/SimTypes.ts:22](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/SimTypes.ts#L22)*
+*Defined in [engine/SimTypes.ts:22](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/SimTypes.ts#L22)*

@@ -29,7 +29,7 @@
 
 \+ **new ObjectFactories**(`scene`: Scene, `world`: World): *[ObjectFactories](objectfactories.md)*
 
-*Defined in [engine/objects/ObjectFactories.ts:15](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/objects/ObjectFactories.ts#L15)*
+*Defined in [engine/objects/ObjectFactories.ts:15](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/objects/ObjectFactories.ts#L15)*
 
 **Parameters:**
 
@@ -46,7 +46,7 @@ Name | Type |
 
 • **_factories**: *Map‹string, function›*
 
-*Defined in [engine/objects/ObjectFactories.ts:13](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/objects/ObjectFactories.ts#L13)*
+*Defined in [engine/objects/ObjectFactories.ts:13](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/objects/ObjectFactories.ts#L13)*
 
 ___
 
@@ -54,7 +54,7 @@ ___
 
 • **_scene**: *Scene*
 
-*Defined in [engine/objects/ObjectFactories.ts:14](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/objects/ObjectFactories.ts#L14)*
+*Defined in [engine/objects/ObjectFactories.ts:14](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/objects/ObjectFactories.ts#L14)*
 
 ___
 
@@ -62,7 +62,7 @@ ___
 
 • **_world**: *World*
 
-*Defined in [engine/objects/ObjectFactories.ts:15](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/objects/ObjectFactories.ts#L15)*
+*Defined in [engine/objects/ObjectFactories.ts:15](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/objects/ObjectFactories.ts#L15)*
 
 ## Methods
 
@@ -70,7 +70,7 @@ ___
 
 ▸ **makeObject**(`spec`: [SimObjectSpec](../globals.md#simobjectspec)): *[SimObject](simobject.md) | undefined*
 
-*Defined in [engine/objects/ObjectFactories.ts:40](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/objects/ObjectFactories.ts#L40)*
+*Defined in [engine/objects/ObjectFactories.ts:40](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/objects/ObjectFactories.ts#L40)*
 
 **Parameters:**
 
@@ -86,7 +86,7 @@ ___
 
 ▸ **registerFactory**(`type`: string, `factoryFunc`: function): *void*
 
-*Defined in [engine/objects/ObjectFactories.ts:33](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/objects/ObjectFactories.ts#L33)*
+*Defined in [engine/objects/ObjectFactories.ts:33](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/objects/ObjectFactories.ts#L33)*
 
 **Parameters:**
 

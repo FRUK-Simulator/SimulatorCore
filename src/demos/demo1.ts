@@ -202,13 +202,13 @@ function main() {
   robot.setMotorPower(1, 0.5);
 
   setInterval(() => {
-    if (isGoingForward && robot.getAnalogInput(0) < 1.5) {
+    if (isGoingForward && robot.getAnalogInput(0) < 0.15) {
       isGoingForward = false;
       robot.setMotorPower(0, -0.5);
       robot.setMotorPower(1, -0.5);
     }
 
-    if (!isGoingForward && robot.getAnalogInput(1) < 1.5) {
+    if (!isGoingForward && robot.getAnalogInput(1) < 0.15) {
       isGoingForward = true;
       robot.setMotorPower(0, 0.5);
       robot.setMotorPower(1, 0.5);

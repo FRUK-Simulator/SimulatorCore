@@ -20,7 +20,7 @@
 
 • **mountPoint**: *[WheelMountingPoint](../enums/wheelmountingpoint.md)*
 
-*Defined in [engine/specs/RobotSpecs.ts:24](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/specs/RobotSpecs.ts#L24)*
+*Defined in [engine/specs/RobotSpecs.ts:31](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/specs/RobotSpecs.ts#L31)*
 
 ___
 
@@ -28,7 +28,7 @@ ___
 
 • **offset**? : *[Vector3d](../globals.md#vector3d)*
 
-*Defined in [engine/specs/RobotSpecs.ts:25](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/specs/RobotSpecs.ts#L25)*
+*Defined in [engine/specs/RobotSpecs.ts:32](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/specs/RobotSpecs.ts#L32)*
 
 ___
 
@@ -36,4 +36,4 @@ ___
 
 • **wheel**: *[IRobotWheelSpec](irobotwheelspec.md)*
 
-*Defined in [engine/specs/RobotSpecs.ts:23](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/specs/RobotSpecs.ts#L23)*
+*Defined in [engine/specs/RobotSpecs.ts:30](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/specs/RobotSpecs.ts#L30)*

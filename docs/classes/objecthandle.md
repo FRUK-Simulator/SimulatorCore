@@ -41,7 +41,7 @@
 
 \+ **new ObjectHandle**(`ref`: [ISimObjectRef](../interfaces/isimobjectref.md), `rootObject`: T): *[ObjectHandle](objecthandle.md)*
 
-*Defined in [engine/handles/ObjectHandle.ts:6](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/handles/ObjectHandle.ts#L6)*
+*Defined in [engine/handles/ObjectHandle.ts:6](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/handles/ObjectHandle.ts#L6)*
 
 **Parameters:**
 
@@ -58,7 +58,7 @@ Name | Type |
 
 • **_objectRef**: *[ISimObjectRef](../interfaces/isimobjectref.md)*
 
-*Defined in [engine/handles/ObjectHandle.ts:6](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/handles/ObjectHandle.ts#L6)*
+*Defined in [engine/handles/ObjectHandle.ts:6](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/handles/ObjectHandle.ts#L6)*
 
 ___
 
@@ -66,4 +66,4 @@ ___
 
 • **_rootObject**: *T*
 
-*Defined in [engine/handles/ObjectHandle.ts:5](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/handles/ObjectHandle.ts#L5)*
+*Defined in [engine/handles/ObjectHandle.ts:5](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/handles/ObjectHandle.ts#L5)*

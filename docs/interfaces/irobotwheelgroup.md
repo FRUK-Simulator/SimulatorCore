@@ -2,7 +2,7 @@
 
 # Interface: IRobotWheelGroup
 
-This interface describes a group of wheels that are mechanically linked
+Interface describing a group of wheels that are mechanically linked
 
 In real life, this would mean that the wheels are connected via belt/chain/gears
 and thus move together at the same rate
@@ -24,7 +24,7 @@ and thus move together at the same rate
 
 • **id**: *string*
 
-*Defined in [engine/specs/RobotSpecs.ts:35](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/specs/RobotSpecs.ts#L35)*
+*Defined in [engine/specs/RobotSpecs.ts:42](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/specs/RobotSpecs.ts#L42)*
 
 ___
 
@@ -32,4 +32,4 @@ ___
 
 • **wheels**: *[IRobotWheelAndMount](irobotwheelandmount.md)[]*
 
-*Defined in [engine/specs/RobotSpecs.ts:36](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/specs/RobotSpecs.ts#L36)*
+*Defined in [engine/specs/RobotSpecs.ts:43](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/specs/RobotSpecs.ts#L43)*

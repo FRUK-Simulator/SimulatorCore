@@ -19,7 +19,7 @@
 
 • **LEFT_CENTER**:
 
-*Defined in [engine/specs/RobotSpecs.ts:6](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/specs/RobotSpecs.ts#L6)*
+*Defined in [engine/specs/RobotSpecs.ts:6](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/specs/RobotSpecs.ts#L6)*
 
 ___
 
@@ -27,7 +27,7 @@ ___
 
 • **LEFT_FRONT**:
 
-*Defined in [engine/specs/RobotSpecs.ts:5](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/specs/RobotSpecs.ts#L5)*
+*Defined in [engine/specs/RobotSpecs.ts:5](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/specs/RobotSpecs.ts#L5)*
 
 ___
 
@@ -35,7 +35,7 @@ ___
 
 • **LEFT_REAR**:
 
-*Defined in [engine/specs/RobotSpecs.ts:7](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/specs/RobotSpecs.ts#L7)*
+*Defined in [engine/specs/RobotSpecs.ts:7](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/specs/RobotSpecs.ts#L7)*
 
 ___
 
@@ -43,7 +43,7 @@ ___
 
 • **RIGHT_CENTER**:
 
-*Defined in [engine/specs/RobotSpecs.ts:9](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/specs/RobotSpecs.ts#L9)*
+*Defined in [engine/specs/RobotSpecs.ts:9](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/specs/RobotSpecs.ts#L9)*
 
 ___
 
@@ -51,7 +51,7 @@ ___
 
 • **RIGHT_FRONT**:
 
-*Defined in [engine/specs/RobotSpecs.ts:8](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/specs/RobotSpecs.ts#L8)*
+*Defined in [engine/specs/RobotSpecs.ts:8](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/specs/RobotSpecs.ts#L8)*
 
 ___
 
@@ -59,4 +59,4 @@ ___
 
 • **RIGHT_REAR**:
 
-*Defined in [engine/specs/RobotSpecs.ts:10](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/specs/RobotSpecs.ts#L10)*
+*Defined in [engine/specs/RobotSpecs.ts:10](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/specs/RobotSpecs.ts#L10)*

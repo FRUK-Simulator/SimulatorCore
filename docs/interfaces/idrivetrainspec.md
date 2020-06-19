@@ -2,7 +2,7 @@
 
 # Interface: IDrivetrainSpec
 
-This interface describes a robot drivetrain that consists of wheelgroups and
+Interface describing a robot drivetrain that consists of wheelgroups and
 motorgroups.
 
 ## Hierarchy
@@ -22,7 +22,7 @@ motorgroups.
 
 • **motorGroups**: *[IMotorGroup](imotorgroup.md)[]*
 
-*Defined in [engine/specs/RobotSpecs.ts:66](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/specs/RobotSpecs.ts#L66)*
+*Defined in [engine/specs/RobotSpecs.ts:73](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/specs/RobotSpecs.ts#L73)*
 
 ___
 
@@ -30,4 +30,4 @@ ___
 
 • **wheelGroups**: *[IRobotWheelGroup](irobotwheelgroup.md)[]*
 
-*Defined in [engine/specs/RobotSpecs.ts:65](https://github.com/zhiquanyeo/SimulatorCore/blob/f1bf202/src/engine/specs/RobotSpecs.ts#L65)*
+*Defined in [engine/specs/RobotSpecs.ts:72](https://github.com/FRUK-Simulator/SimulatorCore/blob/cdc4cfb/src/engine/specs/RobotSpecs.ts#L72)*
