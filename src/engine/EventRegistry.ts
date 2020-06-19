@@ -166,7 +166,9 @@ export class EventRegistry {
         // For each sensor...
         if (sensor.sensorType === "DistanceSensor") {
           const distSensor = <SimDistanceSensor>sensor;
-          const angle = -distSensor.body.getAngle();
+
+          // NOTE!!! We subtract Pi here because we are 180 degrees rotated
+          const angle = -distSensor.body.getAngle() - Math.PI;
           const bodyCenter = distSensor.body.getWorldCenter();
 
           const p1 = new Vec2(

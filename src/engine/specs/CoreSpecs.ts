@@ -89,3 +89,11 @@ export interface IWallSpec extends IBaseSimObjectSpec {
   thickness?: number;
   height?: number;
 }
+
+// Custom Meshes
+export interface ICustomMeshSpec {
+  filePath: string;
+  translation?: Vector3d;
+  rotation?: Vector3d;
+  scale?: Vector3d;
+}

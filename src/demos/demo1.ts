@@ -93,10 +93,16 @@ function main() {
   //   }
   // }, 2000);
 
+  simulator.addBox({
+    type: "box",
+    dimensions: { x: 1, y: 1, z: 1 },
+    initialPosition: { x: 3, y: 0 },
+  });
+
   const robotBuilder = new RobotBuilder.Builder();
   const wheel = new RobotBuilder.WheelBuilder(1)
     .setMountPoint(RobotSpecs.WheelMountingPoint.LEFT_FRONT)
-    .setMountOffset({ x: -0.075, y: -0.25, z: 0.5 });
+    .setMountOffset({ x: -0.075, y: -0.25, z: 0.7 });
   const motor = new RobotBuilder.MotorBuilder().setChannel(0).setMaxForce(5);
 
   const distanceSensor = new RobotBuilder.DistanceSensorBuilder(0)
@@ -112,32 +118,47 @@ function main() {
         .setChannel(1)
         .setMountFace(RobotSpecs.SensorMountingFace.REAR)
     )
+    .addBasicSensor(
+      distanceSensor
+        .copy()
+        .setChannel(2)
+        .setMountFace(RobotSpecs.SensorMountingFace.RIGHT)
+    )
     .addWheel("left-drive", wheel)
     .addWheel(
       "left-drive",
       wheel
         .copy()
         .setMountPoint(RobotSpecs.WheelMountingPoint.LEFT_REAR)
-        .setMountOffset({ x: -0.075, y: -0.25, z: -0.5 })
+        .setMountOffset({ x: -0.075, y: -0.25, z: -0.85 })
     )
     .addWheel(
       "right-drive",
       wheel
         .copy()
         .setMountPoint(RobotSpecs.WheelMountingPoint.RIGHT_FRONT)
-        .setMountOffset({ x: 0.075, y: -0.25, z: 0.5 })
+        .setMountOffset({ x: 0.075, y: -0.25, z: 0.7 })
     )
     .addWheel(
       "right-drive",
       wheel
         .copy()
         .setMountPoint(RobotSpecs.WheelMountingPoint.RIGHT_REAR)
-        .setMountOffset({ x: 0.075, y: -0.25, z: -0.5 })
+        .setMountOffset({ x: 0.075, y: -0.25, z: -0.85 })
     )
     .addMotor("left-drive", motor)
     .addMotor("right-drive", motor.copy().setChannel(1));
 
-  const robot = simulator.addRobot(robotBuilder.generateSpec());
+  const spec = robotBuilder.generateSpec();
+  spec.customMesh = {
+    filePath: "assets/models/robot.gltf",
+    rotation: {
+      x: 0,
+      y: Math.PI / 2,
+      z: 0,
+    },
+  };
+  const robot = simulator.addRobot(spec);
 
   let isGoingForward = true;
   robot.setMotorPower(0, 0.5);

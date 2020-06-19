@@ -65,13 +65,13 @@ export class SimDistanceSensor extends SimBasicSensor {
         angle = 0;
         break;
       case SensorMountingFace.REAR:
-        angle = Math.PI;
+        angle = -Math.PI;
         break;
       case SensorMountingFace.LEFT:
-        angle = Math.PI / 2;
+        angle = -Math.PI / 2;
         break;
       case SensorMountingFace.RIGHT:
-        angle = -Math.PI / 2;
+        angle = Math.PI / 2;
         break;
     }
 

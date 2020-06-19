@@ -1,4 +1,4 @@
-import { IBaseSimObjectSpec } from "./CoreSpecs";
+import { IBaseSimObjectSpec, ICustomMeshSpec } from "./CoreSpecs";
 import { Vector3d } from "../SimTypes";
 
 export enum WheelMountingPoint {
@@ -79,6 +79,7 @@ export interface IDrivetrainSpec {
  */
 export interface IRobotSpec extends IBaseSimObjectSpec {
   type: "robot";
+  customMesh?: ICustomMeshSpec;
   dimensions: Vector3d;
   drivetrain: IDrivetrainSpec;
   basicSensors?: BasicSensorSpec[];
