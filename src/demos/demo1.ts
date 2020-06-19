@@ -1,4 +1,4 @@
-import { Sim3D, CoreSpecs, SimulatorConfig, RobotSpecs } from "../index";
+import { Sim3D, SimulatorConfig, RobotSpecs } from "../index";
 
 let simulator: Sim3D;
 
