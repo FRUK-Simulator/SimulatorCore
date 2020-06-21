@@ -1,16 +1,16 @@
-// Main unit: centimeter
+// Main unit: meter
 export enum LengthUnit {
-  MILLIMETER = 0.1,
-  CENTIMETER = 1,
-  INCH = 2.54,
-  FEET = 30.48,
-  METER = 100,
+  MILLIMETER = 0.001,
+  CENTIMETER = 0.01,
+  INCH = 0.0254,
+  FEET = 0.3048,
+  METER = 1,
 }
 
 // Main unit: degree
 export enum AngleUnit {
   DEGREE = 1,
-  RADIAN = 57.3,
+  RADIAN = 180.0 / Math.PI,
 }
 
 type Unit = LengthUnit | AngleUnit;
