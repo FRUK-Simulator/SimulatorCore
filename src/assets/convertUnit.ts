@@ -13,4 +13,15 @@ export enum AngleUnit {
   RADIAN = 57.3,
 }
 
-export default {};
+type Unit = LengthUnit | AngleUnit;
+
+/**
+ * @param {number} value Number that will be converted
+ * @param {Unit} from Type of the given number
+ * @param {Unit} to Type of the returned number
+ * @return {number} Return converted number
+ */
+export default (value: number, from: Unit, to: Unit): number => {
+  const multiplier: number = from / to;
+  return value * multiplier;
+};
