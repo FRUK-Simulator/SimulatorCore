@@ -22,6 +22,7 @@ type Unit = LengthUnit | AngleUnit;
  * @return {number} Return converted number
  */
 export default (value: number, from: Unit, to: Unit): number => {
-  const multiplier: number = from / to;
+  const multiplier: number =
+    Math.round((from / to + Number.EPSILON) * 1000) / 1000;
   return value * multiplier;
 };
