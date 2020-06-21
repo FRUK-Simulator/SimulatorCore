@@ -15,3 +15,6 @@ export { RobotSpecs };
 
 import * as RobotBuilder from "./builder/RobotBuilder";
 export { RobotBuilder };
+
+import Utils from "./utils";
+export { Utils };
