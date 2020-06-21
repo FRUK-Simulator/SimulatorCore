@@ -64,6 +64,7 @@ describe("Convert unit function", () => {
       expect(convertUnit(value, AngleUnit.RADIAN, AngleUnit.DEGREE)).toEqual(
         value * 57.3
       );
+
       done();
     });
   });
