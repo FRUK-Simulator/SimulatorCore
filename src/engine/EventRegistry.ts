@@ -1,7 +1,6 @@
-import { World, Contact, Fixture, Vec2 } from "planck-js";
+import { World, Contact, Fixture } from "planck-js";
 import { ISimUserData, ISimSensorDescriptor } from "./specs/RobotSpecs";
 import { SimBasicSensor } from "./objects/robot/sensors/SimBasicSensor";
-import { SimDistanceSensor } from "./objects/robot/sensors/SimDistanceSensor";
 
 type SensorRegisty = Map<string, SimBasicSensor>;
 
@@ -22,8 +21,6 @@ function getSensorDescriptors(a: Fixture, b: Fixture): ISimSensorDescriptor[] {
   return result;
 }
 
-const RAYCAST_UPDATE_INTERVAL_MS = 50;
-
 /**
  * Simulator-wide Event Registry
  *
@@ -31,6 +28,15 @@ const RAYCAST_UPDATE_INTERVAL_MS = 50;
  * out for collision events. When events of interest are detected, the
  * registry will notify the appropriately subscribed {@link SimBasicSensor}
  * instance.
+ *
+ * We cluster all the Contact sensor events here since collision detection
+ * is a global event, and it seems wasteful for every contact sensor to
+ * maintain its own collision event handler.
+ *
+ * Additionally, this class can be used to listen out for simulator level
+ * "collision" events e.g. object entering/exiting a zone, etc that can
+ * then be broadcast to clients of the simulator, letting them implement
+ * additional game logic.
  */
 export class EventRegistry {
   private _sensors: Map<string, SensorRegisty> = new Map<
@@ -38,9 +44,6 @@ export class EventRegistry {
     SensorRegisty
   >();
 
-  private _world: World;
-
-  private _timeSinceLastUpdate = 0;
   private _onDispose: () => void;
 
   /**
@@ -63,8 +66,6 @@ export class EventRegistry {
       world.off("begin-contact", onBeginContantFunc);
       world.off("end-contact", onEndContantFunc);
     };
-
-    this._world = world;
   }
 
   dispose(): void {
@@ -164,68 +165,5 @@ export class EventRegistry {
     if (!robotSensors.has(sensor.identifier)) {
       robotSensors.set(sensor.identifier, sensor);
     }
-  }
-
-  update(dtS: number): void {
-    dtS *= 1000;
-    this._timeSinceLastUpdate += dtS;
-    if (this._timeSinceLastUpdate < RAYCAST_UPDATE_INTERVAL_MS) {
-      return;
-    }
-
-    this._timeSinceLastUpdate = 0;
-
-    // TODO we might want to throttle this...
-    // Go through every current distance sensor
-    this._sensors.forEach((sensorRegistry, robotGuid) => {
-      sensorRegistry.forEach((sensor) => {
-        // For each sensor...
-        if (sensor.sensorType === "DistanceSensor") {
-          const distSensor = <SimDistanceSensor>sensor;
-
-          // NOTE!!! We subtract Pi here because we are 180 degrees rotated
-          const angle = -distSensor.body.getAngle() - Math.PI;
-          const bodyCenter = distSensor.body.getWorldCenter();
-
-          const p1 = new Vec2(
-            bodyCenter.x + Math.sin(angle) * distSensor.minRange,
-            bodyCenter.y + Math.cos(angle) * distSensor.minRange
-          );
-
-          // TODO this should do a sweep
-          const p2 = new Vec2(
-            bodyCenter.x + Math.sin(angle) * distSensor.maxRange,
-            bodyCenter.y + Math.cos(angle) * distSensor.maxRange
-          );
-
-          const detectionRange = distSensor.maxRange - distSensor.minRange;
-
-          this._world.rayCast(
-            p1,
-            p2,
-            (
-              fixture: Fixture,
-              p: Vec2,
-              normal: Vec2,
-              fraction: number
-            ): number => {
-              // Ignore everything that is part of the robot that this sensor is
-              // attached to
-              if (fixture.getUserData()) {
-                const userData = fixture.getUserData() as ISimUserData;
-                if (userData.robotGuid === robotGuid) {
-                  return -1;
-                }
-              }
-
-              sensor.onSensorEvent({
-                value: fraction * detectionRange,
-              });
-              return fraction;
-            }
-          );
-        }
-      });
-    });
   }
 }

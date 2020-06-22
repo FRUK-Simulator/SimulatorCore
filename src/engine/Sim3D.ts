@@ -138,7 +138,6 @@ export class Sim3D {
 
       window.requestAnimationFrame(r);
       this.updatePhysics(dt);
-      this.eventRegistry.update(dt);
       this.render();
     };
 

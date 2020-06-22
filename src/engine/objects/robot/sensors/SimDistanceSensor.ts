@@ -9,7 +9,7 @@ import {
   SensorMountingFace,
 } from "../../../specs/RobotSpecs";
 import { getSensorMountPosition } from "../../../utils/RobotUtils";
-import { Vec2, Box } from "planck-js";
+import { Vec2, Box, Fixture } from "planck-js";
 
 /**
  * Simulated Distance Sensor
@@ -33,12 +33,19 @@ export class SimDistanceSensor extends SimBasicSensor {
   private _maxRange = 0;
   private _detectAngle = 0;
 
+  private _timeSinceLastUpdateMs = 0;
+
   constructor(
     spec: IDistanceSensorSpec,
     robotGuid: string,
     robotSpec: IRobotSpec
   ) {
-    super("DistanceSensor", BasicSensorOutputChannelType.ANALOG, spec);
+    super(
+      "DistanceSensor",
+      BasicSensorOutputChannelType.ANALOG,
+      robotGuid,
+      spec
+    );
 
     this._minRange = spec.minRange || 0;
     this._maxRange = spec.maxRange;
@@ -119,24 +126,75 @@ export class SimDistanceSensor extends SimBasicSensor {
     return this._detectAngle;
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  update(ms: number): void {
+  /**
+   * Sensor output
+   *
+   * This value represents the percentage of V<sub>ref</sub> corresponding
+   * to the distance detected
+   */
+  get value(): number {
+    const pct =
+      (this.getDistance() - this.minRange) / (this.maxRange - this.minRange);
+    return pct;
+  }
+
+  private getDistance(): number {
+    let result = 0;
+
+    const sensorAngle = -this._body.getAngle();
     const bodyCenter = this._body.getWorldCenter();
+
+    // Set up min/max points
+    const p1 = new Vec2(
+      bodyCenter.x + Math.sin(sensorAngle) * this.minRange,
+      bodyCenter.y + Math.cos(sensorAngle) * this.minRange
+    );
+
+    // TODO Implement cone of detection here
+    const p2 = new Vec2(
+      bodyCenter.x + Math.sin(sensorAngle) * this.maxRange,
+      bodyCenter.y + Math.cos(sensorAngle) * this.maxRange
+    );
+
+    const detectionRange = this.maxRange - this.minRange;
+
+    this._body
+      .getWorld()
+      .rayCast(
+        p1,
+        p2,
+        (fixture: Fixture, p: Vec2, normal: Vec2, fraction: number): number => {
+          // Ignore everything that is part of the robot that this sensor is attached to
+          if (fixture.getUserData()) {
+            const userData = fixture.getUserData() as ISimUserData;
+            if (userData.robotGuid === this._robotGuid) {
+              return -1;
+            }
+          }
+
+          // Set the result to be the current reading
+          result = fraction * detectionRange;
+
+          return fraction;
+        }
+      );
+
+    return result;
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  update(dtS: number): void {
+    const bodyCenter = this._body.getWorldCenter();
+    const sensorAngle = -this._body.getAngle();
     this._mesh.position.x = bodyCenter.x;
     this._mesh.position.z = bodyCenter.y;
 
-    this._mesh.rotation.y = -this._body.getAngle();
+    this._mesh.rotation.y = sensorAngle;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   onSensorEvent(val: IBasicSensorValue): void {
-    // TODO We can add support for more creative methods of
-    // adjusting values (e.g. some Sharp IR sensors have a
-    // non-linear response curve)
-
-    // For now, return a straight percentage of range
-    const pct = (val.value - this.minRange) / (this.maxRange - this.minRange);
-    this._value = {
-      value: pct,
-    };
+    // no-op
+    // We handle all sensor events synchronously within ourselves
   }
 }

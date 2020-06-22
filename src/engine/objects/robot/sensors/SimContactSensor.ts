@@ -38,7 +38,12 @@ export class SimContactSensor extends SimBasicSensor {
     robotGuid: string,
     robotSpec: IRobotSpec
   ) {
-    super("ContactSensor", BasicSensorOutputChannelType.DIGITAL, spec);
+    super(
+      "ContactSensor",
+      BasicSensorOutputChannelType.DIGITAL,
+      robotGuid,
+      spec
+    );
     const render = !!spec.render;
 
     // Get mount positions

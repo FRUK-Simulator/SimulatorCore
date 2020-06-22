@@ -23,9 +23,15 @@ export abstract class SimBasicSensor extends SimObject {
   protected _bodySpecs: BodyDef;
   protected _fixtureSpecs: FixtureDef;
 
+  /**
+   * GUID of the robot that this sensor is attached to
+   */
+  protected _robotGuid: string;
+
   constructor(
     type: string,
     channelType: BasicSensorOutputChannelType,
+    robotGuid: string,
     spec: IBasicSensorSpec
   ) {
     super("BasicSensor-" + type);
@@ -33,6 +39,7 @@ export abstract class SimBasicSensor extends SimObject {
     this._channelType = channelType;
     this._sensorType = type;
     this._value = { value: 0.0 };
+    this._robotGuid = robotGuid;
   }
 
   /**
