@@ -1,4 +1,4 @@
-export type Unit = LengthUnit | AngleUnit;
+export type Unit = LengthUnit | AngleUnit | MassUnit;
 
 /**
  * @unit Meter
@@ -31,12 +31,30 @@ export class AngleUnit {
   ) {}
 }
 
+/**
+ * @unit Kilogram
+ */
+export class MassUnit {
+  public static readonly GRAM = new MassUnit(0.001);
+  public static readonly OUNCE = new MassUnit(0.0283);
+  public static readonly POUND = new MassUnit(0.4536);
+  public static readonly KILOGRAM = new MassUnit(1);
+
+  public static readonly type = "mass";
+  private constructor(
+    public readonly value: number,
+    public readonly type: string = "mass"
+  ) {}
+}
+
 export interface IDefaultUnits {
   length: LengthUnit;
   angle: AngleUnit;
+  mass: MassUnit;
 }
 
 export const DefaultUnits = {
   length: LengthUnit.METER,
   angle: AngleUnit.DEGREE,
+  mass: MassUnit.KILOGRAM,
 };
