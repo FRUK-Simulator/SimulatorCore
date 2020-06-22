@@ -165,7 +165,7 @@ function main() {
   }, 100);
 
   const button = document.createElement("button");
-  button.textContent = "Toggle wirefraeme";
+  button.textContent = "Toggle wireframe";
   button.addEventListener("click", (ev) => {
     simulator.setDebugFlag(!simulator.isDebugMode());
     ev.stopPropagation();

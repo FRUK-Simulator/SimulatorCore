@@ -63,6 +63,7 @@ export class Sim3D {
   private objectFactories: ObjectFactories;
 
   private debugMode = false;
+  private debugMesh: THREE.Mesh;
 
   // Physics!
   private world: World;
@@ -110,6 +111,15 @@ export class Sim3D {
     // Axes
     const axesHelper = new THREE.AxesHelper(1);
     scene.add(axesHelper);
+
+    // Debug Mesh
+    let debugMaterial = new THREE.MeshBasicMaterial();
+    debugMaterial.wireframe = true;
+    debugMaterial.color = new THREE.Color("black");
+
+    this.debugMesh = new THREE.Mesh(new THREE.Geometry(), debugMaterial);
+    scene.add(this.debugMesh);
+    this.debugMesh.visible = this.debugMode;
   }
 
   private resetScene(config: WorldConfig) {
@@ -204,10 +214,10 @@ export class Sim3D {
 
   render(): void {
     this.cameraControls.update();
-    this.renderer.render(this.scene, this.camera);
     if (this.debugMode) {
       this.renderWireframes();
     }
+    this.renderer.render(this.scene, this.camera);
   }
 
   updatePhysics(time: number): void {
@@ -231,6 +241,7 @@ export class Sim3D {
       window.requestAnimationFrame(r);
       this.updatePhysics(dt);
       this.eventRegistry.update(dt);
+
       this.render();
     };
 
@@ -374,14 +385,16 @@ export class Sim3D {
 
   setDebugFlag(debug: boolean): void {
     this.debugMode = debug;
+    this.debugMesh.visible = debug;
   }
 
   renderWireframes(): void {
-    const debugScene = new THREE.Scene();
     const height = 3;
-    const material = new THREE.MeshBasicMaterial();
-    material.wireframe = true;
-    material.color = new THREE.Color("black");
+
+    const geom = (this.debugMesh.geometry = new THREE.Geometry());
+
+    while (geom.vertices.length > 0) geom.vertices.pop();
+    while (geom.faces.length > 0) geom.faces.pop();
 
     for (let body = this.world.getBodyList(); body; body = body.getNext()) {
       for (
@@ -440,9 +453,5 @@ export class Sim3D {
         }
       }
     }
-
-    this.renderer.autoClear = false;
-    this.renderer.render(debugScene, this.camera);
-    this.renderer.autoClear = true;
   }
 }
