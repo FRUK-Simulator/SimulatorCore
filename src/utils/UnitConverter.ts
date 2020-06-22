@@ -51,6 +51,10 @@ class UnknownUnitError extends Error {
   }
 }
 
+//TODO: Split into more files
+//TODO: Move defaults to the config file
+//TODO: Create documentation
+//TODO: Create tests
 export class UnitConverter {
   private readonly _defaultUnits: IDefaultUnits;
 
@@ -71,6 +75,17 @@ export class UnitConverter {
 
     const multiplier: number =
       Math.round((from.value / DefaultUnits[from.type].value) * 1000) / 1000;
+
+    return value * multiplier;
+  }
+
+  public fromSimulatorUnits(value: number, to: Unit): number | never {
+    if (!DefaultUnits[to.type]) {
+      throw new UnknownUnitError();
+    }
+
+    const multiplier: number =
+      Math.round((DefaultUnits[to.type].value / to.value) * 1000) / 1000;
 
     return value * multiplier;
   }
