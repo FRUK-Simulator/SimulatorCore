@@ -1,5 +1,5 @@
 export class IncompatibleUnitsError extends Error {
-  public message: string = "Provided units are incompatible!";
+  public message = "Provided units are incompatible!";
 
   constructor() {
     super();
@@ -7,7 +7,7 @@ export class IncompatibleUnitsError extends Error {
 }
 
 export class UnknownUnitError extends Error {
-  public message: string = "Provided unit type is incorrect!";
+  public message = "Provided unit type is incorrect!";
 
   constructor() {
     super();

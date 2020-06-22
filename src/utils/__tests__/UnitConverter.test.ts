@@ -43,7 +43,7 @@ describe("Unit converter", () => {
       });
     });
 
-    for (let key in units) {
+    for (const key in units) {
       describe(`From ${key}`, () => {
         it("It should return correct converted number", (done) => {
           const number: number = faker.random.number();
@@ -75,7 +75,7 @@ describe("Unit converter", () => {
       });
     });
 
-    for (let key in units) {
+    for (const key in units) {
       describe(`To ${key}`, () => {
         it("It should return correct converted number", (done) => {
           const number: number = faker.random.number();
