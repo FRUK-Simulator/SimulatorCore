@@ -1,7 +1,7 @@
 import { IDefaultUnits, DefaultUnits, Unit } from "./units";
 import { UnknownUnitError, IncompatibleUnitsError } from "./errors";
 
-export class UnitConverter {
+export default class UnitConverter {
   private readonly _defaultUnits: IDefaultUnits;
 
   /**
@@ -22,8 +22,8 @@ export class UnitConverter {
     }
 
     const multiplier: number =
-      Math.round((from.value / this._defaultUnits[from.type].value) * 1000) /
-      1000;
+      Math.round((from.value / this._defaultUnits[from.type].value) * 10000) /
+      10000;
 
     return value * multiplier;
   }
@@ -39,7 +39,8 @@ export class UnitConverter {
     }
 
     const multiplier: number =
-      Math.round((this._defaultUnits[to.type].value / to.value) * 1000) / 1000;
+      Math.round((this._defaultUnits[to.type].value / to.value) * 10000) /
+      10000;
 
     return value * multiplier;
   }
@@ -56,7 +57,7 @@ export class UnitConverter {
     }
 
     const multiplier: number =
-      Math.round((from.value / to.value) * 1000) / 1000;
+      Math.round((from.value / to.value) * 10000) / 10000;
 
     return value * multiplier;
   }

@@ -1,76 +1,93 @@
-// import faker from "faker";
-// import { UnitConverter, LengthUnit } from "../UnitConverter";
-// import convertUnit, { LengthUnit, AngleUnit } from "../convertUnit";
+import faker from "faker";
+import UnitConverter from "../UnitConverter";
+import { LengthUnit } from "../UnitConverter/units";
+import { UnknownUnitError } from "../UnitConverter/errors";
 
-// describe("Convert unit function", () => {
-//   describe("Millimeter to meter", () => {
-//     it("Should return converted number", (done) => {
-//       const unitConverter = new UnitConverter();
+describe("Unit converter", () => {
+  const unitConverter: UnitConverter = new UnitConverter({
+    length: { type: "length", value: 1 },
+    angle: { type: "angle", value: 1 },
+  });
 
-//       unitConverter.toSimulatorUnits(20, LengthUnit.CENTIMETER);
-//       done();
-//       const value: number = faker.random.number();
+  describe("To simulator units method", () => {
+    describe("From unknown unit", () => {
+      it("It should throw an error", (done) => {
+        const number: number = faker.random.number();
 
-//       expect(
-//         convertUnit(value, LengthUnit.MILLIMETER, LengthUnit.METER)
-//       ).toEqual(value * 0.001);
-//       done();
-//     });
-//   });
+        expect(() => {
+          unitConverter.toSimulatorUnits(number, {
+            type: "testType",
+            value: 1,
+          });
+        }).toThrow(UnknownUnitError);
 
-// describe("Feet to centimeter", () => {
-//   it("Should return converted number", (done) => {
-//     const value: number = faker.random.number();
+        done();
+      });
+    });
 
-//     expect(
-//       convertUnit(value, LengthUnit.FEET, LengthUnit.CENTIMETER)
-//     ).toEqual(value * 30.48);
-//     done();
-//   });
-// });
+    describe("From millimeters", () => {
+      it("It should return correct converted number", (done) => {
+        const number: number = faker.random.number();
+        const convertedNumber: number = unitConverter.toSimulatorUnits(
+          number,
+          LengthUnit.MILLIMETER
+        );
 
-// describe("Meter to inch", () => {
-//   it("Should return converted number", (done) => {
-//     const value: number = faker.random.number();
+        expect(convertedNumber).toEqual(number * 0.001);
+        done();
+      });
+    });
 
-//     expect(convertUnit(value, LengthUnit.METER, LengthUnit.INCH)).toEqual(
-//       value * 39.37
-//     );
-//     done();
-//   });
-// });
+    describe("From centimeters", () => {
+      it("It should return correct converted number", (done) => {
+        const number: number = faker.random.number();
+        const convertedNumber: number = unitConverter.toSimulatorUnits(
+          number,
+          LengthUnit.CENTIMETER
+        );
 
-// describe("Inch to feet", () => {
-//   it("Should return converted number", (done) => {
-//     const value: number = faker.random.number();
+        expect(convertedNumber).toEqual(number * 0.01);
+        done();
+      });
+    });
 
-//     expect(convertUnit(value, LengthUnit.INCH, LengthUnit.FEET)).toEqual(
-//       value * 0.083
-//     );
-//     done();
-//   });
-// });
+    describe("From inches", () => {
+      it("It should return correct converted number", (done) => {
+        const number: number = faker.random.number();
+        const convertedNumber: number = unitConverter.toSimulatorUnits(
+          number,
+          LengthUnit.INCH
+        );
 
-// describe("Degree to radian", () => {
-//   it("Should return converted number", (done) => {
-//     const value: number = faker.random.number();
+        expect(convertedNumber).toEqual(number * 0.0254);
+        done();
+      });
+    });
 
-//     expect(convertUnit(value, AngleUnit.DEGREE, AngleUnit.RADIAN)).toEqual(
-//       value * 0.017
-//     );
-//     done();
-//   });
-// });
+    describe("From foot", () => {
+      it("It should return correct converted number", (done) => {
+        const number: number = faker.random.number();
+        const convertedNumber: number = unitConverter.toSimulatorUnits(
+          number,
+          LengthUnit.FEET
+        );
 
-// describe("Radian to degree", () => {
-//   it("Should return converted number", (done) => {
-//     const value: number = faker.random.number();
+        expect(convertedNumber).toEqual(number * 0.3048);
+        done();
+      });
+    });
 
-//     expect(convertUnit(value, AngleUnit.RADIAN, AngleUnit.DEGREE)).toEqual(
-//       value * 57.3
-//     );
+    describe("From meters", () => {
+      it("It should return correct converted number", (done) => {
+        const number: number = faker.random.number();
+        const convertedNumber: number = unitConverter.toSimulatorUnits(
+          number,
+          LengthUnit.METER
+        );
 
-//     done();
-//   });
-// });
-// });
+        expect(convertedNumber).toEqual(number);
+        done();
+      });
+    });
+  });
+});
