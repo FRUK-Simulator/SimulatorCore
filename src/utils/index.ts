@@ -1,5 +1,5 @@
-import convertUnit from "./convertUnit";
+import { UnitConverter } from "./UnitConverter";
 
 export default {
-  convertUnit,
+  UnitConverter,
 };
