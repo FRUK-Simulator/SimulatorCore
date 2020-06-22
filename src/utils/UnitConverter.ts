@@ -89,4 +89,15 @@ export class UnitConverter {
 
     return value * multiplier;
   }
+
+  public convert(value: number, from: Unit, to: Unit): number | never {
+    if (from.type !== to.type) {
+      throw new IncompatibleUnitsError();
+    }
+
+    const multiplier: number =
+      Math.round((from.value / to.value) * 1000) / 1000;
+
+    return value * multiplier;
+  }
 }
