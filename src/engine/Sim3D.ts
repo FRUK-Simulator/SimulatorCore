@@ -378,11 +378,11 @@ export class Sim3D {
     return handle;
   }
 
-  isDebugMode() {
+  isDebugMode(): boolean {
     return this.debugMesh.visible;
   }
 
-  setDebugMode(enabled: boolean) {
+  setDebugMode(enabled: boolean): void {
     this.debugMesh.visible = enabled;
   }
 }
