@@ -361,4 +361,10 @@ export class Sim3D {
     const handle = new RobotHandle(robot, robotRoot);
     return handle;
   }
+
+  isDebugMode() {
+    return false;
+  }
+
+  setDebugMode(enabled: boolean) {}
 }
