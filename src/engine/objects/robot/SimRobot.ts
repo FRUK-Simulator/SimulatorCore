@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader";
 import { SimObject } from "../SimObject";
 import { SimRobotDrivetrain } from "./SimRobotDrivetrain";
 import {
@@ -31,20 +32,69 @@ export class SimRobot extends SimObject {
   private _drivetrain: SimRobotDrivetrain;
   private _basicSensors: BasicSensorManager;
 
+  private _meshLoader: GLTFLoader | undefined;
+  private _usingCustomMesh = false;
+
   constructor(spec: IRobotSpec) {
     super("SimRobot");
 
-    const color =
-      spec.baseColor !== undefined ? spec.baseColor : ROBOT_DEFAULT_COLOR;
-    const bodyGeom = new THREE.BoxGeometry(
-      spec.dimensions.x,
-      spec.dimensions.y,
-      spec.dimensions.z
-    );
-    const bodyMaterial = new THREE.MeshStandardMaterial({ color });
-    const bodyMesh = new THREE.Mesh(bodyGeom, bodyMaterial);
+    if (!spec.customMesh) {
+      const color =
+        spec.baseColor !== undefined ? spec.baseColor : ROBOT_DEFAULT_COLOR;
+      const bodyGeom = new THREE.BoxGeometry(
+        spec.dimensions.x,
+        spec.dimensions.y,
+        spec.dimensions.z
+      );
+      const bodyMaterial = new THREE.MeshStandardMaterial({ color });
+      const bodyMesh = new THREE.Mesh(bodyGeom, bodyMaterial);
 
-    this._mesh = bodyMesh;
+      this._mesh = bodyMesh;
+    } else {
+      this._usingCustomMesh = true;
+      // Set up the base mesh as a parent
+      this._mesh = new THREE.Mesh();
+
+      // TODO Longer term:
+      // We should generalize the mesh loading. Potential ideas include
+      // a SimCustomMeshObject that extends SimObject that knows how to
+      // load meshes, and SimRobot can extend from that.
+      // We might also need to slightly rework how adding a mesh to the
+      // scene works, since with mesh loading, it's async. Additionally
+      // if our physics geometries depend on mesh information, then that
+      // will need to get deferred as well.
+
+      // Set up the loader
+      this._meshLoader = new GLTFLoader();
+      this._meshLoader.load(
+        spec.customMesh.filePath,
+        (gltf) => {
+          const loadedMesh: THREE.Group = gltf.scene;
+
+          // Translate, Scale, rotate
+          if (spec.customMesh.translation) {
+            loadedMesh.position.x = spec.customMesh.translation.x;
+            loadedMesh.position.y = spec.customMesh.translation.y;
+            loadedMesh.position.z = spec.customMesh.translation.z;
+          }
+          if (spec.customMesh.scale) {
+            loadedMesh.scale.x = spec.customMesh.scale.x;
+            loadedMesh.scale.y = spec.customMesh.scale.y;
+            loadedMesh.scale.z = spec.customMesh.scale.z;
+          }
+          if (spec.customMesh.rotation) {
+            loadedMesh.rotation.x = spec.customMesh.rotation.x;
+            loadedMesh.rotation.y = spec.customMesh.rotation.y;
+            loadedMesh.rotation.z = spec.customMesh.rotation.z;
+          }
+          this._mesh.add(gltf.scene);
+        },
+        undefined,
+        (err) => {
+          console.error(err);
+        }
+      );
+    }
 
     const bodyPos: Vec2 = new Vec2(0, 0);
     if (spec.initialPosition) {
@@ -89,13 +139,15 @@ export class SimRobot extends SimObject {
     this._basicSensors.sensors.forEach((sensor) => {
       this.addChild(sensor);
 
-      if (sensor.mesh) {
+      if (!this._usingCustomMesh && sensor.mesh) {
         sensor.mesh.translateY(-this._drivetrain.yOffset);
       }
     });
 
-    // Adjust our base mesh up
-    this._mesh.translateY(-this._drivetrain.yOffset);
+    if (!this._usingCustomMesh) {
+      // Adjust our base mesh up
+      this._mesh.translateY(-this._drivetrain.yOffset);
+    }
   }
 
   update(ms: number): void {

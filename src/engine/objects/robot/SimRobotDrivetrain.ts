@@ -99,6 +99,8 @@ export class SimRobotDrivetrain {
    * @param robotSpec
    */
   private configureWheels(robotSpec: IRobotSpec, robotGuid: string): void {
+    const hasCustomMesh = robotSpec.customMesh !== undefined;
+
     robotSpec.drivetrain.wheelGroups.forEach((wheelGroup) => {
       if (this._wheelGroups.has(wheelGroup.id)) {
         throw new Error(`Wheel Group "${wheelGroup.id}" already exists`);
@@ -118,7 +120,8 @@ export class SimRobotDrivetrain {
         const simWheel = new SimRobotWheel(
           wheelAndMountSpec.wheel,
           robotGuid,
-          wheelPosition
+          wheelPosition,
+          !hasCustomMesh
         );
 
         wheels.push(simWheel);

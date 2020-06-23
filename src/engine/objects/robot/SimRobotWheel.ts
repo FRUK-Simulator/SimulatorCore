@@ -13,33 +13,44 @@ export class SimRobotWheel extends SimObject {
   private _bodySpecs: BodyDef;
   private _fixtureSpecs: FixtureDef;
 
-  constructor(spec: IRobotWheelSpec, robotGuid: string, wheelPos?: Vector3d) {
+  constructor(
+    spec: IRobotWheelSpec,
+    robotGuid: string,
+    wheelPos?: Vector3d,
+    shouldRender?: boolean
+  ) {
     super("SimWheel");
 
-    const color =
-      spec.baseColor !== undefined ? spec.baseColor : DEFAULT_WHEEL_COLOR;
     const thickness =
       spec.thickness !== undefined ? spec.thickness : DEFAULT_WHEEL_THICKNESS;
 
-    const wheelGeom = new THREE.CylinderGeometry(
-      spec.radius,
-      spec.radius,
-      thickness
-    );
-    const wheelMaterial = new THREE.MeshStandardMaterial({ color });
-    const wheelMesh = new THREE.Mesh(wheelGeom, wheelMaterial);
+    if (shouldRender) {
+      const color =
+        spec.baseColor !== undefined ? spec.baseColor : DEFAULT_WHEEL_COLOR;
 
-    this._mesh = wheelMesh;
+      const wheelGeom = new THREE.CylinderGeometry(
+        spec.radius,
+        spec.radius,
+        thickness
+      );
+      const wheelMaterial = new THREE.MeshStandardMaterial({ color });
+      const wheelMesh = new THREE.Mesh(wheelGeom, wheelMaterial);
+
+      this._mesh = wheelMesh;
+    } else {
+      // empty mesh
+      this._mesh = new THREE.Mesh();
+    }
 
     // rotate Pi/2 around the Z axis to get it vertical
-    wheelMesh.rotation.z = Math.PI / 2;
+    this._mesh.rotation.z = Math.PI / 2;
 
     const bodyPos: Vec2 = new Vec2(0, 0);
 
     if (wheelPos !== undefined) {
-      wheelMesh.position.x = wheelPos.x;
-      wheelMesh.position.y = wheelPos.y;
-      wheelMesh.position.z = wheelPos.z;
+      this._mesh.position.x = wheelPos.x;
+      this._mesh.position.y = wheelPos.y;
+      this._mesh.position.z = wheelPos.z;
 
       bodyPos.x = wheelPos.x;
       bodyPos.y = wheelPos.z;
@@ -71,7 +82,7 @@ export class SimRobotWheel extends SimObject {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   update(ms: number): void {
     // Generate a force based on input
-    const forceVector = this._body.getWorldVector(new Vec2(0, 1));
+    const forceVector = this._body.getWorldVector(new Vec2(0, -1));
     forceVector.mul(this._forceMagnitude);
 
     const bodyCenter = this._body.getWorldCenter();

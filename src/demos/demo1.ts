@@ -4,15 +4,15 @@ let simulator: Sim3D;
 
 const simConfig: SimulatorConfig = {
   defaultWorld: {
-    xLength: 10,
-    zLength: 20,
+    xLength: 6,
+    zLength: 6,
     walls: [],
 
     camera: {
       position: {
         x: 0,
-        y: 4,
-        z: 12,
+        y: 2,
+        z: 2,
       },
     },
   },
@@ -93,18 +93,24 @@ function main() {
   //   }
   // }, 2000);
 
+  // simulator.addBox({
+  //   type: "box",
+  //   dimensions: { x: 1, y: 1, z: 1 },
+  //   initialPosition: { x: 3, y: 0 },
+  // });
+
   const robotBuilder = new RobotBuilder.Builder();
-  const wheel = new RobotBuilder.WheelBuilder(1)
+  const wheel = new RobotBuilder.WheelBuilder(0.09)
     .setMountPoint(RobotSpecs.WheelMountingPoint.LEFT_FRONT)
-    .setMountOffset({ x: -0.075, y: -0.25, z: 0.5 });
-  const motor = new RobotBuilder.MotorBuilder().setChannel(0).setMaxForce(5);
+    .setMountOffset({ x: -0.0075, y: -0.25, z: 0.033 });
+  const motor = new RobotBuilder.MotorBuilder().setChannel(0).setMaxForce(0.25);
 
   const distanceSensor = new RobotBuilder.DistanceSensorBuilder(0)
     .setMountFace(RobotSpecs.SensorMountingFace.FRONT)
     .setMaxRange(5);
 
   robotBuilder
-    .setDimensions({ x: 2, y: 1, z: 3 })
+    .setDimensions({ x: 0.225, y: 0.225, z: 0.255 })
     .addBasicSensor(distanceSensor)
     .addBasicSensor(
       distanceSensor
@@ -112,56 +118,75 @@ function main() {
         .setChannel(1)
         .setMountFace(RobotSpecs.SensorMountingFace.REAR)
     )
+    .addBasicSensor(
+      distanceSensor
+        .copy()
+        .setChannel(2)
+        .setMountFace(RobotSpecs.SensorMountingFace.RIGHT)
+    )
     .addWheel("left-drive", wheel)
     .addWheel(
       "left-drive",
       wheel
         .copy()
         .setMountPoint(RobotSpecs.WheelMountingPoint.LEFT_REAR)
-        .setMountOffset({ x: -0.075, y: -0.25, z: -0.5 })
+        .setMountOffset({ x: -0.0075, y: -0.25, z: -0.033 })
     )
     .addWheel(
       "right-drive",
       wheel
         .copy()
         .setMountPoint(RobotSpecs.WheelMountingPoint.RIGHT_FRONT)
-        .setMountOffset({ x: 0.075, y: -0.25, z: 0.5 })
+        .setMountOffset({ x: 0.0075, y: -0.25, z: 0.033 })
     )
     .addWheel(
       "right-drive",
       wheel
         .copy()
         .setMountPoint(RobotSpecs.WheelMountingPoint.RIGHT_REAR)
-        .setMountOffset({ x: 0.075, y: -0.25, z: -0.5 })
+        .setMountOffset({ x: 0.0075, y: -0.25, z: -0.033 })
     )
     .addMotor("left-drive", motor)
     .addMotor("right-drive", motor.copy().setChannel(1));
 
-  const robot = simulator.addRobot(robotBuilder.generateSpec());
+  const spec = robotBuilder.generateSpec();
+  spec.customMesh = {
+    filePath: "assets/models/edubot-lores.gltf",
+    rotation: {
+      x: -Math.PI / 2,
+      y: 0,
+      z: Math.PI / 2,
+    },
+  };
+  const robot = simulator.addRobot(spec);
 
-  let isGoingForward = true;
-  robot.setMotorPower(0, 0.5);
-  robot.setMotorPower(1, 0.5);
+  enum RobotMode {
+    LOOKING,
+    RUN_AWAY,
+  }
+
+  let currMode = RobotMode.LOOKING;
+  let runAwayStartTime = 0;
 
   setInterval(() => {
-    if (
-      isGoingForward &&
-      robot.getAnalogInput(0) > 0 &&
-      robot.getAnalogInput(0) < 0.15
-    ) {
-      isGoingForward = false;
-      robot.setMotorPower(0, -0.5);
-      robot.setMotorPower(1, -0.5);
-    }
+    switch (currMode) {
+      case RobotMode.LOOKING:
+        robot.setMotorPower(0, 0.35);
+        robot.setMotorPower(1, 0.35);
 
-    if (
-      !isGoingForward &&
-      robot.getAnalogInput(1) > 0 &&
-      robot.getAnalogInput(1) < 0.15
-    ) {
-      isGoingForward = true;
-      robot.setMotorPower(0, 0.5);
-      robot.setMotorPower(1, 0.5);
+        if (robot.getAnalogInput(0) > 0 && robot.getAnalogInput(0) < 0.15) {
+          runAwayStartTime = Date.now();
+          currMode = RobotMode.RUN_AWAY;
+        }
+        break;
+      case RobotMode.RUN_AWAY:
+        robot.setMotorPower(0, -0.15);
+        robot.setMotorPower(1, -0.35);
+
+        if (Date.now() - runAwayStartTime > 1000) {
+          currMode = RobotMode.LOOKING;
+        }
+        break;
     }
   }, 100);
 

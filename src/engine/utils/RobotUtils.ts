@@ -24,7 +24,7 @@ export function getSensorMountPosition(
 
   switch (mountFace) {
     case SensorMountingFace.FRONT:
-      result.z += robotSpec.dimensions.z / 2;
+      result.z -= robotSpec.dimensions.z / 2;
       break;
     case SensorMountingFace.LEFT:
       result.x -= robotSpec.dimensions.x / 2;
@@ -33,7 +33,7 @@ export function getSensorMountPosition(
       result.x += robotSpec.dimensions.x / 2;
       break;
     case SensorMountingFace.REAR:
-      result.z -= robotSpec.dimensions.z / 2;
+      result.z += robotSpec.dimensions.z / 2;
       break;
   }
 
