@@ -25,6 +25,7 @@ import { IRobotSpec } from "./specs/RobotSpecs";
 import { SimRobot } from "./objects/robot/SimRobot";
 import { RobotHandle } from "./handles/RobotHandle";
 import { EventRegistry } from "./EventRegistry";
+import { generateDebugGeometry } from "./utils/PhysicsDebug";
 
 interface ISimObjectContainer {
   type: string;
@@ -50,6 +51,8 @@ const DEFAULT_CONFIG: SimulatorConfig = {
 export class Sim3D {
   private scene: THREE.Scene;
   private renderer: THREE.Renderer;
+
+  private debugMesh: THREE.Mesh;
 
   private camera: THREE.PerspectiveCamera;
   private cameraControls: OrbitControls;
@@ -107,6 +110,15 @@ export class Sim3D {
     // Axes
     const axesHelper = new THREE.AxesHelper(1);
     scene.add(axesHelper);
+
+    // Debug
+    const emptyGeometry = new THREE.Geometry();
+    const debugMaterial = new THREE.MeshBasicMaterial();
+    debugMaterial.color = new THREE.Color("black");
+    debugMaterial.wireframe = true;
+    this.debugMesh = new THREE.Mesh(emptyGeometry, debugMaterial);
+    this.debugMesh.visible = false;
+    scene.add(this.debugMesh);
   }
 
   private resetScene(config: WorldConfig) {
@@ -201,6 +213,10 @@ export class Sim3D {
 
   render(): void {
     this.cameraControls.update();
+    if (this.debugMesh.visible) {
+      this.debugMesh.geometry = new THREE.Geometry();
+      generateDebugGeometry(this.debugMesh.geometry, this.world);
+    }
     this.renderer.render(this.scene, this.camera);
   }
 
@@ -363,8 +379,10 @@ export class Sim3D {
   }
 
   isDebugMode() {
-    return false;
+    return this.debugMesh.visible;
   }
 
-  setDebugMode(enabled: boolean) {}
+  setDebugMode(enabled: boolean) {
+    this.debugMesh.visible = enabled;
+  }
 }
