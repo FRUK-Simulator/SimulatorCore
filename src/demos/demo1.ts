@@ -164,4 +164,13 @@ function main() {
       robot.setMotorPower(1, 0.5);
     }
   }, 100);
+
+  const button = document.createElement("button");
+  button.textContent = "Toggle wireframe";
+  button.addEventListener("click", (ev) => {
+    simulator.setDebugMode(!simulator.isDebugMode());
+    ev.stopPropagation();
+    ev.preventDefault();
+  });
+  document.body.appendChild(button);
 }
