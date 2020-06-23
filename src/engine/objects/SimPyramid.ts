@@ -74,7 +74,7 @@ export class SimPyramid extends SimObject {
     };
 
     this.fixtureSpecs = {
-      shape: new Box(spec.baseDimensions.x, spec.baseDimensions.y),
+      shape: new Box(spec.baseDimensions.x / 2, spec.baseDimensions.y / 2),
       density: 1,
       isSensor: false,
       friction: 0.3,
