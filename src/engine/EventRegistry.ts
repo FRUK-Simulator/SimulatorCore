@@ -41,6 +41,7 @@ export class EventRegistry {
   private _world: World;
 
   private _timeSinceLastUpdate = 0;
+  private _onDispose: () => void;
 
   /**
    * Create a new EventRegistry and connect it to the provided world
@@ -49,10 +50,25 @@ export class EventRegistry {
   constructor(world: World) {
     // Hook up the event listeners for the physics engine
     // This is for collisions
-    world.on("begin-contact", this.onBeginContact.bind(this));
-    world.on("end-contact", this.onEndContact.bind(this));
+    const onBeginContantFunc: (
+      contact: Contact
+    ) => void = this.onBeginContact.bind(this);
+    const onEndContantFunc: (contact: Contact) => void = this.onEndContact.bind(
+      this
+    );
+    world.on("begin-contact", onBeginContantFunc);
+    world.on("end-contact", onEndContantFunc);
+
+    this._onDispose = () => {
+      world.off("begin-contact", onBeginContantFunc);
+      world.off("end-contact", onEndContantFunc);
+    };
 
     this._world = world;
+  }
+
+  dispose(): void {
+    this._onDispose();
   }
 
   // World event handlers
