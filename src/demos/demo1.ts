@@ -1,5 +1,7 @@
 import { Sim3D, SimulatorConfig, RobotSpecs, RobotBuilder } from "../index";
+import { GUI } from "dat.gui";
 
+let gui: GUI;
 let simulator: Sim3D;
 
 const simConfig: SimulatorConfig = {
@@ -25,12 +27,24 @@ window.onresize = () => {
   }
 };
 
+const demoOptions = {
+  debugMode: false,
+};
+
 function main() {
   const canvas = <HTMLCanvasElement>document.getElementById("demo1");
 
   simulator = new Sim3D(canvas, simConfig);
   simulator.onresize();
   simulator.beginRendering();
+
+  gui = new GUI();
+  const debugFolder = gui.addFolder("Debug Options");
+  const debugModeController = debugFolder.add(demoOptions, "debugMode");
+
+  debugModeController.onChange((val) => {
+    simulator.setDebugMode(val);
+  });
 
   // const ballSpec: CoreSpecs.IBallSpec = {
   //   type: "ball",
@@ -189,13 +203,4 @@ function main() {
         break;
     }
   }, 100);
-
-  const button = document.createElement("button");
-  button.textContent = "Toggle wireframe";
-  button.addEventListener("click", (ev) => {
-    simulator.setDebugMode(!simulator.isDebugMode());
-    ev.stopPropagation();
-    ev.preventDefault();
-  });
-  document.body.appendChild(button);
 }

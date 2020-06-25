@@ -4,13 +4,16 @@ import * as THREE from "three";
 export function generateDebugGeometry(
   geom: THREE.Geometry,
   world: Planck.World
-) {
+): void {
   for (let body = world.getBodyList(); body; body = body.getNext()) {
     generateDebugGeometryBody(geom, body);
   }
 }
 
-function generateDebugGeometryBody(geom: THREE.Geometry, body: Planck.Body) {
+function generateDebugGeometryBody(
+  geom: THREE.Geometry,
+  body: Planck.Body
+): void {
   for (
     let fixture = body.getFixtureList();
     fixture;
@@ -24,7 +27,7 @@ function generateDebugGeometryFixture(
   geom: THREE.Geometry,
   body: Planck.Body,
   fixture: Planck.Fixture
-) {
+): void {
   switch (fixture.getType()) {
     case "polygon":
       generateDebugGeometryPolygon(
@@ -42,7 +45,7 @@ function generateDebugGeometryPolygon(
   geom: THREE.Geometry,
   body: Planck.Body,
   shape: Planck.PolygonShape
-) {
+): void {
   const offset = geom.vertices.length;
   const translation = body.getPosition();
   const rotation = body.getAngle();
