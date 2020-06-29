@@ -37,7 +37,7 @@ const DEFAULT_CONFIG: SimulatorConfig = {
   defaultWorld: {
     zLength: 10,
     xLength: 10,
-    walls: [],
+    walls: { type: "perimeter" },
 
     camera: {
       position: {
@@ -358,32 +358,44 @@ export class Sim3D {
 
     if (worldConfig.walls) {
       // We want walls
-      if (worldConfig.walls.length === 0) {
-        // // Empty array, generate the default set of walls (perimeter)
+      if (!worldConfig.walls.walls) {
+        // // Empty array, generate the default set of walls (perimeter) with the given height
+        let height = worldConfig.walls.height ? worldConfig.walls.height : 1;
+        let thickness = worldConfig.walls.thickness
+          ? worldConfig.walls.thickness
+          : 0.1;
         this.addWall({
           type: "wall",
           start: { x: -worldConfig.xLength / 2, y: -worldConfig.zLength / 2 },
           end: { x: worldConfig.xLength / 2, y: -worldConfig.zLength / 2 },
           baseColor: 0x00ff00,
+          height: height,
+          thickness: thickness,
         });
         this.addWall({
           type: "wall",
           start: { x: -worldConfig.xLength / 2, y: worldConfig.zLength / 2 },
           end: { x: worldConfig.xLength / 2, y: worldConfig.zLength / 2 },
           baseColor: 0xff0000,
+          height: height,
+          thickness: thickness,
         });
         this.addWall({
           type: "wall",
           start: { x: -worldConfig.xLength / 2, y: -worldConfig.zLength / 2 },
           end: { x: -worldConfig.xLength / 2, y: worldConfig.zLength / 2 },
+          height: height,
+          thickness: thickness,
         });
         this.addWall({
           type: "wall",
           start: { x: worldConfig.xLength / 2, y: -worldConfig.zLength / 2 },
           end: { x: worldConfig.xLength / 2, y: worldConfig.zLength / 2 },
+          height: height,
+          thickness: thickness,
         });
       } else {
-        worldConfig.walls.forEach((wallSpec) => {
+        worldConfig.walls.walls.forEach((wallSpec) => {
           this.addWall(wallSpec);
         });
       }
