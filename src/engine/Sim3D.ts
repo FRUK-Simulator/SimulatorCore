@@ -360,8 +360,8 @@ export class Sim3D {
       // We want walls
       if (!worldConfig.walls.walls) {
         // // Empty array, generate the default set of walls (perimeter) with the given height
-        let height = worldConfig.walls.height ? worldConfig.walls.height : 1;
-        let thickness = worldConfig.walls.thickness
+        const height = worldConfig.walls.height ? worldConfig.walls.height : 1;
+        const thickness = worldConfig.walls.thickness
           ? worldConfig.walls.thickness
           : 0.1;
         this.addWall({
