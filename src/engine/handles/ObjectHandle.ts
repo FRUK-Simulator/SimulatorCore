@@ -30,6 +30,10 @@ export abstract class ObjectHandle<T extends SimObject> {
     return this._isValid;
   }
 
+  get ref(): ISimObjectRef {
+    return this._objectRef;
+  }
+
   private _onInvalidate(): void {
     // This method will get called when the handle is invalidated
     // Basically we just set all our properties to undefined, and this will

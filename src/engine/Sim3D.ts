@@ -28,6 +28,7 @@ import { EventRegistry } from "./EventRegistry";
 import { generateDebugGeometry } from "./utils/PhysicsDebug";
 import { HandleRegistry } from "./HandleRegistry";
 import { DEFAULT_WALL_THICKNESS, DEFAULT_WALL_HEIGHT } from "./objects/SimWall";
+import { ObjectHandle } from "./handles/ObjectHandle";
 
 interface ISimObjectContainer {
   type: string;
@@ -251,11 +252,27 @@ export class Sim3D {
     return handle;
   }
 
-  isDebugMode() {
+  /**
+   * Remove an object from the scene
+   * @param handle Handle to the specified object
+   */
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  removeObject(handle: ObjectHandle<any>): void {
+    const rootObj = this.getSimObject(handle.ref);
+    if (!rootObj) {
+      return;
+    }
+
+    this.removeFromScene(rootObj);
+
+    this.handleRegistry.invalidateHandle(handle.ref.guid);
+  }
+
+  isDebugMode(): boolean {
     return this.debugMesh.visible;
   }
 
-  setDebugMode(enabled: boolean) {
+  setDebugMode(enabled: boolean): void {
     this.debugMesh.visible = enabled;
   }
 
@@ -506,11 +523,26 @@ export class Sim3D {
 
   /**
    * Add this object (and any children) to the scene
+   * @private
+   * @param simObject
    */
   private addToScene(simObject: SimObject): void {
     this.scene.add(simObject.mesh);
     simObject.children.forEach((simObj) => {
       this.addToScene(simObj);
+    });
+  }
+
+  /**
+   * Remove a SimObject (and all children) from the scene and world
+   * @private
+   * @param simObject
+   */
+  private removeFromScene(simObject: SimObject): void {
+    this.scene.remove(simObject.mesh);
+    this.world.destroyBody(simObject.body);
+    simObject.children.forEach((simObj) => {
+      this.removeFromScene(simObj);
     });
   }
 }
