@@ -7,8 +7,12 @@ import { Vector3d } from "../../SimTypes";
 const DEFAULT_WHEEL_COLOR = 0x000000;
 const DEFAULT_WHEEL_THICKNESS = 0.15;
 
+const DEFAULT_OMNI_SIDESLIP_PCT = 0.1;
+const DEFAULT_NON_OMNI_SIDESLIP_PCT = 0.5;
+
 export class SimRobotWheel extends SimObject {
   protected _forceMagnitude = 0;
+  protected _sideSlipPercent = 0;
 
   private _bodySpecs: BodyDef;
   private _fixtureSpecs: FixtureDef;
@@ -20,6 +24,10 @@ export class SimRobotWheel extends SimObject {
     shouldRender?: boolean
   ) {
     super("SimWheel");
+
+    this._sideSlipPercent = spec.isOmni
+      ? DEFAULT_OMNI_SIDESLIP_PCT
+      : DEFAULT_NON_OMNI_SIDESLIP_PCT;
 
     const thickness =
       spec.thickness !== undefined ? spec.thickness : DEFAULT_WHEEL_THICKNESS;
@@ -73,24 +81,16 @@ export class SimRobotWheel extends SimObject {
       shape: new Box(thickness / 2, spec.radius),
       density: 1,
       isSensor: false,
-      friction: 0.3,
-      restitution: 0.4,
       userData: userData,
     };
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   update(ms: number): void {
-    // Generate a force based on input
-    const forceVector = this._body.getWorldVector(new Vec2(0, -1));
-    forceVector.mul(this._forceMagnitude);
-
     const bodyCenter = this._body.getWorldCenter();
 
-    if (forceVector.lengthSquared() > 0.001) {
-      // Apply the force, simulating the wheel pushing against ground friction
-      this._body.applyForce(forceVector, bodyCenter, true);
-    }
+    this.updateFriction();
+    this.updateDrive();
 
     // Update the mesh
     this._mesh.position.x = bodyCenter.x;
@@ -109,5 +109,52 @@ export class SimRobotWheel extends SimObject {
 
   getFixtureDef(): FixtureDef {
     return this._fixtureSpecs;
+  }
+
+  private getForwardVelocity(): Vec2 {
+    const currForwardNormal = this._body.getWorldVector(new Vec2(0, 1));
+    return currForwardNormal.mul(
+      Vec2.dot(currForwardNormal, this._body.getLinearVelocity())
+    );
+  }
+
+  private getLateralVelocity(): Vec2 {
+    const currRightNormal = this._body.getWorldVector(new Vec2(1, 0));
+    return currRightNormal.mul(
+      Vec2.dot(currRightNormal, this._body.getLinearVelocity())
+    );
+  }
+
+  private updateFriction(): void {
+    // Lateral
+    // TODO the max lateral impulse should be proportional to mass
+    const maxLateralImpulse = 2.0;
+    let impulse = this.getLateralVelocity().mul(
+      -this._body.getMass() * this._sideSlipPercent
+    );
+
+    if (impulse.length() > maxLateralImpulse) {
+      impulse = impulse.mul(maxLateralImpulse / impulse.length());
+    }
+    this._body.applyLinearImpulse(impulse, this._body.getWorldCenter());
+
+    // Angular
+    this._body.applyAngularImpulse(
+      0.1 * this._body.getInertia() * -this._body.getAngularVelocity()
+    );
+
+    // Forward linear velocity
+    // TODO Implement Brake/Coast logic here
+  }
+
+  private updateDrive(): void {
+    const forceVector = this._body.getWorldVector(new Vec2(0, -1));
+    forceVector.mul(this._forceMagnitude);
+
+    // TODO take into account static friction?
+    if (forceVector.lengthSquared() > 0.0005) {
+      // Apply the force, simulating the wheel pushing against ground friction
+      this._body.applyForce(forceVector, this._body.getWorldCenter(), true);
+    }
   }
 }
