@@ -13,6 +13,9 @@ export { CoreSpecs };
 import * as RobotSpecs from "./engine/specs/RobotSpecs";
 export { RobotSpecs };
 
+import * as CameraSpecs from "./engine/specs/CameraSpecs";
+export { CameraSpecs };
+
 import * as RobotBuilder from "./builder/RobotBuilder";
 export { RobotBuilder };
 
