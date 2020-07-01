@@ -11,8 +11,7 @@ export type SimObjectSpec =
   | IWallSpec
   | IPyramidSpec
   | IConeSpec
-  | ICylinderSpec
-  | IPerimeterSpec;
+  | ICylinderSpec;
 
 export interface IPhysicsProperties {
   linearDamping?: number;
@@ -95,7 +94,6 @@ export interface IWallSpec extends IBaseSimObjectSpec {
  * Spec for a Perimeter
  */
 export interface IPerimeterSpec {
-  type: "perimeter";
   thickness: number;
   height: number;
 }

@@ -39,7 +39,6 @@ const DEFAULT_CONFIG: SimulatorConfig = {
     zLength: 10,
     xLength: 10,
     perimeter: {
-      type: "perimeter",
       height: DEFAULT_WALL_HEIGHT,
       thickness: DEFAULT_WALL_THICKNESS,
     },
