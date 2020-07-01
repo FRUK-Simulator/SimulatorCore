@@ -8,7 +8,7 @@ const simConfig: SimulatorConfig = {
   defaultWorld: {
     xLength: 6,
     zLength: 6,
-    walls: { type: "perimeter", height: 1, thickness: 0.3 },
+    perimeter: { type: "perimeter", height: 1, thickness: 0.3 },
 
     camera: {
       position: {

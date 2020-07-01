@@ -11,8 +11,8 @@ import { IWallSpec } from "../specs/CoreSpecs";
 import { FixtureDef } from "planck-js";
 import { BodyDef } from "planck-js";
 
-const DEFAULT_WALL_THICKNESS = 0.1;
-const DEFAULT_WALL_HEIGHT = 1;
+export const DEFAULT_WALL_THICKNESS = 0.1;
+export const DEFAULT_WALL_HEIGHT = 1;
 const DEFAULT_WALL_COLOR = 0x226622;
 
 /**

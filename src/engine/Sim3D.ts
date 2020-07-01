@@ -27,6 +27,7 @@ import { RobotHandle } from "./handles/RobotHandle";
 import { EventRegistry } from "./EventRegistry";
 import { generateDebugGeometry } from "./utils/PhysicsDebug";
 import { HandleRegistry } from "./HandleRegistry";
+import { DEFAULT_WALL_THICKNESS, DEFAULT_WALL_HEIGHT } from "./objects/SimWall";
 
 interface ISimObjectContainer {
   type: string;
@@ -37,7 +38,11 @@ const DEFAULT_CONFIG: SimulatorConfig = {
   defaultWorld: {
     zLength: 10,
     xLength: 10,
-    walls: { type: "perimeter" },
+    perimeter: {
+      type: "perimeter",
+      height: DEFAULT_WALL_HEIGHT,
+      thickness: DEFAULT_WALL_THICKNESS,
+    },
 
     camera: {
       position: {
@@ -356,46 +361,67 @@ export class Sim3D {
     );
     this.scene.add(grid);
 
-    if (worldConfig.walls) {
-      // We want walls
-      if (!worldConfig.walls.walls) {
-        // // Empty array, generate the default set of walls (perimeter) with the given height
-        const height = worldConfig.walls.height ? worldConfig.walls.height : 1;
-        const thickness = worldConfig.walls.thickness
-          ? worldConfig.walls.thickness
-          : 0.1;
+    if (worldConfig.perimeter) {
+      // Make a perimeter with the given height and thickness
+      this.addWall({
+        type: "wall",
+        start: { x: -worldConfig.xLength / 2, y: -worldConfig.zLength / 2 },
+        end: { x: worldConfig.xLength / 2, y: -worldConfig.zLength / 2 },
+        baseColor: 0x00ff00,
+        height: worldConfig.perimeter.height,
+        thickness: worldConfig.perimeter.thickness,
+      });
+      this.addWall({
+        type: "wall",
+        start: { x: -worldConfig.xLength / 2, y: worldConfig.zLength / 2 },
+        end: { x: worldConfig.xLength / 2, y: worldConfig.zLength / 2 },
+        baseColor: 0xff0000,
+        height: worldConfig.perimeter.height,
+        thickness: worldConfig.perimeter.thickness,
+      });
+      this.addWall({
+        type: "wall",
+        start: { x: -worldConfig.xLength / 2, y: -worldConfig.zLength / 2 },
+        end: { x: -worldConfig.xLength / 2, y: worldConfig.zLength / 2 },
+        height: worldConfig.perimeter.height,
+        thickness: worldConfig.perimeter.thickness,
+      });
+      this.addWall({
+        type: "wall",
+        start: { x: worldConfig.xLength / 2, y: -worldConfig.zLength / 2 },
+        end: { x: worldConfig.xLength / 2, y: worldConfig.zLength / 2 },
+        height: worldConfig.perimeter.height,
+        thickness: worldConfig.perimeter.thickness,
+      });
+    } else if (worldConfig.walls) {
+      console.warn(
+        "Using worldConfig.walls will be deprecated in favor of the worldConfig.perimeter field"
+      );
+      if (worldConfig.walls.length === 0) {
         this.addWall({
           type: "wall",
           start: { x: -worldConfig.xLength / 2, y: -worldConfig.zLength / 2 },
           end: { x: worldConfig.xLength / 2, y: -worldConfig.zLength / 2 },
           baseColor: 0x00ff00,
-          height: height,
-          thickness: thickness,
         });
         this.addWall({
           type: "wall",
           start: { x: -worldConfig.xLength / 2, y: worldConfig.zLength / 2 },
           end: { x: worldConfig.xLength / 2, y: worldConfig.zLength / 2 },
           baseColor: 0xff0000,
-          height: height,
-          thickness: thickness,
         });
         this.addWall({
           type: "wall",
           start: { x: -worldConfig.xLength / 2, y: -worldConfig.zLength / 2 },
           end: { x: -worldConfig.xLength / 2, y: worldConfig.zLength / 2 },
-          height: height,
-          thickness: thickness,
         });
         this.addWall({
           type: "wall",
           start: { x: worldConfig.xLength / 2, y: -worldConfig.zLength / 2 },
           end: { x: worldConfig.xLength / 2, y: worldConfig.zLength / 2 },
-          height: height,
-          thickness: thickness,
         });
       } else {
-        worldConfig.walls.walls.forEach((wallSpec) => {
+        worldConfig.walls.forEach((wallSpec) => {
           this.addWall(wallSpec);
         });
       }

@@ -94,11 +94,10 @@ export interface IWallSpec extends IBaseSimObjectSpec {
 /**
  * Spec for a Perimeter
  */
-export interface IPerimeterSpec extends IBaseSimObjectSpec {
+export interface IPerimeterSpec {
   type: "perimeter";
-  walls?: IWallSpec[];
-  thickness?: number;
-  height?: number;
+  thickness: number;
+  height: number;
 }
 
 // Custom Meshes
