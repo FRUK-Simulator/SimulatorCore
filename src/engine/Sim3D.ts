@@ -27,6 +27,7 @@ import { RobotHandle } from "./handles/RobotHandle";
 import { EventRegistry } from "./EventRegistry";
 import { generateDebugGeometry } from "./utils/PhysicsDebug";
 import { HandleRegistry } from "./HandleRegistry";
+import { DEFAULT_WALL_THICKNESS, DEFAULT_WALL_HEIGHT } from "./objects/SimWall";
 
 interface ISimObjectContainer {
   type: string;
@@ -37,7 +38,10 @@ const DEFAULT_CONFIG: SimulatorConfig = {
   defaultWorld: {
     zLength: 10,
     xLength: 10,
-    walls: [],
+    perimeter: {
+      height: DEFAULT_WALL_HEIGHT,
+      thickness: DEFAULT_WALL_THICKNESS,
+    },
 
     camera: {
       position: {
@@ -356,10 +360,43 @@ export class Sim3D {
     );
     this.scene.add(grid);
 
-    if (worldConfig.walls) {
-      // We want walls
+    if (worldConfig.perimeter) {
+      // Make a perimeter with the given height and thickness
+      this.addWall({
+        type: "wall",
+        start: { x: -worldConfig.xLength / 2, y: -worldConfig.zLength / 2 },
+        end: { x: worldConfig.xLength / 2, y: -worldConfig.zLength / 2 },
+        baseColor: 0x00ff00,
+        height: worldConfig.perimeter.height,
+        thickness: worldConfig.perimeter.thickness,
+      });
+      this.addWall({
+        type: "wall",
+        start: { x: -worldConfig.xLength / 2, y: worldConfig.zLength / 2 },
+        end: { x: worldConfig.xLength / 2, y: worldConfig.zLength / 2 },
+        baseColor: 0xff0000,
+        height: worldConfig.perimeter.height,
+        thickness: worldConfig.perimeter.thickness,
+      });
+      this.addWall({
+        type: "wall",
+        start: { x: -worldConfig.xLength / 2, y: -worldConfig.zLength / 2 },
+        end: { x: -worldConfig.xLength / 2, y: worldConfig.zLength / 2 },
+        height: worldConfig.perimeter.height,
+        thickness: worldConfig.perimeter.thickness,
+      });
+      this.addWall({
+        type: "wall",
+        start: { x: worldConfig.xLength / 2, y: -worldConfig.zLength / 2 },
+        end: { x: worldConfig.xLength / 2, y: worldConfig.zLength / 2 },
+        height: worldConfig.perimeter.height,
+        thickness: worldConfig.perimeter.thickness,
+      });
+    } else if (worldConfig.walls) {
+      console.warn(
+        "Using worldConfig.walls will be deprecated in favor of the worldConfig.perimeter field"
+      );
       if (worldConfig.walls.length === 0) {
-        // // Empty array, generate the default set of walls (perimeter)
         this.addWall({
           type: "wall",
           start: { x: -worldConfig.xLength / 2, y: -worldConfig.zLength / 2 },

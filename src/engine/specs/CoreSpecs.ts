@@ -90,6 +90,14 @@ export interface IWallSpec extends IBaseSimObjectSpec {
   height?: number;
 }
 
+/**
+ * Spec for a Perimeter
+ */
+export interface IPerimeterSpec {
+  thickness: number;
+  height: number;
+}
+
 // Custom Meshes
 export interface ICustomMeshSpec {
   filePath: string;
