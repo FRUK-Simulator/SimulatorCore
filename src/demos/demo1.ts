@@ -1,4 +1,10 @@
-import { Sim3D, SimulatorConfig, RobotSpecs, RobotBuilder } from "../index";
+import {
+  Sim3D,
+  SimulatorConfig,
+  RobotSpecs,
+  RobotBuilder,
+  CameraSpecs,
+} from "../index";
 import { GUI } from "dat.gui";
 
 let gui: GUI;
@@ -29,6 +35,7 @@ window.onresize = () => {
 
 const demoOptions = {
   debugMode: false,
+  cameraMode: "position",
 };
 
 function main() {
@@ -44,6 +51,46 @@ function main() {
 
   debugModeController.onChange((val) => {
     simulator.setDebugMode(val);
+  });
+
+  const cameraFolder = gui.addFolder("Camera Options");
+  const cameraModeController = cameraFolder.add(demoOptions, "cameraMode", [
+    "position",
+    "chase",
+    "orbit",
+  ]);
+
+  cameraModeController.onChange((val) => {
+    switch (val) {
+      case "position":
+        simulator.setCameraMode({
+          type: CameraSpecs.CameraMode.POSITION,
+          position: {
+            x: 0,
+            y: 2,
+            z: 2,
+          },
+        });
+        break;
+      case "chase":
+        simulator.setCameraMode({
+          type: CameraSpecs.CameraMode.THIRD_PERSON,
+          handle: robot,
+          offset: {
+            x: 0.5,
+            y: 1,
+            z: 1,
+          },
+        });
+        break;
+      case "orbit":
+        simulator.setCameraMode({
+          type: CameraSpecs.CameraMode.ORBIT,
+          handle: robot,
+          radius: 3,
+          height: 3,
+        });
+    }
   });
 
   // const ballSpec: CoreSpecs.IBallSpec = {
@@ -188,7 +235,7 @@ function main() {
         robot.setMotorPower(0, 0.35);
         robot.setMotorPower(1, 0.35);
 
-        if (robot.getAnalogInput(0) > 0 && robot.getAnalogInput(0) < 0.15) {
+        if (robot.getAnalogInput(0) > 0 && robot.getAnalogInput(0) < 0.05) {
           runAwayStartTime = Date.now();
           currMode = RobotMode.RUN_AWAY;
         }

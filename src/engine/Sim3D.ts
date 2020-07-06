@@ -29,6 +29,8 @@ import { generateDebugGeometry } from "./utils/PhysicsDebug";
 import { HandleRegistry } from "./HandleRegistry";
 import { DEFAULT_WALL_THICKNESS, DEFAULT_WALL_HEIGHT } from "./objects/SimWall";
 import { ObjectHandle } from "./handles/ObjectHandle";
+import { CameraModeSpec, CameraMode } from "./specs/CameraSpecs";
+import { CameraManager } from "./CameraManager";
 
 interface ISimObjectContainer {
   type: string;
@@ -62,6 +64,7 @@ export class Sim3D {
 
   private camera: THREE.PerspectiveCamera;
   private cameraControls: OrbitControls;
+  private cameraManager: CameraManager;
 
   private isRendering = false;
 
@@ -143,7 +146,7 @@ export class Sim3D {
 
       window.requestAnimationFrame(r);
       this.updatePhysics(dt);
-      this.render();
+      this.render(dt);
     };
 
     this.isRendering = true;
@@ -276,6 +279,27 @@ export class Sim3D {
     this.debugMesh.visible = enabled;
   }
 
+  setCameraMode(spec: CameraModeSpec): void {
+    if (spec.type === CameraMode.POSITION) {
+      this.cameraManager.setPositionMode(spec.position);
+    } else if (spec.type === CameraMode.THIRD_PERSON) {
+      const simObj = this.getSimObject(spec.handle.ref);
+      if (simObj) {
+        this.cameraManager.setThirdPersonMode(simObj, spec.offset);
+      }
+    } else if (spec.type === CameraMode.ORBIT) {
+      const simObj = this.getSimObject(spec.handle.ref);
+      if (simObj) {
+        this.cameraManager.setOrbitMode(
+          simObj,
+          spec.radius,
+          spec.height,
+          spec.angularVelocity
+        );
+      }
+    }
+  }
+
   /**
    * Destroy and recreate the 3D scene and physics world
    */
@@ -326,6 +350,9 @@ export class Sim3D {
     // Recreate Event registry
     this.eventRegistry = new EventRegistry(this.world);
 
+    // Recreate Camera Manager
+    this.cameraManager = new CameraManager();
+
     // Debug
     const emptyGeometry = new THREE.Geometry();
     const debugMaterial = new THREE.MeshBasicMaterial();
@@ -353,6 +380,8 @@ export class Sim3D {
       near,
       far
     ));
+
+    this.cameraManager.setCamera(this.camera);
 
     camera.position.z += worldConfig.camera ? worldConfig.camera.position.z : 0;
     camera.position.y += worldConfig.camera ? worldConfig.camera.position.y : 0;
@@ -448,8 +477,14 @@ export class Sim3D {
     this.scene.add(axesHelper);
   }
 
-  private render(): void {
-    this.cameraControls.update();
+  private render(time: number): void {
+    // If the camera manager did NOT handle camera positioning
+    // e.g. we are in POSITION mode, then fall back to the camera
+    // controls update
+    if (!this.cameraManager.update(time)) {
+      this.cameraControls.update();
+    }
+
     if (this.debugMesh.visible) {
       this.debugMesh.geometry = new THREE.Geometry();
       generateDebugGeometry(this.debugMesh.geometry, this.world);
