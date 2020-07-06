@@ -8,6 +8,7 @@ import { makeSimWall } from "./SimWall";
 import { makeSimPyramid } from "./SimPyramid";
 import { makeSimCone } from "./SimCone";
 import { makeSimCylinder } from "./SimCylinder";
+import { makeZone } from "./Zone";
 
 export class ObjectFactories {
   private _factories: Map<string, (spec: SimObjectSpec) => SimObject>;
@@ -28,6 +29,7 @@ export class ObjectFactories {
     this.registerFactory("pyramid", makeSimPyramid);
     this.registerFactory("cone", makeSimCone);
     this.registerFactory("cylinder", makeSimCylinder);
+    this.registerFactory("zone", makeZone);
   }
 
   private registerFactory(

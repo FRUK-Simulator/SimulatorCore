@@ -11,7 +11,8 @@ export type SimObjectSpec =
   | IWallSpec
   | IPyramidSpec
   | IConeSpec
-  | ICylinderSpec;
+  | ICylinderSpec
+  | IZoneSpec;
 
 export interface IPhysicsProperties {
   linearDamping?: number;
@@ -104,4 +105,13 @@ export interface ICustomMeshSpec {
   translation?: Vector3d;
   rotation?: Vector3d;
   scale?: Vector3d;
+}
+
+// Zone
+export interface IZoneSpec extends IBaseSimObjectSpec {
+  type: "zone";
+  zoneId: string;
+  xLength: number;
+  zLength: number;
+  opacity?: number;
 }

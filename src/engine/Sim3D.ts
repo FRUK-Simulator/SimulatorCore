@@ -13,6 +13,7 @@ import {
   IWallSpec,
   IConeSpec,
   ICylinderSpec,
+  IZoneSpec,
 } from "./specs/CoreSpecs";
 import { ObjectFactories } from "./objects/ObjectFactories";
 import { BallHandle } from "./handles/BallHandle";
@@ -31,6 +32,7 @@ import { DEFAULT_WALL_THICKNESS, DEFAULT_WALL_HEIGHT } from "./objects/SimWall";
 import { ObjectHandle } from "./handles/ObjectHandle";
 import { CameraModeSpec, CameraMode } from "./specs/CameraSpecs";
 import { CameraManager } from "./CameraManager";
+import { ZoneHandle } from "./handles/ZoneHandle";
 
 interface ISimObjectContainer {
   type: string;
@@ -269,6 +271,10 @@ export class Sim3D {
     this.removeFromScene(rootObj);
 
     this.handleRegistry.invalidateHandle(handle.ref.guid);
+  }
+
+  addZone(spec: IZoneSpec): ZoneHandle {
+    return this.addGameObject<ZoneHandle>(spec, ZoneHandle);
   }
 
   isDebugMode(): boolean {

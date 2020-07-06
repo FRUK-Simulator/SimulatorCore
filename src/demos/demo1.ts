@@ -221,6 +221,16 @@ function main() {
   };
   const robot = simulator.addRobot(spec);
 
+  simulator.addZone({
+    type: "zone",
+    initialPosition: { x: 0, y: 0 },
+    baseColor: 0xff0000,
+    opacity: 0.4,
+    xLength: 2,
+    zLength: 1,
+    zoneId: "test-zone",
+  });
+
   enum RobotMode {
     LOOKING,
     RUN_AWAY,
