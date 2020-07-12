@@ -1,5 +1,5 @@
-import { Vector3d } from "./SimTypes";
-import { IWallSpec, IPerimeterSpec } from "./specs/CoreSpecs";
+import { Vector3d } from "../SimTypes";
+import { IWallSpec, IPerimeterSpec } from "../specs/CoreSpecs";
 
 export interface SimulatorConfig {
   defaultWorld: WorldConfig;

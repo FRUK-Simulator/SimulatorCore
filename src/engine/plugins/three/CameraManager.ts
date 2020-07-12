@@ -1,7 +1,7 @@
 import * as THREE from "three";
-import { CameraMode } from "./specs/CameraSpecs";
+import { CameraMode } from "./../../specs/CameraSpecs";
 import { SimObject } from "./objects/SimObject";
-import { Vector3d } from "./SimTypes";
+import { Vector3d } from "./../../SimTypes";
 
 /**
  * Camera Manager - A manager of cameras

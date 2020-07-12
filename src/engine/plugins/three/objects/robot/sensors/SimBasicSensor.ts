@@ -2,7 +2,7 @@ import {
   BasicSensorOutputChannelType,
   IBasicSensorValue,
   IBasicSensorSpec,
-} from "../../../specs/RobotSpecs";
+} from "../../../../../specs/RobotSpecs";
 import { SimObject } from "../../SimObject";
 import { BodyDef, FixtureDef } from "planck-js";
 import { EventRegistry } from "../../../EventRegistry";

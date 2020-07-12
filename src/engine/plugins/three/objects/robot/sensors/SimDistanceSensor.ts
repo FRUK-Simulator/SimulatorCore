@@ -7,8 +7,8 @@ import {
   ISimUserData,
   IBasicSensorValue,
   SensorMountingFace,
-} from "../../../specs/RobotSpecs";
-import { getSensorMountPosition } from "../../../utils/RobotUtils";
+} from "../../../../../specs/RobotSpecs";
+import { getSensorMountPosition } from "../../../../../utils/RobotUtils";
 import { Vec2, Box, Fixture } from "planck-js";
 
 /**

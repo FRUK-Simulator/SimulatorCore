@@ -1,5 +1,5 @@
 import { World, Contact, Fixture } from "planck-js";
-import { ISimUserData, ISimSensorDescriptor } from "./specs/RobotSpecs";
+import { ISimUserData, ISimSensorDescriptor } from "../../specs/RobotSpecs";
 import { SimBasicSensor } from "./objects/robot/sensors/SimBasicSensor";
 
 type SensorRegisty = Map<string, SimBasicSensor>;

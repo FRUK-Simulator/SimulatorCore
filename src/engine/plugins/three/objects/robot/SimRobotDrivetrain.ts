@@ -2,12 +2,12 @@ import {
   IRobotSpec,
   WheelMountingPoint,
   IRobotWheelAndMount,
-} from "../../specs/RobotSpecs";
+} from "../../../../specs/RobotSpecs";
 import { SimRobotWheel } from "./SimRobotWheel";
 import { SimMotor } from "./SimMotor";
-import { Vector3d, Vector2d } from "../../SimTypes";
-import { Vector3dUtil } from "../../utils/VectorUtil";
-import { clamp } from "../..//utils/MathUtil";
+import { Vector3d, Vector2d } from "../../../../SimTypes";
+import { Vector3dUtil } from "../../../../utils/VectorUtil";
+import { clamp } from "../../../../utils/MathUtil";
 
 function getMountPointPosition(
   robotSpec: IRobotSpec,

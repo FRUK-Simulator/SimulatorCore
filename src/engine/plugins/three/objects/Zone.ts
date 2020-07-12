@@ -1,8 +1,8 @@
 import * as THREE from "three";
 import { BodyDef, FixtureDef, Vec2, Box } from "planck-js";
-import { IZoneSpec } from "../specs/CoreSpecs";
+import { IZoneSpec } from "../../../specs/CoreSpecs";
 import { SimObject } from "./SimObject";
-import { Vector2d } from "../SimTypes";
+import { Vector2d } from "../../../SimTypes";
 
 /**
  * Factory method for creating a Zone

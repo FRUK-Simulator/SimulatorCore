@@ -1,13 +1,13 @@
 import * as THREE from "three";
 import { SimObject } from "./SimObject";
-import { Vector2d } from "../SimTypes";
+import { Vector2d } from "../../../SimTypes";
 import {
   getLineLength2d,
   getMidpoint2d,
   getAngleRadians2d,
-} from "../utils/Geom2dUtil";
+} from "../../../utils/Geom2dUtil";
 import { Vec2, Box } from "planck-js";
-import { IWallSpec } from "../specs/CoreSpecs";
+import { IWallSpec } from "../../../specs/CoreSpecs";
 import { FixtureDef } from "planck-js";
 import { BodyDef } from "planck-js";
 

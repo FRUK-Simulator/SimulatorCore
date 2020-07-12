@@ -10,7 +10,7 @@ import {
   FixtureDef,
   PrismaticJoint,
 } from "planck-js";
-import { IRobotSpec, ISimUserData } from "../../specs/RobotSpecs";
+import { IRobotSpec, ISimUserData } from "../../../../specs/RobotSpecs";
 import { BasicSensorManager } from "./sensors/BasicSensorManager";
 import { EventRegistry } from "../../EventRegistry";
 

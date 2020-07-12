@@ -2,7 +2,7 @@ import { SimBasicSensor } from "./SimBasicSensor";
 import {
   IRobotSpec,
   BasicSensorOutputChannelType,
-} from "../../../specs/RobotSpecs";
+} from "../../../../../specs/RobotSpecs";
 import { SimContactSensor } from "./SimContactSensor";
 import { EventRegistry } from "../../../EventRegistry";
 import { SimDistanceSensor } from "./SimDistanceSensor";

@@ -1,6 +1,6 @@
-import { ISimObjectRef } from "../SimTypes";
+import { ISimObjectRef } from "../../../SimTypes";
 import { SimObject } from "../objects/SimObject";
-import { HandleRegistry } from "../HandleRegistry";
+import { HandleRegistry } from "../../../HandleRegistry";
 
 export abstract class ObjectHandle<T extends SimObject> {
   protected _rootObject: T;

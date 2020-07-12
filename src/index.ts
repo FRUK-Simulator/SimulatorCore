@@ -1,10 +1,13 @@
-export { Sim3D } from "./engine/Sim3D";
-export { SimulatorConfig, WorldConfig } from "./engine/SimulatorConfig";
+export { Sim3D } from "./engine/plugins/three/Sim3D";
+export {
+  SimulatorConfig,
+  WorldConfig,
+} from "./engine/interface/SimulatorConfig";
 
 import * as CoreSimTypes from "./engine/SimTypes";
 export { CoreSimTypes };
 
-import * as Handles from "./engine/handles";
+import * as Handles from "./engine/plugins/three/handles";
 export { Handles };
 
 import * as CoreSpecs from "./engine/specs/CoreSpecs";

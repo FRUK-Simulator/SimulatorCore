@@ -1,8 +1,8 @@
 import * as THREE from "three";
 import { SimObject } from "../SimObject";
 import { Vec2, Box, BodyDef, FixtureDef } from "planck-js";
-import { IRobotWheelSpec, ISimUserData } from "../../specs/RobotSpecs";
-import { Vector3d } from "../../SimTypes";
+import { IRobotWheelSpec, ISimUserData } from "../../../../specs/RobotSpecs";
+import { Vector3d } from "../../../../SimTypes";
 
 const DEFAULT_WHEEL_COLOR = 0x000000;
 const DEFAULT_WHEEL_THICKNESS = 0.15;

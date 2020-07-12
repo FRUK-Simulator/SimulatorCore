@@ -3,7 +3,7 @@ import { SimObject } from "./SimObject";
 import { World } from "planck-js";
 import { makeSimBall } from "./SimBall";
 import { makeSimBox } from "./SimBox";
-import { SimObjectSpec } from "../specs/CoreSpecs";
+import { SimObjectSpec } from "../../../specs/CoreSpecs";
 import { makeSimWall } from "./SimWall";
 import { makeSimPyramid } from "./SimPyramid";
 import { makeSimCone } from "./SimCone";

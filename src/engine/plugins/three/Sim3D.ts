@@ -1,9 +1,9 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-import { SimulatorConfig, WorldConfig } from "./SimulatorConfig";
+import { SimulatorConfig, WorldConfig } from "../../interface/SimulatorConfig";
 import { makeGrid, GridPlane } from "./utils/GridUtil";
 import { World, Vec2 } from "planck-js";
-import { ISimObjectRef } from "./SimTypes";
+import { ISimObjectRef } from "./../../SimTypes";
 import { SimObject } from "./objects/SimObject";
 import {
   SimObjectSpec,
@@ -14,7 +14,7 @@ import {
   IConeSpec,
   ICylinderSpec,
   IZoneSpec,
-} from "./specs/CoreSpecs";
+} from "./../../specs/CoreSpecs";
 import { ObjectFactories } from "./objects/ObjectFactories";
 import { BallHandle } from "./handles/BallHandle";
 import { BoxHandle } from "./handles/BoxHandle";
@@ -22,15 +22,15 @@ import { PyramidHandle } from "./handles/PyramidHandle";
 import { ConeHandle } from "./handles/ConeHandle";
 import { CylinderHandle } from "./handles/CylinderHandle";
 import { WallHandle } from "./handles/WallHandle";
-import { IRobotSpec } from "./specs/RobotSpecs";
+import { IRobotSpec } from "./../../specs/RobotSpecs";
 import { SimRobot } from "./objects/robot/SimRobot";
 import { RobotHandle } from "./handles/RobotHandle";
 import { EventRegistry } from "./EventRegistry";
 import { generateDebugGeometry } from "./utils/PhysicsDebug";
-import { HandleRegistry } from "./HandleRegistry";
+import { HandleRegistry } from "./../../HandleRegistry";
 import { DEFAULT_WALL_THICKNESS, DEFAULT_WALL_HEIGHT } from "./objects/SimWall";
 import { ObjectHandle } from "./handles/ObjectHandle";
-import { CameraModeSpec, CameraMode } from "./specs/CameraSpecs";
+import { CameraModeSpec, CameraMode } from "./../../specs/CameraSpecs";
 import { CameraManager } from "./CameraManager";
 import { ZoneHandle } from "./handles/ZoneHandle";
 

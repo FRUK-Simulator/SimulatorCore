@@ -1,8 +1,8 @@
 import * as THREE from "three";
 import { SimObject } from "./SimObject";
 import { Vec2, Box } from "planck-js";
-import { ICylinderSpec } from "../specs/CoreSpecs";
-import { Vector2d } from "../SimTypes";
+import { ICylinderSpec } from "../../../specs/CoreSpecs";
+import { Vector2d } from "../../../SimTypes";
 import { FixtureDef } from "planck-js";
 import { BodyDef } from "planck-js";
 

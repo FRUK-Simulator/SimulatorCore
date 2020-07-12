@@ -8,9 +8,9 @@ import {
   SensorMountingFace,
   ISimUserData,
   IBasicSensorValue,
-} from "../../../specs/RobotSpecs";
+} from "../../../../../specs/RobotSpecs";
 import { Vec2, Box } from "planck-js";
-import { getSensorMountPosition } from "../../../utils/RobotUtils";
+import { getSensorMountPosition } from "../../../../../utils/RobotUtils";
 
 const SENSOR_INACTIVE_COLOR = 0xaaaaaa;
 const SENSOR_ACTIVE_COLOR = 0xff0000;
