@@ -1,8 +1,7 @@
 import { ISimObjectRef } from "../../../SimTypes";
-import { SimObject } from "../objects/SimObject";
 import { HandleRegistry } from "../../../HandleRegistry";
 
-export abstract class ObjectHandle<T extends SimObject> {
+export abstract class ObjectHandle<T> {
   protected _rootObject: T;
   protected _objectRef: ISimObjectRef;
   protected _isValid: boolean;
