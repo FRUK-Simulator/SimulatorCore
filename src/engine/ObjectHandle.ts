@@ -1,5 +1,5 @@
-import { ISimObjectRef } from "../../../SimTypes";
-import { HandleRegistry } from "../../../HandleRegistry";
+import { ISimObjectRef } from "./SimTypes";
+import { HandleRegistry } from "./HandleRegistry";
 
 export abstract class ObjectHandle<T> {
   protected _rootObject: T;

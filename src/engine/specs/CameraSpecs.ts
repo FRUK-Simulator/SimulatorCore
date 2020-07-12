@@ -1,4 +1,4 @@
-import { ObjectHandle } from "../plugins/three/handles/ObjectHandle";
+import { ObjectHandle } from "../ObjectHandle";
 import { Vector3d } from "../SimTypes";
 
 export enum CameraMode {

@@ -1,4 +1,4 @@
-import { ObjectHandle } from "./ObjectHandle";
+import { ObjectHandle } from "../../../ObjectHandle";
 import { SimCone } from "../objects/SimCone";
 
 export class ConeHandle extends ObjectHandle<SimCone> {

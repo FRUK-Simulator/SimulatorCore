@@ -1,4 +1,4 @@
-import { ObjectHandle } from "./ObjectHandle";
+import { ObjectHandle } from "../../../ObjectHandle";
 import { Zone } from "../objects/Zone";
 
 export class ZoneHandle extends ObjectHandle<Zone> {

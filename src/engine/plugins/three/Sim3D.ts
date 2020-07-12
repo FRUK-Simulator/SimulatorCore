@@ -29,7 +29,7 @@ import { EventRegistry } from "./EventRegistry";
 import { generateDebugGeometry } from "./utils/PhysicsDebug";
 import { HandleRegistry } from "./../../HandleRegistry";
 import { DEFAULT_WALL_THICKNESS, DEFAULT_WALL_HEIGHT } from "./objects/SimWall";
-import { ObjectHandle } from "./handles/ObjectHandle";
+import { ObjectHandle } from "../../ObjectHandle";
 import { CameraModeSpec, CameraMode } from "./../../specs/CameraSpecs";
 import { CameraManager } from "./CameraManager";
 import { ZoneHandle } from "./handles/ZoneHandle";

@@ -1,4 +1,4 @@
-import { ObjectHandle } from "./ObjectHandle";
+import { ObjectHandle } from "../../../ObjectHandle";
 import { SimCylinder } from "../objects/SimCylinder";
 
 export class CylinderHandle extends ObjectHandle<SimCylinder> {

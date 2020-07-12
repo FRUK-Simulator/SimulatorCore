@@ -1,4 +1,4 @@
-import { ObjectHandle } from "./ObjectHandle";
+import { ObjectHandle } from "../../../ObjectHandle";
 import { SimRobot } from "../objects/robot/SimRobot";
 
 export class RobotHandle extends ObjectHandle<SimRobot> {
