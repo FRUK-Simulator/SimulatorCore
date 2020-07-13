@@ -33,6 +33,8 @@ import { ObjectHandle } from "../../ObjectHandle";
 import { CameraModeSpec, CameraMode } from "./../../specs/CameraSpecs";
 import { CameraManager } from "./CameraManager";
 import { ZoneHandle } from "./handles/ZoneHandle";
+import { ISim3D } from "../../interface/ISim3D";
+import { IRobotHandle } from "../../interface/IRobotHandle";
 
 interface ISimObjectContainer {
   type: string;
@@ -58,7 +60,7 @@ const DEFAULT_CONFIG: SimulatorConfig = {
   },
 };
 
-export class Sim3D {
+export class Sim3D implements ISim3D {
   private scene: THREE.Scene;
   private renderer: THREE.Renderer;
 
@@ -215,7 +217,7 @@ export class Sim3D {
    * Add a new, controllable robot to the simulation
    * @param spec Specification for a robot
    */
-  addRobot(spec: IRobotSpec): RobotHandle | undefined {
+  addRobot(spec: IRobotSpec): RobotHandle {
     const robot = new SimRobot(spec);
 
     const robotBody = this.world.createBody(robot.getBodySpecs());

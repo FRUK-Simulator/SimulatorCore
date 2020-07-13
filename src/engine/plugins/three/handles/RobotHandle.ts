@@ -1,7 +1,9 @@
 import { ObjectHandle } from "../../../ObjectHandle";
 import { SimRobot } from "../objects/robot/SimRobot";
+import { IRobotHandle } from "../../../interface/IRobotHandle";
 
-export class RobotHandle extends ObjectHandle<SimRobot> {
+export class RobotHandle extends ObjectHandle<SimRobot>
+  implements IRobotHandle {
   setMotorPower(channel: number, value: number): void {
     this._rootObject.setMotorPower(channel, value);
   }
