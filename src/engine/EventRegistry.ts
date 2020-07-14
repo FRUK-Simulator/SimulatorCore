@@ -4,8 +4,10 @@ import {
   SimUserData,
   ISensorFixtureUserData,
   IBaseFixtureUserData,
+  IZoneFixtureUserData,
 } from "./specs/UserDataSpecs";
 import { SimBasicSensor } from "./objects/robot/sensors/SimBasicSensor";
+import { EventEmitter } from "events";
 
 type SensorRegisty = Map<string, SimBasicSensor>;
 type ObjectPartCount = Map<string, number>; // Object GUID -> number of instances in zone
@@ -14,6 +16,12 @@ function isSensorUserData(
   userData: SimUserData
 ): userData is ISensorFixtureUserData {
   return userData.type === "sensor";
+}
+
+function isZoneUserData(
+  userData: SimUserData
+): userData is IZoneFixtureUserData {
+  return userData.type === "zone";
 }
 
 function getSensorDescriptors(a: Fixture, b: Fixture): ISimSensorDescriptor[] {
@@ -102,7 +110,7 @@ function isZoneContact(a: Fixture, b: Fixture): boolean {
  * then be broadcast to clients of the simulator, letting them implement
  * additional game logic.
  */
-export class EventRegistry {
+export class EventRegistry extends EventEmitter {
   private _sensors: Map<string, SensorRegisty> = new Map<
     string,
     SensorRegisty
@@ -121,6 +129,8 @@ export class EventRegistry {
    * @param world Currently loaded physics world
    */
   constructor(world: World) {
+    super();
+
     // Hook up the event listeners for the physics engine
     // This is for collisions
     const onBeginContantFunc: (
@@ -150,6 +160,7 @@ export class EventRegistry {
    */
   private onBeginContact(contact: Contact): void {
     this.updateContactSensors(contact, true);
+    this.updateZones(contact, true);
   }
 
   /**
@@ -159,6 +170,109 @@ export class EventRegistry {
    */
   private onEndContact(contact: Contact): void {
     this.updateContactSensors(contact, false);
+    this.updateZones(contact, false);
+  }
+
+  /**
+   * Broadcast a zone event to appropriate parties
+   * @private
+   * @param contact
+   * @param hasContact
+   */
+  private updateZones(contact: Contact, hasContact: boolean): void {
+    const fixtureA: Fixture = contact.getFixtureA();
+    const fixtureB: Fixture = contact.getFixtureB();
+
+    if (fixtureA.getUserData() === null && fixtureB.getUserData() === null) {
+      return;
+    }
+
+    if (!isZoneContact(fixtureA, fixtureB)) {
+      return;
+    }
+
+    const userDataA: SimUserData | null = fixtureA.getUserData() as SimUserData;
+    const userDataB: SimUserData | null = fixtureB.getUserData() as SimUserData;
+
+    let zoneId = "";
+    let objectGuid = "";
+
+    if (userDataA && isZoneUserData(userDataA)) {
+      if (!userDataB) {
+        return;
+      }
+      // A is the zone
+      zoneId = userDataA.zone.id;
+
+      if (userDataB.rootGuid !== undefined) {
+        objectGuid = userDataB.rootGuid;
+      } else {
+        objectGuid = userDataB.selfGuid;
+      }
+    } else if (userDataB && isZoneUserData(userDataB)) {
+      if (!userDataA) {
+        return;
+      }
+      // B is the zone
+      zoneId = userDataB.zone.id;
+
+      if (userDataA.rootGuid !== undefined) {
+        objectGuid = userDataA.rootGuid;
+      } else {
+        objectGuid = userDataA.selfGuid;
+      }
+    }
+
+    if (hasContact) {
+      // Contact begun
+      // Look up the zone ID in the map
+      if (!this._zones.has(zoneId)) {
+        this._zones.set(zoneId, new Map<string, number>());
+      }
+
+      const zoneCollisions = this._zones.get(zoneId);
+      let count = 0;
+      if (zoneCollisions.has(objectGuid)) {
+        count = zoneCollisions.get(objectGuid);
+      }
+
+      if (count === 0) {
+        // This is the first time we are seeing this object guid
+        this.emit("zone-entry", {
+          zoneId,
+          objectGuid,
+        });
+      }
+
+      count++;
+      zoneCollisions.set(objectGuid, count);
+    } else {
+      // If we don't have a zone, just bail out
+      if (!this._zones.has(zoneId)) {
+        return;
+      }
+
+      const zoneCollisions = this._zones.get(zoneId);
+      if (!zoneCollisions.has(objectGuid)) {
+        return;
+      }
+
+      let count = zoneCollisions.get(objectGuid);
+      if (count === 0) {
+        return;
+      }
+
+      count--;
+
+      if (count <= 0) {
+        this.emit("zone-exit", {
+          zoneId,
+          objectGuid,
+        });
+      }
+
+      zoneCollisions.set(objectGuid, count);
+    }
   }
 
   /**

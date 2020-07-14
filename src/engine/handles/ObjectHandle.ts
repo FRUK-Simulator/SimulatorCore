@@ -1,8 +1,10 @@
 import { ISimObjectRef } from "../SimTypes";
 import { SimObject } from "../objects/SimObject";
 import { HandleRegistry } from "../HandleRegistry";
+import { ISimulatorEvent } from "../specs/CoreSpecs";
+import { EventEmitter } from "events";
 
-export abstract class ObjectHandle<T extends SimObject> {
+export abstract class ObjectHandle<T extends SimObject> extends EventEmitter {
   protected _rootObject: T;
   protected _objectRef: ISimObjectRef;
   protected _isValid: boolean;
@@ -12,6 +14,7 @@ export abstract class ObjectHandle<T extends SimObject> {
     rootObject: T,
     handleRegistry: HandleRegistry
   ) {
+    super();
     this._objectRef = ref;
     this._rootObject = rootObject;
     this._isValid = true;
@@ -19,7 +22,8 @@ export abstract class ObjectHandle<T extends SimObject> {
     // Register ourselves with the handle registry
     handleRegistry.registerHandle(
       this._objectRef.guid,
-      this._onInvalidate.bind(this)
+      this._onInvalidate.bind(this),
+      this._onSimulationEvent.bind(this)
     );
   }
 
@@ -43,5 +47,9 @@ export abstract class ObjectHandle<T extends SimObject> {
     this._objectRef = undefined;
 
     this._isValid = false;
+  }
+
+  private _onSimulationEvent(evt: ISimulatorEvent): void {
+    this.emit("simulator-event", evt);
   }
 }

@@ -14,6 +14,8 @@ import {
   IConeSpec,
   ICylinderSpec,
   IZoneSpec,
+  IRawZoneEvent,
+  ISimulatorEvent,
 } from "./specs/CoreSpecs";
 import { ObjectFactories } from "./objects/ObjectFactories";
 import { BallHandle } from "./handles/BallHandle";
@@ -33,6 +35,8 @@ import { ObjectHandle } from "./handles/ObjectHandle";
 import { CameraModeSpec, CameraMode } from "./specs/CameraSpecs";
 import { CameraManager } from "./CameraManager";
 import { ZoneHandle } from "./handles/ZoneHandle";
+
+import { EventEmitter } from "events";
 
 interface ISimObjectContainer {
   type: string;
@@ -58,7 +62,7 @@ const DEFAULT_CONFIG: SimulatorConfig = {
   },
 };
 
-export class Sim3D {
+export class Sim3D extends EventEmitter {
   private scene: THREE.Scene;
   private renderer: THREE.Renderer;
 
@@ -87,6 +91,7 @@ export class Sim3D {
   private eventRegistry: EventRegistry;
 
   constructor(private canvas: HTMLCanvasElement, config?: SimulatorConfig) {
+    super();
     if (!config) {
       config = DEFAULT_CONFIG;
     }
@@ -356,6 +361,47 @@ export class Sim3D {
     // Recreate Event registry
     this.eventRegistry = new EventRegistry(this.world);
 
+    // Hook up event registry events
+    this.eventRegistry.on("zone-entry", (data: IRawZoneEvent) => {
+      if (!data) {
+        return;
+      }
+
+      const objRef = this.getObjectRef(data.objectGuid);
+      if (!objRef) {
+        return;
+      }
+
+      this.emitSimulationEvent(
+        "zone-entry",
+        {
+          zoneId: data.zoneId,
+          objectRef: objRef,
+        },
+        objRef
+      );
+    });
+
+    this.eventRegistry.on("zone-exit", (data: IRawZoneEvent) => {
+      if (!data) {
+        return;
+      }
+
+      const objRef = this.getObjectRef(data.objectGuid);
+      if (!objRef) {
+        return;
+      }
+
+      this.emitSimulationEvent(
+        "zone-exit",
+        {
+          zoneId: data.zoneId,
+          objectRef: objRef,
+        },
+        objRef
+      );
+    });
+
     // Recreate Camera Manager
     this.cameraManager = new CameraManager();
 
@@ -585,5 +631,37 @@ export class Sim3D {
     simObject.children.forEach((simObj) => {
       this.removeFromScene(simObj);
     });
+  }
+
+  private getObjectRef(objectGuid: string): ISimObjectRef | null {
+    if (!this.simObjects.has(objectGuid)) {
+      return null;
+    }
+
+    const obj = this.simObjects.get(objectGuid);
+    return {
+      guid: objectGuid,
+      type: obj.type,
+    };
+  }
+
+  private emitSimulationEvent(
+    eventType: string,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    payload: any,
+    objectRef?: ISimObjectRef
+  ): void {
+    const evtInfo: ISimulatorEvent = {
+      type: eventType,
+      data: payload,
+    };
+
+    // fire a simulation-event
+    this.emit("simulation-event", evtInfo);
+
+    if (objectRef) {
+      // Find a handle
+      this.handleRegistry.emitSimulationEvent(objectRef.guid, evtInfo);
+    }
   }
 }
