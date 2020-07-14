@@ -4,10 +4,13 @@ import {
   IDistanceSensorSpec,
   IRobotSpec,
   BasicSensorOutputChannelType,
-  ISimUserData,
   IBasicSensorValue,
   SensorMountingFace,
 } from "../../../specs/RobotSpecs";
+import {
+  ISensorFixtureUserData,
+  IBaseFixtureUserData,
+} from "../../../specs/UserDataSpecs";
 import { getSensorMountPosition } from "../../../utils/RobotUtils";
 import { Vec2, Box, Fixture } from "planck-js";
 
@@ -69,10 +72,10 @@ export class SimDistanceSensor extends SimBasicSensor {
     let angle: number;
     switch (spec.mountFace) {
       case SensorMountingFace.FRONT:
-        angle = 0;
+        angle = -Math.PI;
         break;
       case SensorMountingFace.REAR:
-        angle = -Math.PI;
+        angle = 0;
         break;
       case SensorMountingFace.LEFT:
         angle = -Math.PI / 2;
@@ -89,7 +92,10 @@ export class SimDistanceSensor extends SimBasicSensor {
       bullet: true,
     };
 
-    const userData: ISimUserData = {
+    const userData: ISensorFixtureUserData = {
+      selfGuid: this.guid,
+      rootGuid: robotGuid,
+      type: "sensor",
       sensor: {
         sensorType: this.sensorType,
         robotGuid: robotGuid,
@@ -101,7 +107,7 @@ export class SimDistanceSensor extends SimBasicSensor {
       shape: new Box(0.005, 0.005),
       density: 1,
       isSensor: true,
-      userData: userData,
+      userData,
     };
   }
 
@@ -166,8 +172,11 @@ export class SimDistanceSensor extends SimBasicSensor {
         (fixture: Fixture, p: Vec2, normal: Vec2, fraction: number): number => {
           // Ignore everything that is part of the robot that this sensor is attached to
           if (fixture.getUserData()) {
-            const userData = fixture.getUserData() as ISimUserData;
-            if (userData.robotGuid === this._robotGuid) {
+            const userData = fixture.getUserData() as IBaseFixtureUserData;
+            if (
+              userData.rootGuid === this._robotGuid ||
+              userData.selfGuid === this._robotGuid
+            ) {
               return -1;
             }
           }

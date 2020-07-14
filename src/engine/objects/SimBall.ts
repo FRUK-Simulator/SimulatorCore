@@ -5,6 +5,7 @@ import { IBallSpec } from "../specs/CoreSpecs";
 import { Vector2d } from "../SimTypes";
 import { FixtureDef } from "planck-js";
 import { BodyDef } from "planck-js";
+import { IBaseFixtureUserData } from "../specs/UserDataSpecs";
 
 const DEFAULT_BALL_COLOR = 0x0000ff;
 
@@ -54,12 +55,18 @@ export class SimBall extends SimObject {
       angularDamping: 0.3,
     };
 
+    const userData: IBaseFixtureUserData = {
+      selfGuid: this.guid,
+      type: "simobject-ball",
+    };
+
     this.fixtureSpecs = {
       shape: new Circle(spec.radius),
       density: 1,
       isSensor: false,
       friction: 0.3,
       restitution: 0.4,
+      userData,
     };
   }
 

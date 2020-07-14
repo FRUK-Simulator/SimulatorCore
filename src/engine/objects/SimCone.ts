@@ -5,6 +5,7 @@ import { IConeSpec } from "../specs/CoreSpecs";
 import { Vector2d } from "../SimTypes";
 import { FixtureDef } from "planck-js";
 import { BodyDef } from "planck-js";
+import { IBaseFixtureUserData } from "../specs/UserDataSpecs";
 
 const DEFAULT_CONE_COLOR = 0xffff00;
 
@@ -54,12 +55,18 @@ export class SimCone extends SimObject {
       angularDamping: 0.3,
     };
 
+    const userData: IBaseFixtureUserData = {
+      selfGuid: this.guid,
+      type: "simobject-cone",
+    };
+
     this.fixtureSpecs = {
       shape: new Circle(spec.radius),
       density: 1,
       isSensor: false,
       friction: 0.3,
       restitution: 0.4,
+      userData,
     };
   }
 

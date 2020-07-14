@@ -1,24 +1,88 @@
 import { World, Contact, Fixture } from "planck-js";
-import { ISimUserData, ISimSensorDescriptor } from "./specs/RobotSpecs";
+import { ISimSensorDescriptor } from "./specs/RobotSpecs";
+import {
+  SimUserData,
+  ISensorFixtureUserData,
+  IBaseFixtureUserData,
+} from "./specs/UserDataSpecs";
 import { SimBasicSensor } from "./objects/robot/sensors/SimBasicSensor";
 
 type SensorRegisty = Map<string, SimBasicSensor>;
+type ObjectPartCount = Map<string, number>; // Object GUID -> number of instances in zone
+
+function isSensorUserData(
+  userData: SimUserData
+): userData is ISensorFixtureUserData {
+  return userData.type === "sensor";
+}
 
 function getSensorDescriptors(a: Fixture, b: Fixture): ISimSensorDescriptor[] {
-  const aUserData: ISimUserData | null = a.getUserData() as ISimUserData;
-  const bUserData: ISimUserData | null = b.getUserData() as ISimUserData;
+  const aUserData: SimUserData | null = a.getUserData() as SimUserData;
+  const bUserData: SimUserData | null = b.getUserData() as SimUserData;
 
   const result: ISimSensorDescriptor[] = [];
 
-  if (aUserData && aUserData.sensor) {
+  if (aUserData && isSensorUserData(aUserData)) {
     result.push(aUserData.sensor);
   }
 
-  if (bUserData && bUserData.sensor) {
+  if (bUserData && isSensorUserData(bUserData)) {
     result.push(bUserData.sensor);
   }
 
   return result;
+}
+
+function isSameObject(a: Fixture, b: Fixture): boolean {
+  const userDataA: SimUserData | null = a.getUserData() as SimUserData;
+  const userDataB: SimUserData | null = b.getUserData() as SimUserData;
+
+  // Ignore any collisions that are between elements in the
+  if (userDataA && userDataB) {
+    if (!userDataA.rootGuid) {
+      if (userDataB.rootGuid === userDataA.selfGuid) {
+        return true;
+      }
+    } else if (userDataA.rootGuid) {
+      if (
+        userDataA.rootGuid === userDataB.rootGuid ||
+        userDataA.rootGuid === userDataB.selfGuid
+      ) {
+        return true;
+      }
+    }
+
+    if (!userDataB.rootGuid) {
+      if (userDataA.rootGuid === userDataB.selfGuid) {
+        return true;
+      }
+    } else if (userDataB.rootGuid) {
+      if (
+        userDataA.rootGuid === userDataB.rootGuid ||
+        userDataB.rootGuid === userDataA.selfGuid
+      ) {
+        return true;
+      }
+    }
+  }
+
+  return false;
+}
+
+function isZoneContact(a: Fixture, b: Fixture): boolean {
+  if (a.getUserData() !== null) {
+    if ((a.getUserData() as IBaseFixtureUserData).type === "zone") {
+      return true;
+    }
+  }
+
+  if (b.getUserData() !== null) {
+    if ((b.getUserData() as IBaseFixtureUserData).type === "zone") {
+      return true;
+    }
+  }
+
+  return false;
 }
 
 /**
@@ -42,6 +106,12 @@ export class EventRegistry {
   private _sensors: Map<string, SensorRegisty> = new Map<
     string,
     SensorRegisty
+  >();
+
+  // Maps from Zone ID to ObjectPartCount
+  private _zones: Map<string, ObjectPartCount> = new Map<
+    string,
+    ObjectPartCount
   >();
 
   private _onDispose: () => void;
@@ -108,6 +178,16 @@ export class EventRegistry {
 
     const fixtureA: Fixture = contact.getFixtureA();
     const fixtureB: Fixture = contact.getFixtureB();
+
+    // Bail out if both fixtures belong to the same root object
+    if (isSameObject(fixtureA, fixtureB)) {
+      return;
+    }
+
+    // Ensure that none of these are zones
+    if (isZoneContact(fixtureA, fixtureB)) {
+      return;
+    }
 
     const sensorDescriptors = getSensorDescriptors(fixtureA, fixtureB);
 

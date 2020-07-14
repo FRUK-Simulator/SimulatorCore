@@ -87,15 +87,6 @@ export interface IRobotSpec extends IBaseSimObjectSpec {
   // they can get added as properties here
 }
 
-/**
- * Interface describing user-specified data that can be attached
- * to simulator engine objects
- */
-export interface ISimUserData {
-  sensor?: ISimSensorDescriptor;
-  robotGuid?: string;
-}
-
 // Sensors
 
 /**
