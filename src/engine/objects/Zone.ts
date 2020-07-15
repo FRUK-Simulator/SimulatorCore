@@ -3,6 +3,7 @@ import { BodyDef, FixtureDef, Vec2, Box } from "planck-js";
 import { IZoneSpec } from "../specs/CoreSpecs";
 import { SimObject } from "./SimObject";
 import { Vector2d } from "../SimTypes";
+import { IZoneFixtureUserData } from "../specs/UserDataSpecs";
 
 /**
  * Factory method for creating a Zone
@@ -63,9 +64,19 @@ export class Zone extends SimObject {
       angle: 0,
     };
 
+    const userData: IZoneFixtureUserData = {
+      selfGuid: this.guid,
+      type: "zone",
+      zone: {
+        id: this._zoneId,
+        color: spec.baseColor,
+      },
+    };
+
     this._fixtureSpecs = {
       shape: new Box(spec.xLength / 2, spec.zLength / 2),
       isSensor: true,
+      userData,
     };
   }
 

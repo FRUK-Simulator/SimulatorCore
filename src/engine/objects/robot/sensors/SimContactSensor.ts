@@ -6,9 +6,9 @@ import {
   BasicSensorOutputChannelType,
   IRobotSpec,
   SensorMountingFace,
-  ISimUserData,
   IBasicSensorValue,
 } from "../../../specs/RobotSpecs";
+import { ISensorFixtureUserData } from "../../../specs/UserDataSpecs";
 import { Vec2, Box } from "planck-js";
 import { getSensorMountPosition } from "../../../utils/RobotUtils";
 
@@ -99,7 +99,10 @@ export class SimContactSensor extends SimBasicSensor {
       bullet: true,
     };
 
-    const userData: ISimUserData = {
+    const userData: ISensorFixtureUserData = {
+      selfGuid: this.guid,
+      rootGuid: robotGuid,
+      type: "sensor",
       sensor: {
         sensorType: this.sensorType,
         robotGuid: robotGuid,

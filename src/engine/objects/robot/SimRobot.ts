@@ -10,7 +10,8 @@ import {
   FixtureDef,
   PrismaticJoint,
 } from "planck-js";
-import { IRobotSpec, ISimUserData } from "../../specs/RobotSpecs";
+import { IRobotSpec } from "../../specs/RobotSpecs";
+import { IBaseFixtureUserData } from "../../specs/UserDataSpecs";
 import { BasicSensorManager } from "./sensors/BasicSensorManager";
 import { EventRegistry } from "../../EventRegistry";
 
@@ -111,8 +112,9 @@ export class SimRobot extends SimObject {
       angularDamping: 0.3,
     };
 
-    const userData: ISimUserData = {
-      robotGuid: this.guid,
+    const userData: IBaseFixtureUserData = {
+      selfGuid: this.guid,
+      type: "robot",
     };
 
     this._fixtureSpecs = {
