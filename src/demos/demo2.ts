@@ -13,8 +13,8 @@ let simulator: ISim3D;
 
 const simConfig: SimulatorConfig = {
   defaultWorld: {
-    xLength: 80,
-    zLength: 80,
+    xLength: 50,
+    zLength: 50,
     perimeter: { height: 4, thickness: 0.3 },
 
     camera: {
