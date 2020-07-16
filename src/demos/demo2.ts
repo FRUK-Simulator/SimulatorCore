@@ -13,9 +13,9 @@ let simulator: ISim3D;
 
 const simConfig: SimulatorConfig = {
   defaultWorld: {
-    xLength: 6,
-    zLength: 6,
-    perimeter: { height: 1, thickness: 0.3 },
+    xLength: 80,
+    zLength: 80,
+    perimeter: { height: 4, thickness: 0.3 },
 
     camera: {
       position: {
@@ -73,7 +73,7 @@ function main() {
     RUN_AWAY,
   }
 
-  let currMode = RobotMode.LOOKING;
+  let currMode = RobotMode.RUN_AWAY;
   let switchTime = 0;
 
   setInterval(() => {
@@ -82,7 +82,7 @@ function main() {
         robot.setMotorPower(0, 5);
         robot.setMotorPower(1, 5);
 
-        if (Date.now() - switchTime > 5000) {
+        if (Date.now() - switchTime > 10000) {
           switchTime = Date.now();
           currMode = RobotMode.RUN_AWAY;
         }

@@ -22,44 +22,6 @@ import * as CANNON from "cannon";
 
 window.CANNON = CANNON;
 
-function createScene(
-  engine: BABYLON.Engine,
-  canvas: HTMLCanvasElement
-): BABYLON.Scene {
-  let scene = new BABYLON.Scene(engine);
-  let gravityVector = new BABYLON.Vector3(0, -9.81, 0);
-  let physicsPlugin = new BABYLON.CannonJSPlugin();
-
-  scene.enablePhysics(gravityVector, physicsPlugin);
-
-  let camera = new BABYLON.ArcRotateCamera(
-    "Camera",
-    (3 * Math.PI) / 2,
-    Math.PI / 3,
-    50,
-    BABYLON.Vector3.Zero(),
-    scene
-  );
-  camera.attachControl(canvas, true);
-
-  let light = new BABYLON.HemisphericLight(
-    "light",
-    new BABYLON.Vector3(0, 1, 0),
-    scene
-  );
-  light.intensity = 0.7;
-
-  let ground = BABYLON.Mesh.CreateGround("ground1", 80, 80, 2, scene);
-  ground.physicsImpostor = new BABYLON.PhysicsImpostor(
-    ground,
-    BABYLON.PhysicsImpostor.BoxImpostor,
-    { mass: 0, friction: 0.2, restitution: 0 },
-    scene
-  );
-
-  return scene;
-}
-
 const DEFAULT_CONFIG: SimulatorConfig = {
   defaultWorld: {
     zLength: 10,
@@ -82,18 +44,18 @@ const DEFAULT_CONFIG: SimulatorConfig = {
 export class Sim3D implements ISim3D {
   private engine: BABYLON.Engine;
   private scene: BABYLON.Scene;
+  private canvas: HTMLCanvasElement;
   private config: SimulatorConfig;
   private handleRegistry: HandleRegistry;
 
-  constructor(private canvas: HTMLCanvasElement, config?: SimulatorConfig) {
+  constructor(private htmlCanvas: HTMLCanvasElement, config?: SimulatorConfig) {
     if (!config) {
       config = DEFAULT_CONFIG;
     }
 
     this.config = config;
-
-    this.engine = new BABYLON.Engine(canvas, true);
-    this.scene = createScene(this.engine, canvas);
+    this.canvas = htmlCanvas;
+    this.engine = new BABYLON.Engine(this.canvas, true);
 
     this.resetSimulator();
   }
@@ -122,7 +84,44 @@ export class Sim3D implements ISim3D {
    * from the scene, and they will need to be re-added.
    */
   resetSimulator(): void {
-    this.initSceneAndWorld();
+    this.scene = new BABYLON.Scene(this.engine);
+    let gravityVector = new BABYLON.Vector3(0, -10, 0);
+    let physicsPlugin = new BABYLON.CannonJSPlugin();
+
+    this.scene.enablePhysics(gravityVector, physicsPlugin);
+
+    let camera = new BABYLON.ArcRotateCamera(
+      "Camera",
+      (3 * Math.PI) / 2,
+      Math.PI / 3,
+      50,
+      BABYLON.Vector3.Zero(),
+      this.scene
+    );
+    camera.attachControl(this.canvas, true);
+
+    let light = new BABYLON.HemisphericLight(
+      "light",
+      new BABYLON.Vector3(0, 1, 0),
+      this.scene
+    );
+    light.intensity = 0.7;
+
+    let ground = BABYLON.Mesh.CreateGround(
+      "ground1",
+      this.config.defaultWorld.xLength,
+      this.config.defaultWorld.zLength,
+      2,
+      this.scene
+    );
+    ground.physicsImpostor = new BABYLON.PhysicsImpostor(
+      ground,
+      BABYLON.PhysicsImpostor.BoxImpostor,
+      { mass: 0, friction: 0.2, restitution: 0 },
+      this.scene
+    );
+
+    this.buildWalls();
   }
 
   /**
@@ -164,9 +163,9 @@ export class Sim3D implements ISim3D {
   }
 
   /**
-   * Initializes the basic scene using the `defaultWorld` in config
+   * Build walls using the `defaultWorld` in config
    */
-  private initSceneAndWorld(): void {
+  private buildWalls(): void {
     const worldConfig = this.config.defaultWorld;
 
     makeSimWall(
@@ -180,71 +179,36 @@ export class Sim3D implements ISim3D {
       },
       this.scene
     );
-
-    /*if (worldConfig.perimeter) {
-      // Make a perimeter with the given height and thickness
-      this.addWall({
-        type: "wall",
-        start: { x: -worldConfig.xLength / 2, y: -worldConfig.zLength / 2 },
-        end: { x: worldConfig.xLength / 2, y: -worldConfig.zLength / 2 },
-        baseColor: 0x00ff00,
-        height: worldConfig.perimeter.height,
-        thickness: worldConfig.perimeter.thickness,
-      });
-      this.addWall({
+    makeSimWall(
+      {
         type: "wall",
         start: { x: -worldConfig.xLength / 2, y: worldConfig.zLength / 2 },
         end: { x: worldConfig.xLength / 2, y: worldConfig.zLength / 2 },
         baseColor: 0xff0000,
         height: worldConfig.perimeter.height,
         thickness: worldConfig.perimeter.thickness,
-      });
-      this.addWall({
+      },
+      this.scene
+    );
+    makeSimWall(
+      {
         type: "wall",
         start: { x: -worldConfig.xLength / 2, y: -worldConfig.zLength / 2 },
         end: { x: -worldConfig.xLength / 2, y: worldConfig.zLength / 2 },
         height: worldConfig.perimeter.height,
         thickness: worldConfig.perimeter.thickness,
-      });
-      this.addWall({
+      },
+      this.scene
+    );
+    makeSimWall(
+      {
         type: "wall",
         start: { x: worldConfig.xLength / 2, y: -worldConfig.zLength / 2 },
         end: { x: worldConfig.xLength / 2, y: worldConfig.zLength / 2 },
         height: worldConfig.perimeter.height,
         thickness: worldConfig.perimeter.thickness,
-      });
-    } else if (worldConfig.walls) {
-      console.warn(
-        "Using worldConfig.walls will be deprecated in favor of the worldConfig.perimeter field"
-      );
-      if (worldConfig.walls.length === 0) {
-        this.addWall({
-          type: "wall",
-          start: { x: -worldConfig.xLength / 2, y: -worldConfig.zLength / 2 },
-          end: { x: worldConfig.xLength / 2, y: -worldConfig.zLength / 2 },
-          baseColor: 0x00ff00,
-        });
-        this.addWall({
-          type: "wall",
-          start: { x: -worldConfig.xLength / 2, y: worldConfig.zLength / 2 },
-          end: { x: worldConfig.xLength / 2, y: worldConfig.zLength / 2 },
-          baseColor: 0xff0000,
-        });
-        this.addWall({
-          type: "wall",
-          start: { x: -worldConfig.xLength / 2, y: -worldConfig.zLength / 2 },
-          end: { x: -worldConfig.xLength / 2, y: worldConfig.zLength / 2 },
-        });
-        this.addWall({
-          type: "wall",
-          start: { x: worldConfig.xLength / 2, y: -worldConfig.zLength / 2 },
-          end: { x: worldConfig.xLength / 2, y: worldConfig.zLength / 2 },
-        });
-      } else {
-        worldConfig.walls.forEach((wallSpec) => {
-          this.addWall(wallSpec);
-        });
-      }
-    }*/
+      },
+      this.scene
+    );
   }
 }
