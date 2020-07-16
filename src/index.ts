@@ -1,6 +1,6 @@
 export { Sim3D } from "./engine/plugins/three/Sim3D";
 export { ISim3D } from "./engine/interface/ISim3D";
-export { createThreeSim3D } from "./engine/EngineFactory";
+export { createSim3D, SimulatorPlugins } from "./engine/EngineFactory";
 export { IRobotHandle } from "./engine/interface/IRobotHandle";
 export {
   SimulatorConfig,

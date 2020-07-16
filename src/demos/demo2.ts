@@ -4,10 +4,12 @@ import {
   RobotBuilder,
   CameraSpecs,
 } from "../index";
-import { Sim3D } from "../engine/plugins/babylon/Sim3D";
+import { createSim3D } from "../engine/EngineFactory";
 import { IRobotSpec } from "../engine/specs/RobotSpecs";
+import { ISim3D } from "../engine/interface/ISim3D";
+import { Sim3D } from "../engine/plugins/babylon/Sim3D";
 
-let simulator: Sim3D;
+let simulator: ISim3D;
 
 const simConfig: SimulatorConfig = {
   defaultWorld: {
@@ -35,12 +37,36 @@ window.onresize = () => {
 function main() {
   const canvas = <HTMLCanvasElement>document.getElementById("demo2");
 
-  simulator = new Sim3D(canvas, simConfig);
+  //simulator = createSim3D(SimulatorPlugin.BABYLON, canvas, simConfig);
+  let simulator: Sim3D = new Sim3D(canvas, simConfig);
   simulator.onresize();
   simulator.beginRendering();
+
   let robotSpec: IRobotSpec;
   const robot = simulator.addRobot(robotSpec);
-  simulator.addBox();
+
+  simulator.addBox({
+    type: "box",
+    baseColor: 0x00ffff,
+    dimensions: { x: 2, y: 4, z: 8 },
+    physicsProperties: { density: 2 },
+    initialPosition: { x: -16, y: -8 },
+  });
+
+  simulator.addBox({
+    type: "box",
+    baseColor: 0xffffff,
+    dimensions: { x: 2, y: 4, z: 8 },
+    physicsProperties: { density: 2 },
+    initialPosition: { x: -8, y: -8 },
+  });
+
+  simulator.addBall({
+    type: "ball",
+    radius: 2,
+    physicsProperties: { density: 2 },
+    initialPosition: { x: 4, y: 4 },
+  });
 
   enum RobotMode {
     LOOKING,

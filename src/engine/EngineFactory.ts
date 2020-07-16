@@ -1,10 +1,21 @@
 import { ISim3D } from "./interface/ISim3D";
 import { SimulatorConfig } from "./interface/SimulatorConfig";
-import { Sim3D } from "./plugins/three/Sim3D";
+import { createBabylonSim3D } from "./plugins/babylon/Factory";
+import { createThreeSim3D } from "./plugins/three/Factory";
 
-export function createThreeSim3D(
+export enum SimulatorPlugins {
+  THREE,
+  BABYLON,
+}
+
+export function createSim3D(
+  plugin: SimulatorPlugins,
   canvas: HTMLCanvasElement,
   config?: SimulatorConfig
 ): ISim3D {
-  return new Sim3D(canvas, config);
+  if (plugin == SimulatorPlugins.BABYLON) {
+    return createBabylonSim3D(canvas, config);
+  } else {
+    return createThreeSim3D(canvas, config);
+  }
 }
