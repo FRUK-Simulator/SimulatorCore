@@ -61,10 +61,10 @@ export class Zone extends SimObject {
         spec.rectangleZone.zLength / 2
       );
     } else if (spec.ellipseZone) {
-      var xRadius = spec.ellipseZone.xRadius;
-      var yRadius = spec.ellipseZone.zRadius;
+      const xRadius = spec.ellipseZone.xRadius;
+      const yRadius = spec.ellipseZone.zRadius;
 
-      var shape = new THREE.Shape().ellipse(
+      const shape = new THREE.Shape().ellipse(
         initialPosition.x,
         initialPosition.y,
         xRadius,
@@ -75,7 +75,7 @@ export class Zone extends SimObject {
         0
       );
 
-      var zoneGeom = new THREE.ShapeBufferGeometry(shape);
+      const zoneGeom = new THREE.ShapeBufferGeometry(shape);
       zoneMesh = new THREE.Mesh(zoneGeom, zoneMaterial);
 
       fixtureShape = new Box(
@@ -87,21 +87,21 @@ export class Zone extends SimObject {
       var fixturePoints = [];
 
       for (var i = 0; i < spec.polygonZone.points.length; i++) {
-        var point = new THREE.Vector2(
+        const point = new THREE.Vector2(
           spec.polygonZone.points[i].x,
           spec.polygonZone.points[i].y
         );
         shapePoints.push(point);
 
-        var fixPoint = new Vec2(
+        const fixPoint = new Vec2(
           spec.polygonZone.points[i].x,
           spec.polygonZone.points[i].y
         );
         fixturePoints.push(fixPoint);
       }
 
-      var shape = new THREE.Shape(shapePoints);
-      var zoneGeom = new THREE.ShapeBufferGeometry(shape);
+      const shape = new THREE.Shape(shapePoints);
+      const zoneGeom = new THREE.ShapeBufferGeometry(shape);
       zoneMesh = new THREE.Mesh(zoneGeom, zoneMaterial);
 
       fixtureShape = new Polygon(fixturePoints);
