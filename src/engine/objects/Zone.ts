@@ -83,8 +83,8 @@ export class Zone extends SimObject {
         spec.ellipseZone.zRadius
       );
     } else if (spec.polygonZone) {
-      let shapePoints = [];
-      let fixturePoints = [];
+      const shapePoints = [];
+      const fixturePoints = [];
 
       for (let i = 0; i < spec.polygonZone.points.length; i++) {
         const point = new THREE.Vector2(
