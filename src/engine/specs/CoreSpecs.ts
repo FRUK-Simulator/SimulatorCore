@@ -107,12 +107,27 @@ export interface ICustomMeshSpec {
   scale?: Vector3d;
 }
 
+export interface IRectangleZoneSpec {
+  xLength: number;
+  zLength: number;
+}
+
+export interface IEllipseZoneSpec {
+  xRadius: number;
+  zRadius: number;
+}
+
+export interface IPolygonZoneSpec {
+  points: Vector2d[];
+}
+
 // Zone
 export interface IZoneSpec extends IBaseSimObjectSpec {
   type: "zone";
   zoneId: string;
-  xLength: number;
-  zLength: number;
+  rectangleZone?: IRectangleZoneSpec;
+  ellipseZone?: IEllipseZoneSpec;
+  polygonZone?: IPolygonZoneSpec;
   opacity?: number;
 }
 
