@@ -46,8 +46,8 @@ export class Zone extends SimObject {
 
     const zoneMaterial = new THREE.MeshBasicMaterial(materialSpecs);
 
-    var fixtureShape;
-    var zoneMesh;
+    let fixtureShape;
+    let zoneMesh;
 
     if (spec.rectangleZone) {
       const zoneGeom = new THREE.PlaneGeometry(
@@ -83,10 +83,10 @@ export class Zone extends SimObject {
         spec.ellipseZone.zRadius
       );
     } else if (spec.polygonZone) {
-      var shapePoints = [];
-      var fixturePoints = [];
+      let shapePoints = [];
+      let fixturePoints = [];
 
-      for (var i = 0; i < spec.polygonZone.points.length; i++) {
+      for (let i = 0; i < spec.polygonZone.points.length; i++) {
         const point = new THREE.Vector2(
           spec.polygonZone.points[i].x,
           spec.polygonZone.points[i].y
