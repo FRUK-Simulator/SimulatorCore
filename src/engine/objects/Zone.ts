@@ -1,6 +1,11 @@
 import * as THREE from "three";
 import { BodyDef, FixtureDef, Vec2, Box, Polygon } from "planck-js";
-import { IZoneSpec } from "../specs/CoreSpecs";
+import {
+  IZoneSpec,
+  IRectangleZoneSpec,
+  IEllipseZoneSpec,
+  IPolygonZoneSpec,
+} from "../specs/CoreSpecs";
 import { SimObject } from "./SimObject";
 import { Vector2d } from "../SimTypes";
 import { IZoneFixtureUserData } from "../specs/UserDataSpecs";
@@ -49,20 +54,19 @@ export class Zone extends SimObject {
     let fixtureShape;
     let zoneMesh;
 
-    if (spec.rectangleZone) {
+    if (spec.zoneShape.type == "rectangle") {
+      const zoneShape = spec.zoneShape as IRectangleZoneSpec;
       const zoneGeom = new THREE.PlaneGeometry(
-        spec.rectangleZone.xLength,
-        spec.rectangleZone.zLength
+        zoneShape.xLength,
+        zoneShape.zLength
       );
       zoneMesh = new THREE.Mesh(zoneGeom, zoneMaterial);
 
-      fixtureShape = new Box(
-        spec.rectangleZone.xLength / 2,
-        spec.rectangleZone.zLength / 2
-      );
-    } else if (spec.ellipseZone) {
-      const xRadius = spec.ellipseZone.xRadius;
-      const yRadius = spec.ellipseZone.zRadius;
+      fixtureShape = new Box(zoneShape.xLength / 2, zoneShape.zLength / 2);
+    } else if (spec.zoneShape.type == "ellipse") {
+      const zoneShape = spec.zoneShape as IEllipseZoneSpec;
+      const xRadius = zoneShape.xRadius;
+      const yRadius = zoneShape.zRadius;
 
       const shape = new THREE.Shape().ellipse(
         initialPosition.x,
@@ -78,25 +82,20 @@ export class Zone extends SimObject {
       const zoneGeom = new THREE.ShapeBufferGeometry(shape);
       zoneMesh = new THREE.Mesh(zoneGeom, zoneMaterial);
 
-      fixtureShape = new Box(
-        spec.ellipseZone.xRadius,
-        spec.ellipseZone.zRadius
-      );
-    } else if (spec.polygonZone) {
+      fixtureShape = new Box(zoneShape.xRadius, zoneShape.zRadius);
+    } else if (spec.zoneShape.type == "polygon") {
+      const zoneShape = spec.zoneShape as IPolygonZoneSpec;
       const shapePoints = [];
       const fixturePoints = [];
 
-      for (let i = 0; i < spec.polygonZone.points.length; i++) {
+      for (let i = 0; i < zoneShape.points.length; i++) {
         const point = new THREE.Vector2(
-          spec.polygonZone.points[i].x,
-          spec.polygonZone.points[i].y
+          zoneShape.points[i].x,
+          zoneShape.points[i].y
         );
         shapePoints.push(point);
 
-        const fixPoint = new Vec2(
-          spec.polygonZone.points[i].x,
-          spec.polygonZone.points[i].y
-        );
+        const fixPoint = new Vec2(zoneShape.points[i].x, zoneShape.points[i].y);
         fixturePoints.push(fixPoint);
       }
 

@@ -12,7 +12,8 @@ export type SimObjectSpec =
   | IPyramidSpec
   | IConeSpec
   | ICylinderSpec
-  | IZoneSpec;
+  | IZoneSpec
+  | IRectangleZoneSpec;
 
 export interface IPhysicsProperties {
   linearDamping?: number;
@@ -107,17 +108,24 @@ export interface ICustomMeshSpec {
   scale?: Vector3d;
 }
 
-export interface IRectangleZoneSpec {
+interface IBaseZoneShape {
+  type: string;
+}
+
+export interface IRectangleZoneSpec extends IBaseZoneShape {
+  type: "rectangle";
   xLength: number;
   zLength: number;
 }
 
-export interface IEllipseZoneSpec {
+export interface IEllipseZoneSpec extends IBaseZoneShape {
+  type: "ellipse";
   xRadius: number;
   zRadius: number;
 }
 
-export interface IPolygonZoneSpec {
+export interface IPolygonZoneSpec extends IBaseZoneShape {
+  type: "polygon";
   points: Vector2d[];
 }
 
@@ -125,9 +133,7 @@ export interface IPolygonZoneSpec {
 export interface IZoneSpec extends IBaseSimObjectSpec {
   type: "zone";
   zoneId: string;
-  rectangleZone?: IRectangleZoneSpec;
-  ellipseZone?: IEllipseZoneSpec;
-  polygonZone?: IPolygonZoneSpec;
+  zoneShape: IBaseZoneShape;
   opacity?: number;
 }
 
