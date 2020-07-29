@@ -221,13 +221,22 @@ function main() {
   };
   const robot = simulator.addRobot(spec);
 
+  const polygonZone = {
+    type: "polygon",
+    points: [
+      { x: 0, y: 2 },
+      { x: 2, y: 2 },
+      { x: 2, y: 0 },
+      { x: 0, y: 0 },
+    ],
+  };
+
   simulator.addZone({
     type: "zone",
     initialPosition: { x: 0, y: 0 },
     baseColor: 0xff0000,
     opacity: 0.4,
-    xLength: 2,
-    zLength: 1,
+    zoneShape: polygonZone,
     zoneId: "test-zone",
   });
 

@@ -1,6 +1,11 @@
 import * as THREE from "three";
-import { BodyDef, FixtureDef, Vec2, Box } from "planck-js";
-import { IZoneSpec } from "../specs/CoreSpecs";
+import { BodyDef, FixtureDef, Vec2, Box, Polygon } from "planck-js";
+import {
+  IZoneSpec,
+  IRectangleZoneSpec,
+  IEllipseZoneSpec,
+  IPolygonZoneSpec,
+} from "../specs/CoreSpecs";
 import { SimObject } from "./SimObject";
 import { Vector2d } from "../SimTypes";
 import { IZoneFixtureUserData } from "../specs/UserDataSpecs";
@@ -44,9 +49,64 @@ export class Zone extends SimObject {
       initialPosition.y = spec.initialPosition.y;
     }
 
-    const zoneGeom = new THREE.PlaneGeometry(spec.xLength, spec.zLength);
     const zoneMaterial = new THREE.MeshBasicMaterial(materialSpecs);
-    const zoneMesh = new THREE.Mesh(zoneGeom, zoneMaterial);
+
+    let fixtureShape;
+    let zoneMesh;
+
+    if (spec.zoneShape.type == "rectangle") {
+      const zoneShape = spec.zoneShape as IRectangleZoneSpec;
+      const zoneGeom = new THREE.PlaneGeometry(
+        zoneShape.xLength,
+        zoneShape.zLength
+      );
+      zoneMesh = new THREE.Mesh(zoneGeom, zoneMaterial);
+
+      fixtureShape = new Box(zoneShape.xLength / 2, zoneShape.zLength / 2);
+    } else if (spec.zoneShape.type == "ellipse") {
+      const zoneShape = spec.zoneShape as IEllipseZoneSpec;
+      const xRadius = zoneShape.xRadius;
+      const yRadius = zoneShape.zRadius;
+
+      const shape = new THREE.Shape().ellipse(
+        initialPosition.x,
+        initialPosition.y,
+        xRadius,
+        yRadius,
+        0,
+        2 * Math.PI,
+        false,
+        0
+      );
+
+      const zoneGeom = new THREE.ShapeBufferGeometry(shape);
+      zoneMesh = new THREE.Mesh(zoneGeom, zoneMaterial);
+
+      fixtureShape = new Box(zoneShape.xRadius, zoneShape.zRadius);
+    } else if (spec.zoneShape.type == "polygon") {
+      const zoneShape = spec.zoneShape as IPolygonZoneSpec;
+      const shapePoints = [];
+      const fixturePoints = [];
+
+      for (let i = 0; i < zoneShape.points.length; i++) {
+        const point = new THREE.Vector2(
+          zoneShape.points[i].x,
+          zoneShape.points[i].y
+        );
+        shapePoints.push(point);
+
+        const fixPoint = new Vec2(zoneShape.points[i].x, zoneShape.points[i].y);
+        fixturePoints.push(fixPoint);
+      }
+
+      const shape = new THREE.Shape(shapePoints);
+      const zoneGeom = new THREE.ShapeBufferGeometry(shape);
+      zoneMesh = new THREE.Mesh(zoneGeom, zoneMaterial);
+
+      fixtureShape = new Polygon(fixturePoints);
+    } else {
+      console.warn("Some type of zone must be specified");
+    }
 
     zoneMesh.position.y = 0;
     zoneMesh.position.x = initialPosition.x;
@@ -74,7 +134,7 @@ export class Zone extends SimObject {
     };
 
     this._fixtureSpecs = {
-      shape: new Box(spec.xLength / 2, spec.zLength / 2),
+      shape: fixtureShape,
       isSensor: true,
       userData,
     };
