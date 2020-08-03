@@ -14,7 +14,7 @@ export function getSensorMountPosition(
 
   let result: Vector3d = {
     x: initialPosition.x,
-    y: 0,
+    y: robotSpec.dimensions.y / 2,
     z: initialPosition.y,
   };
 
@@ -34,6 +34,12 @@ export function getSensorMountPosition(
       break;
     case SensorMountingFace.REAR:
       result.z += robotSpec.dimensions.z / 2;
+      break;
+    case SensorMountingFace.TOP:
+      result.y += robotSpec.dimensions.y / 2;
+      break;
+    case SensorMountingFace.BOTTOM:
+      result.y -= robotSpec.dimensions.y / 2;
       break;
   }
 
