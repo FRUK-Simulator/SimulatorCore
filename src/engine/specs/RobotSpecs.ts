@@ -15,6 +15,8 @@ export enum SensorMountingFace {
   LEFT,
   RIGHT,
   REAR,
+  TOP,
+  BOTTOM,
 }
 
 export interface IRobotWheelSpec extends IBaseSimObjectSpec {
