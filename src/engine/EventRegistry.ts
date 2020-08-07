@@ -7,9 +7,11 @@ import {
   IZoneFixtureUserData,
 } from "./specs/UserDataSpecs";
 import { SimBasicSensor } from "./objects/robot/sensors/SimBasicSensor";
+import { SimComplexSensor } from "./objects/robot/sensors/SimComplexSensor";
 import { EventEmitter } from "events";
 
-type SensorRegisty = Map<string, SimBasicSensor>;
+type BasicSensorRegisty = Map<string, SimBasicSensor>;
+type ComplexSensorRegisty = Map<string, SimComplexSensor>;
 type ObjectPartCount = Map<string, number>; // Object GUID -> number of instances in zone
 
 function isSensorUserData(
@@ -111,9 +113,14 @@ function isZoneContact(a: Fixture, b: Fixture): boolean {
  * additional game logic.
  */
 export class EventRegistry extends EventEmitter {
-  private _sensors: Map<string, SensorRegisty> = new Map<
+  private _basicSensors: Map<string, BasicSensorRegisty> = new Map<
     string,
-    SensorRegisty
+    BasicSensorRegisty
+  >();
+
+  private _complexSensors: Map<string, ComplexSensorRegisty> = new Map<
+    string,
+    ComplexSensorRegisty
   >();
 
   // Maps from Zone ID to ObjectPartCount
@@ -325,7 +332,7 @@ export class EventRegistry extends EventEmitter {
     sensor: ISimSensorDescriptor,
     hasContact: boolean
   ): void {
-    const robotSensors = this._sensors.get(sensor.robotGuid);
+    const robotSensors = this._basicSensors.get(sensor.robotGuid);
 
     if (robotSensors === undefined) {
       return;
@@ -349,12 +356,35 @@ export class EventRegistry extends EventEmitter {
    * @param sensorIdent
    * @param callback
    */
-  registerSensor(robotGuid: string, sensor: SimBasicSensor): void {
-    if (!this._sensors.has(robotGuid)) {
-      this._sensors.set(robotGuid, new Map<string, SimBasicSensor>());
+  registerBasicSensor(robotGuid: string, sensor: SimBasicSensor): void {
+    if (!this._basicSensors.has(robotGuid)) {
+      this._basicSensors.set(robotGuid, new Map<string, SimBasicSensor>());
     }
 
-    const robotSensors: SensorRegisty = this._sensors.get(robotGuid);
+    const robotSensors: BasicSensorRegisty = this._basicSensors.get(robotGuid);
+
+    if (!robotSensors.has(sensor.identifier)) {
+      robotSensors.set(sensor.identifier, sensor);
+    }
+  }
+
+  /**
+   * Register a sensor callback
+   *
+   * This will end up getting called by a {@link SimRobot} instance as part
+   * of its initialization routines
+   * @param robotGuid
+   * @param sensorIdent
+   * @param callback
+   */
+  registerComplexSensor(robotGuid: string, sensor: SimComplexSensor): void {
+    if (!this._complexSensors.has(robotGuid)) {
+      this._complexSensors.set(robotGuid, new Map<string, SimComplexSensor>());
+    }
+
+    const robotSensors: ComplexSensorRegisty = this._complexSensors.get(
+      robotGuid
+    );
 
     if (!robotSensors.has(sensor.identifier)) {
       robotSensors.set(sensor.identifier, sensor);

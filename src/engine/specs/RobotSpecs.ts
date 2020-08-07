@@ -85,6 +85,7 @@ export interface IRobotSpec extends IBaseSimObjectSpec {
   dimensions: Vector3d;
   drivetrain: IDrivetrainSpec;
   basicSensors?: BasicSensorSpec[];
+  complexSensors?: ComplexSensorSpec[];
   // TODO as we add more features to the robot (e.g. sensors or mechanisms)
   // they can get added as properties here
 }
@@ -145,3 +146,34 @@ export interface IDistanceSensorSpec extends IBasicSensorSpec {
 
 // Add additional basic sensor types to this union
 export type BasicSensorSpec = IContactSensorSpec | IDistanceSensorSpec;
+
+/**
+ * Interface representing a BasicSensor value (e.g. simple digital/analog)
+ */
+export interface IComplexSensorValue {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  value: any;
+}
+
+/**
+ * Spec for a Complex Sensor
+ */
+export interface IComplexSensorSpec {
+  type: string;
+  channel: number;
+  mountFace: SensorMountingFace;
+  mountOffset?: Vector3d;
+  render?: boolean;
+}
+
+/**
+ * Spec for a Color sensor (e.g. zone color detection)
+ */
+export interface IColorSensorSpec extends IComplexSensorSpec {
+  type: "color-sensor";
+  width: number;
+  range: number;
+}
+
+// Add additional basic sensor types to this union
+export type ComplexSensorSpec = IColorSensorSpec;
