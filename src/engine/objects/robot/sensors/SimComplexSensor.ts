@@ -10,7 +10,7 @@ import { EventRegistry } from "../../../EventRegistry";
  * Abstract base class representing a ComplexSensor
  *
  * A ComplexSensor represents a physical sensor that provides feedback
- * either via a digital channel (HIGH/LOW) or an analog channel (voltage)
+ * via a JavsScript Object
  */
 export abstract class SimComplexSensor extends SimObject {
   protected _channel: number;

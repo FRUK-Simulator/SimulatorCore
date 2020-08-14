@@ -172,7 +172,7 @@ export interface IComplexSensorSpec {
 export interface IColorSensorSpec extends IComplexSensorSpec {
   type: "color-sensor";
   width: number;
-  range: number;
+  range?: number;
 }
 
 // Add additional basic sensor types to this union
