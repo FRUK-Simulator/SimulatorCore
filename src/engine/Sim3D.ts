@@ -173,7 +173,7 @@ export class Sim3D extends EventEmitter {
   }
 
   /**
-   * Halt physics from re-processing, leaving rendering to continue
+   * Enable or disable simulator physics
    */
   setPhysicsActive(isActive: boolean): void {
     this.physicsActive = isActive;
