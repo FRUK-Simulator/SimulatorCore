@@ -73,7 +73,7 @@ export class Sim3D extends EventEmitter {
   private cameraManager: CameraManager;
 
   private isRendering = false;
-  private stopPhysics = false;
+  private physicsActive = true;
 
   private config: SimulatorConfig;
 
@@ -153,14 +153,14 @@ export class Sim3D extends EventEmitter {
       this.lastAnimateTime = time;
 
       window.requestAnimationFrame(r);
-      if (!this.stopPhysics) {
+      if (this.physicsActive) {
         this.updatePhysics(dt);
       }
       this.render(dt);
     };
 
     this.isRendering = true;
-    this.stopPhysics = true;
+    this.physicsActive = true;
 
     window.requestAnimationFrame(r);
   }
@@ -175,8 +175,8 @@ export class Sim3D extends EventEmitter {
   /**
    * Halt physics from re-processing, leaving rendering to continue
    */
-  haltPhysics(): void {
-    this.stopPhysics = true;
+  setPhysicsActive(isActive: boolean): void {
+    this.physicsActive = isActive;
   }
 
   // Public API - Objects
