@@ -1,4 +1,5 @@
 import { SimComplexSensor } from "./SimComplexSensor";
+import { SimColorSensor } from "./SimColorSensor";
 import { IRobotSpec } from "../../../specs/RobotSpecs";
 import { EventRegistry } from "../../../EventRegistry";
 
@@ -22,14 +23,11 @@ export class ComplexSensorManager {
     if (!robotSpec.complexSensors) {
       return;
     }
-
     robotSpec.complexSensors.forEach((sensorSpec) => {
       let sensor: SimComplexSensor;
       // TODO move this to a factory
       if (sensorSpec.type === "color-sensor") {
-        console.warn(robotGuid);
-        // TODO uncomment when color sensor exists
-        // sensor = new SimColorSensor(sensorSpec, robotGuid, robotSpec);
+        sensor = new SimColorSensor(sensorSpec, robotGuid, robotSpec);
       }
 
       if (this._sensors.has(sensor.identifier)) {

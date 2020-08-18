@@ -202,6 +202,7 @@ export class EventRegistry extends EventEmitter {
     const userDataB: SimUserData | null = fixtureB.getUserData() as SimUserData;
 
     let zoneId = "";
+    let color = 0;
     let objectGuid = "";
 
     if (userDataA && isZoneUserData(userDataA)) {
@@ -210,6 +211,7 @@ export class EventRegistry extends EventEmitter {
       }
       // A is the zone
       zoneId = userDataA.zone.id;
+      color = userDataA.zone.color;
 
       if (userDataB.rootGuid !== undefined) {
         objectGuid = userDataB.rootGuid;
@@ -222,6 +224,7 @@ export class EventRegistry extends EventEmitter {
       }
       // B is the zone
       zoneId = userDataB.zone.id;
+      color = userDataB.zone.color;
 
       if (userDataA.rootGuid !== undefined) {
         objectGuid = userDataA.rootGuid;
@@ -253,6 +256,15 @@ export class EventRegistry extends EventEmitter {
 
       count++;
       zoneCollisions.set(objectGuid, count);
+
+      // send color of zone to color sensors
+      const sensorDescriptors = getSensorDescriptors(fixtureA, fixtureB);
+
+      sensorDescriptors.forEach((sensor) => {
+        if (sensor.sensorType == "color-sensor") {
+          this.broadcastColor(sensor, color);
+        }
+      });
     } else {
       // If we don't have a zone, just bail out
       if (!this._zones.has(zoneId)) {
@@ -280,6 +292,26 @@ export class EventRegistry extends EventEmitter {
 
       zoneCollisions.set(objectGuid, count);
     }
+  }
+
+  /**
+   * Inform {@link SimColorSensor}s of an update in their state
+   * @private
+   * @param sensor
+   * @param color
+   */
+  private broadcastColor(sensor: ISimSensorDescriptor, color: number): void {
+    const robotSensors = this._complexSensors.get(sensor.robotGuid);
+
+    if (robotSensors === undefined) {
+      return;
+    }
+
+    if (!robotSensors.has(sensor.sensorIdent)) {
+      return;
+    }
+
+    robotSensors.get(sensor.sensorIdent).onSensorEvent({ value: color });
   }
 
   /**

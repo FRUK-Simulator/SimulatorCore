@@ -170,6 +170,11 @@ function main() {
     .setMountFace(RobotSpecs.SensorMountingFace.FRONT)
     .setMaxRange(5);
 
+  const colorSensor = new RobotBuilder.ColorSensorBuilder(3)
+    .setMountFace(RobotSpecs.SensorMountingFace.BOTTOM)
+    .setWidth(0.25)
+    .setRange(5);
+
   robotBuilder
     .setDimensions({ x: 0.225, y: 0.225, z: 0.255 })
     .addBasicSensor(distanceSensor)
@@ -185,6 +190,7 @@ function main() {
         .setChannel(2)
         .setMountFace(RobotSpecs.SensorMountingFace.RIGHT)
     )
+    .addComplexSensor(colorSensor)
     .addWheel("left-drive", wheel)
     .addWheel(
       "left-drive",
@@ -220,6 +226,16 @@ function main() {
     },
   };
   const robot = simulator.addRobot(spec);
+
+  const polygonZone = {
+    type: "polygon",
+    points: [
+      { x: -2, y: 2 },
+      { x: 2, y: 2 },
+      { x: 2, y: -2 },
+      { x: -2, y: -2 },
+    ],
+  };
 
   simulator.addZone({
     type: "zone",

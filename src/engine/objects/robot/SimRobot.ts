@@ -13,6 +13,7 @@ import {
 import { IRobotSpec } from "../../specs/RobotSpecs";
 import { IBaseFixtureUserData } from "../../specs/UserDataSpecs";
 import { BasicSensorManager } from "./sensors/BasicSensorManager";
+import { ComplexSensorManager } from "./sensors/ComplexSensorManager";
 import { EventRegistry } from "../../EventRegistry";
 
 const ROBOT_DEFAULT_COLOR = 0x00ff00;
@@ -32,6 +33,7 @@ export class SimRobot extends SimObject {
 
   private _drivetrain: SimRobotDrivetrain;
   private _basicSensors: BasicSensorManager;
+  private _complexSensors: ComplexSensorManager;
 
   private _meshLoader: GLTFLoader | undefined;
   private _usingCustomMesh = false;
@@ -139,6 +141,20 @@ export class SimRobot extends SimObject {
 
     // Add the created sensors as children
     this._basicSensors.sensors.forEach((sensor) => {
+      console.warn("adding child: ", sensor);
+      this.addChild(sensor);
+
+      if (!this._usingCustomMesh && sensor.mesh) {
+        sensor.mesh.translateY(-this._drivetrain.yOffset);
+      }
+    });
+
+    // Configure Complex Sensors
+    this._complexSensors = new ComplexSensorManager(spec, this.guid);
+
+    // Add the created sensors as children
+    this._complexSensors.sensors.forEach((sensor) => {
+      console.warn("adding child: ", sensor);
       this.addChild(sensor);
 
       if (!this._usingCustomMesh && sensor.mesh) {
@@ -187,6 +203,25 @@ export class SimRobot extends SimObject {
 
     // Configure the basic sensors
     this._basicSensors.sensors.forEach((sensor) => {
+      console.warn("configuring: ", sensor);
+      world.createJoint(
+        new PrismaticJoint(
+          {
+            enableLimit: true,
+            lowerTranslation: 0,
+            upperTranslation: 0,
+          },
+          this._body,
+          sensor.body,
+          sensor.body.getWorldCenter(),
+          new Vec2(1, 0)
+        )
+      );
+    });
+
+    // Configure the complex sensors
+    this._complexSensors.sensors.forEach((sensor) => {
+      console.warn("configuring: ", sensor);
       world.createJoint(
         new PrismaticJoint(
           {
@@ -205,6 +240,7 @@ export class SimRobot extends SimObject {
 
   registerWithEventSystem(eventRegistry: EventRegistry): void {
     this._basicSensors.registerWithEventSystem(this.guid, eventRegistry);
+    this._complexSensors.registerWithEventSystem(this.guid, eventRegistry);
   }
 
   // External facing API
