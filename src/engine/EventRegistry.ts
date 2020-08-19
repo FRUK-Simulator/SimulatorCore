@@ -204,6 +204,7 @@ export class EventRegistry extends EventEmitter {
     let zoneId = "";
     let color = 0;
     let objectGuid = "";
+    let robotGuid = "";
 
     if (userDataA && isZoneUserData(userDataA)) {
       if (!userDataB) {
@@ -215,6 +216,7 @@ export class EventRegistry extends EventEmitter {
 
       if (userDataB.rootGuid !== undefined) {
         objectGuid = userDataB.rootGuid;
+        robotGuid = userDataB.rootGuid;
       } else {
         objectGuid = userDataB.selfGuid;
       }
@@ -228,6 +230,7 @@ export class EventRegistry extends EventEmitter {
 
       if (userDataA.rootGuid !== undefined) {
         objectGuid = userDataA.rootGuid;
+        robotGuid = userDataA.rootGuid;
       } else {
         objectGuid = userDataA.selfGuid;
       }
@@ -258,13 +261,9 @@ export class EventRegistry extends EventEmitter {
       zoneCollisions.set(objectGuid, count);
 
       // send color of zone to color sensors
-      const sensorDescriptors = getSensorDescriptors(fixtureA, fixtureB);
-
-      sensorDescriptors.forEach((sensor) => {
-        if (sensor.sensorType == "color-sensor") {
-          this.broadcastColor(sensor, color);
-        }
-      });
+      if (robotGuid != "") {
+        this.broadcastColor(robotGuid, color);
+      }
     } else {
       // If we don't have a zone, just bail out
       if (!this._zones.has(zoneId)) {
@@ -300,18 +299,18 @@ export class EventRegistry extends EventEmitter {
    * @param sensor
    * @param color
    */
-  private broadcastColor(sensor: ISimSensorDescriptor, color: number): void {
-    const robotSensors = this._complexSensors.get(sensor.robotGuid);
+  private broadcastColor(robotGuid: string, color: number): void {
+    const robotSensors = this._complexSensors.get(robotGuid);
 
     if (robotSensors === undefined) {
       return;
     }
 
-    if (!robotSensors.has(sensor.sensorIdent)) {
-      return;
-    }
-
-    robotSensors.get(sensor.sensorIdent).onSensorEvent({ value: color });
+    robotSensors.forEach((sensor) => {
+      if (sensor.sensorType == "ColorSensor") {
+        sensor.onSensorEvent({ value: color });
+      }
+    });
   }
 
   /**

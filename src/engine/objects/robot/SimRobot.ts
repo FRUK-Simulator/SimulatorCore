@@ -141,7 +141,6 @@ export class SimRobot extends SimObject {
 
     // Add the created sensors as children
     this._basicSensors.sensors.forEach((sensor) => {
-      console.warn("adding child: ", sensor);
       this.addChild(sensor);
 
       if (!this._usingCustomMesh && sensor.mesh) {
@@ -154,7 +153,6 @@ export class SimRobot extends SimObject {
 
     // Add the created sensors as children
     this._complexSensors.sensors.forEach((sensor) => {
-      console.warn("adding child: ", sensor);
       this.addChild(sensor);
 
       if (!this._usingCustomMesh && sensor.mesh) {
@@ -203,7 +201,6 @@ export class SimRobot extends SimObject {
 
     // Configure the basic sensors
     this._basicSensors.sensors.forEach((sensor) => {
-      console.warn("configuring: ", sensor);
       world.createJoint(
         new PrismaticJoint(
           {
@@ -221,7 +218,6 @@ export class SimRobot extends SimObject {
 
     // Configure the complex sensors
     this._complexSensors.sensors.forEach((sensor) => {
-      console.warn("configuring: ", sensor);
       world.createJoint(
         new PrismaticJoint(
           {
