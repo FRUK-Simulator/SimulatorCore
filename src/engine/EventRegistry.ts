@@ -308,7 +308,7 @@ export class EventRegistry extends EventEmitter {
 
     robotSensors.forEach((sensor) => {
       if (sensor.sensorType == "ColorSensor") {
-        sensor.onSensorEvent({ value: color });
+        sensor.onSensorEvent({ value: { color: color } });
       }
     });
   }
