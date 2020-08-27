@@ -133,7 +133,7 @@ export interface IPolygonZoneSpec extends IBaseZoneShape {
 export interface IZoneSpec extends IBaseSimObjectSpec {
   type: "zone";
   zoneId: string;
-  zoneShape: IBaseZoneShape;
+  zoneShape: IPolygonZoneSpec | IEllipseZoneSpec | IRectangleZoneSpec;
   opacity?: number;
 }
 
