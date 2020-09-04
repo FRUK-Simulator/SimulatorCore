@@ -450,15 +450,12 @@ export class Sim3D extends EventEmitter {
     camera.position.z += worldConfig.camera ? worldConfig.camera.position.z : 0;
     camera.position.y += worldConfig.camera ? worldConfig.camera.position.y : 0;
     this.cameraControls = new OrbitControls(camera, this.renderer.domElement);
-
+    this.cameraControls.maxPolarAngle = Math.PI / 2 - 0.1;
     // Lighting
-    const pointLight = new THREE.PointLight(0xffffff, 0.8);
-    pointLight.position.x = 3;
-    pointLight.position.y = 10;
-    pointLight.position.z = 3;
-    this.scene.add(pointLight);
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
+    this.scene.add(directionalLight);
 
-    this.scene.add(new THREE.AmbientLight(0x333333));
+    this.scene.add(new THREE.AmbientLight(0x888888));
 
     // Grid - By default, draw grid lines every 1 unit (metre)
     const grid = makeGrid(
@@ -538,7 +535,55 @@ export class Sim3D extends EventEmitter {
 
     // Axes
     const axesHelper = new THREE.AxesHelper(1);
+    axesHelper.position.x = -worldConfig.xLength / 2 - 1;
+    axesHelper.position.z = -worldConfig.zLength / 2 - 1;
     this.scene.add(axesHelper);
+
+    // Cosmetics
+    const floorGeometry = new THREE.PlaneGeometry(100, 100, 100, 100);
+    const floorTexture = new THREE.TextureLoader().load("/assets/floor.png");
+    floorTexture.repeat = new THREE.Vector2(100, 100);
+    floorTexture.wrapS = THREE.RepeatWrapping;
+    floorTexture.wrapT = THREE.RepeatWrapping;
+    const floorMaterial = new THREE.MeshStandardMaterial({ map: floorTexture });
+    const floor = new THREE.Mesh(floorGeometry, floorMaterial);
+    floor.rotateX(-Math.PI / 2);
+    floor.position.y = -0.1;
+    this.scene.add(floor);
+
+    const blockGeometry = new THREE.BoxGeometry(1, 1, 1);
+    const redBlockMaterial = new THREE.MeshStandardMaterial({
+      color: 0xff0000,
+    });
+    const greenBlockMaterial = new THREE.MeshStandardMaterial({
+      color: 0x00ff00,
+    });
+    const blueBlockMaterial = new THREE.MeshStandardMaterial({
+      color: 0x0000ff,
+    });
+    const blockParent = new THREE.Object3D();
+    {
+      const block = new THREE.Mesh(blockGeometry, redBlockMaterial);
+      block.position.y = 0.5;
+      blockParent.add(block);
+    }
+    {
+      const block = new THREE.Mesh(blockGeometry, greenBlockMaterial);
+      block.position.y = 1.5;
+      block.rotateY(2);
+      blockParent.add(block);
+    }
+    {
+      const block = new THREE.Mesh(blockGeometry, blueBlockMaterial);
+      block.position.y = 0.5;
+      block.position.x = -2;
+      block.position.z = 2;
+      block.rotateY(1);
+      blockParent.add(block);
+    }
+    blockParent.position.x = worldConfig.xLength / 2 + 3;
+    blockParent.position.z = worldConfig.zLength / 2 + 3;
+    this.scene.add(blockParent);
   }
 
   private render(time: number): void {
