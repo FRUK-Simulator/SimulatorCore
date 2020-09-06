@@ -252,6 +252,11 @@ export class SimRobot extends SimObject {
     return this._basicSensors.getAnalogInput(channel);
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  getComplexSensorValue(channel: number, sensorType: string): any {
+    return this._complexSensors.getSensorInput(channel, sensorType);
+  }
+
   getBodySpecs(): BodyDef {
     return this._bodySpecs;
   }

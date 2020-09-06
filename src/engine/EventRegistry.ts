@@ -167,6 +167,7 @@ export class EventRegistry extends EventEmitter {
    */
   private onBeginContact(contact: Contact): void {
     this.updateContactSensors(contact, true);
+    this.updateColorSensors(contact, true);
     this.updateZones(contact, true);
   }
 
@@ -177,6 +178,7 @@ export class EventRegistry extends EventEmitter {
    */
   private onEndContact(contact: Contact): void {
     this.updateContactSensors(contact, false);
+    this.updateColorSensors(contact, false);
     this.updateZones(contact, false);
   }
 
@@ -202,9 +204,7 @@ export class EventRegistry extends EventEmitter {
     const userDataB: SimUserData | null = fixtureB.getUserData() as SimUserData;
 
     let zoneId = "";
-    let color = 0;
     let objectGuid = "";
-    let robotGuid = "";
 
     if (userDataA && isZoneUserData(userDataA)) {
       if (!userDataB) {
@@ -212,11 +212,9 @@ export class EventRegistry extends EventEmitter {
       }
       // A is the zone
       zoneId = userDataA.zone.id;
-      color = userDataA.zone.color;
 
       if (userDataB.rootGuid !== undefined) {
         objectGuid = userDataB.rootGuid;
-        robotGuid = userDataB.rootGuid;
       } else {
         objectGuid = userDataB.selfGuid;
       }
@@ -226,11 +224,9 @@ export class EventRegistry extends EventEmitter {
       }
       // B is the zone
       zoneId = userDataB.zone.id;
-      color = userDataB.zone.color;
 
       if (userDataA.rootGuid !== undefined) {
         objectGuid = userDataA.rootGuid;
-        robotGuid = userDataA.rootGuid;
       } else {
         objectGuid = userDataA.selfGuid;
       }
@@ -259,11 +255,6 @@ export class EventRegistry extends EventEmitter {
 
       count++;
       zoneCollisions.set(objectGuid, count);
-
-      // send color of zone to color sensors
-      if (robotGuid != "") {
-        this.broadcastColor(robotGuid, color);
-      }
     } else {
       // If we don't have a zone, just bail out
       if (!this._zones.has(zoneId)) {
@@ -293,24 +284,78 @@ export class EventRegistry extends EventEmitter {
     }
   }
 
+  private updateColorSensors(contact: Contact, hasContact: boolean): void {
+    if (
+      contact.getFixtureA().getUserData() === null &&
+      contact.getFixtureB().getUserData() === null
+    ) {
+      return;
+    }
+
+    const fixtureA: Fixture = contact.getFixtureA();
+    const fixtureB: Fixture = contact.getFixtureB();
+    const userDataA: SimUserData | null = fixtureA.getUserData() as SimUserData;
+    const userDataB: SimUserData | null = fixtureB.getUserData() as SimUserData;
+
+    if (isSameObject(fixtureA, fixtureB)) {
+      return;
+    }
+
+    // Make sure one of these is a zone
+    if (!isZoneContact(fixtureA, fixtureB)) {
+      return;
+    }
+
+    const sensorDescriptors = getSensorDescriptors(fixtureA, fixtureB);
+
+    // Bail out if none of these are sensors
+    if (sensorDescriptors.length === 0) {
+      return;
+    }
+
+    const colorSensorDescriptor: ISimSensorDescriptor = sensorDescriptors[0];
+    if (colorSensorDescriptor.sensorType !== "ColorSensor") {
+      return;
+    }
+
+    let zoneUserData: IZoneFixtureUserData;
+    if (isZoneUserData(userDataA)) {
+      zoneUserData = userDataA;
+    } else if (isZoneUserData(userDataB)) {
+      zoneUserData = userDataB;
+    }
+
+    // Zone color
+    let zoneColor: number;
+    if (hasContact) {
+      zoneColor =
+        zoneUserData.zone.color !== undefined
+          ? zoneUserData.zone.color
+          : 0xffffff;
+    } else {
+      zoneColor = 0xffffff; // Default to white
+    }
+    this.broadcastColor(colorSensorDescriptor, zoneColor);
+  }
+
   /**
    * Inform {@link SimColorSensor}s of an update in their state
    * @private
    * @param sensor
    * @param color
    */
-  private broadcastColor(robotGuid: string, color: number): void {
-    const robotSensors = this._complexSensors.get(robotGuid);
+  private broadcastColor(sensor: ISimSensorDescriptor, color: number): void {
+    const robotSensors = this._complexSensors.get(sensor.robotGuid);
 
     if (robotSensors === undefined) {
       return;
     }
 
-    robotSensors.forEach((sensor) => {
-      if (sensor.sensorType == "ColorSensor") {
-        sensor.onSensorEvent({ value: { color: color } });
-      }
-    });
+    if (!robotSensors.has(sensor.sensorIdent)) {
+      return;
+    }
+
+    robotSensors.get(sensor.sensorIdent).onSensorEvent({ value: { color } });
   }
 
   /**
