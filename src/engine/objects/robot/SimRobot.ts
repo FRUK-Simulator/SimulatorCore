@@ -13,6 +13,7 @@ import {
 import { IRobotSpec } from "../../specs/RobotSpecs";
 import { IBaseFixtureUserData } from "../../specs/UserDataSpecs";
 import { BasicSensorManager } from "./sensors/BasicSensorManager";
+import { ComplexSensorManager } from "./sensors/ComplexSensorManager";
 import { EventRegistry } from "../../EventRegistry";
 
 const ROBOT_DEFAULT_COLOR = 0x00ff00;
@@ -32,6 +33,7 @@ export class SimRobot extends SimObject {
 
   private _drivetrain: SimRobotDrivetrain;
   private _basicSensors: BasicSensorManager;
+  private _complexSensors: ComplexSensorManager;
 
   private _meshLoader: GLTFLoader | undefined;
   private _usingCustomMesh = false;
@@ -146,6 +148,18 @@ export class SimRobot extends SimObject {
       }
     });
 
+    // Configure Complex Sensors
+    this._complexSensors = new ComplexSensorManager(spec, this.guid);
+
+    // Add the created sensors as children
+    this._complexSensors.sensors.forEach((sensor) => {
+      this.addChild(sensor);
+
+      if (!this._usingCustomMesh && sensor.mesh) {
+        sensor.mesh.translateY(-this._drivetrain.yOffset);
+      }
+    });
+
     if (!this._usingCustomMesh) {
       // Adjust our base mesh up
       this._mesh.translateY(-this._drivetrain.yOffset);
@@ -201,10 +215,28 @@ export class SimRobot extends SimObject {
         )
       );
     });
+
+    // Configure the complex sensors
+    this._complexSensors.sensors.forEach((sensor) => {
+      world.createJoint(
+        new PrismaticJoint(
+          {
+            enableLimit: true,
+            lowerTranslation: 0,
+            upperTranslation: 0,
+          },
+          this._body,
+          sensor.body,
+          sensor.body.getWorldCenter(),
+          new Vec2(1, 0)
+        )
+      );
+    });
   }
 
   registerWithEventSystem(eventRegistry: EventRegistry): void {
     this._basicSensors.registerWithEventSystem(this.guid, eventRegistry);
+    this._complexSensors.registerWithEventSystem(this.guid, eventRegistry);
   }
 
   // External facing API
@@ -218,6 +250,11 @@ export class SimRobot extends SimObject {
 
   getAnalogInput(channel: number): number {
     return this._basicSensors.getAnalogInput(channel);
+  }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  getComplexSensorValue(channel: number, sensorType: string): any {
+    return this._complexSensors.getSensorInput(channel, sensorType);
   }
 
   getBodySpecs(): BodyDef {

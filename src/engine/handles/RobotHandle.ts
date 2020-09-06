@@ -13,4 +13,9 @@ export class RobotHandle extends ObjectHandle<SimRobot> {
   getAnalogInput(channel: number): number {
     return this._rootObject.getAnalogInput(channel);
   }
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  getComplexSensorValue(channel: number, sensorType: string): any {
+    return this._rootObject.getComplexSensorValue(channel, sensorType);
+  }
 }

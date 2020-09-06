@@ -7,9 +7,11 @@ import {
   IMotorSpec,
   IRobotWheelSpec,
   BasicSensorSpec,
+  ComplexSensorSpec,
   IContactSensorSpec,
   SensorMountingFace,
   IDistanceSensorSpec,
+  IColorSensorSpec,
 } from "../engine/specs/RobotSpecs";
 import { Vector3d } from "../engine/SimTypes";
 
@@ -25,6 +27,7 @@ export class Builder {
       motorGroups: [],
     },
     basicSensors: [],
+    complexSensors: [],
   };
 
   private _wheelGroups: Map<string, IRobotWheelGroup> = new Map<
@@ -97,6 +100,11 @@ export class Builder {
 
   addBasicSensor(sensor: BasicSensorSpec): Builder {
     this._spec.basicSensors.push(sensor);
+    return this;
+  }
+
+  addComplexSensor(sensor: ComplexSensorSpec): Builder {
+    this._spec.complexSensors.push(sensor);
     return this;
   }
 
@@ -374,5 +382,88 @@ export class DistanceSensorBuilder implements IDistanceSensorSpec {
 
   get detectionAngle(): number | undefined {
     return this._spec.detectionAngle;
+  }
+}
+
+export class ColorSensorBuilder implements IColorSensorSpec {
+  private _spec: IColorSensorSpec = {
+    type: "color-sensor",
+    channel: 0,
+    width: 0,
+    range: 0,
+    mountFace: SensorMountingFace.FRONT,
+  };
+
+  constructor(channelOrSpec?: number | IColorSensorSpec) {
+    if (typeof channelOrSpec === "number") {
+      this._spec.channel = channelOrSpec;
+    } else if (channelOrSpec !== undefined) {
+      this._spec = channelOrSpec;
+    }
+  }
+
+  setChannel(ch: number): ColorSensorBuilder {
+    this._spec.channel = ch;
+    return this;
+  }
+
+  setMountFace(face: SensorMountingFace): ColorSensorBuilder {
+    this._spec.mountFace = face;
+    return this;
+  }
+
+  setMountOffset(offset: Vector3d): ColorSensorBuilder {
+    this._spec.mountOffset = offset;
+    return this;
+  }
+
+  setRender(render: boolean): ColorSensorBuilder {
+    this._spec.render = render;
+    return this;
+  }
+
+  setWidth(width: number): ColorSensorBuilder {
+    this._spec.width = width;
+    return this;
+  }
+
+  setRange(range: number): ColorSensorBuilder {
+    this._spec.range = range;
+    return this;
+  }
+
+  copy(): ColorSensorBuilder {
+    const newParams = JSON.parse(
+      JSON.stringify(this._spec)
+    ) as IColorSensorSpec;
+    return new ColorSensorBuilder(newParams);
+  }
+
+  get type(): "color-sensor" {
+    return this._spec.type;
+  }
+
+  get channel(): number {
+    return this._spec.channel;
+  }
+
+  get mountFace(): SensorMountingFace {
+    return this._spec.mountFace;
+  }
+
+  get mountOffset(): Vector3d | undefined {
+    return this._spec.mountOffset;
+  }
+
+  get render(): boolean | undefined {
+    return this._spec.render;
+  }
+
+  get width(): number | undefined {
+    return this._spec.width;
+  }
+
+  get range(): number {
+    return this._spec.range;
   }
 }

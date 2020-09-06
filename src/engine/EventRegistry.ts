@@ -7,9 +7,11 @@ import {
   IZoneFixtureUserData,
 } from "./specs/UserDataSpecs";
 import { SimBasicSensor } from "./objects/robot/sensors/SimBasicSensor";
+import { SimComplexSensor } from "./objects/robot/sensors/SimComplexSensor";
 import { EventEmitter } from "events";
 
-type SensorRegisty = Map<string, SimBasicSensor>;
+type BasicSensorRegisty = Map<string, SimBasicSensor>;
+type ComplexSensorRegisty = Map<string, SimComplexSensor>;
 type ObjectPartCount = Map<string, number>; // Object GUID -> number of instances in zone
 
 function isSensorUserData(
@@ -111,9 +113,14 @@ function isZoneContact(a: Fixture, b: Fixture): boolean {
  * additional game logic.
  */
 export class EventRegistry extends EventEmitter {
-  private _sensors: Map<string, SensorRegisty> = new Map<
+  private _basicSensors: Map<string, BasicSensorRegisty> = new Map<
     string,
-    SensorRegisty
+    BasicSensorRegisty
+  >();
+
+  private _complexSensors: Map<string, ComplexSensorRegisty> = new Map<
+    string,
+    ComplexSensorRegisty
   >();
 
   // Maps from Zone ID to ObjectPartCount
@@ -160,6 +167,7 @@ export class EventRegistry extends EventEmitter {
    */
   private onBeginContact(contact: Contact): void {
     this.updateContactSensors(contact, true);
+    this.updateColorSensors(contact, true);
     this.updateZones(contact, true);
   }
 
@@ -170,6 +178,7 @@ export class EventRegistry extends EventEmitter {
    */
   private onEndContact(contact: Contact): void {
     this.updateContactSensors(contact, false);
+    this.updateColorSensors(contact, false);
     this.updateZones(contact, false);
   }
 
@@ -275,6 +284,80 @@ export class EventRegistry extends EventEmitter {
     }
   }
 
+  private updateColorSensors(contact: Contact, hasContact: boolean): void {
+    if (
+      contact.getFixtureA().getUserData() === null &&
+      contact.getFixtureB().getUserData() === null
+    ) {
+      return;
+    }
+
+    const fixtureA: Fixture = contact.getFixtureA();
+    const fixtureB: Fixture = contact.getFixtureB();
+    const userDataA: SimUserData | null = fixtureA.getUserData() as SimUserData;
+    const userDataB: SimUserData | null = fixtureB.getUserData() as SimUserData;
+
+    if (isSameObject(fixtureA, fixtureB)) {
+      return;
+    }
+
+    // Make sure one of these is a zone
+    if (!isZoneContact(fixtureA, fixtureB)) {
+      return;
+    }
+
+    const sensorDescriptors = getSensorDescriptors(fixtureA, fixtureB);
+
+    // Bail out if none of these are sensors
+    if (sensorDescriptors.length === 0) {
+      return;
+    }
+
+    const colorSensorDescriptor: ISimSensorDescriptor = sensorDescriptors[0];
+    if (colorSensorDescriptor.sensorType !== "ColorSensor") {
+      return;
+    }
+
+    let zoneUserData: IZoneFixtureUserData;
+    if (isZoneUserData(userDataA)) {
+      zoneUserData = userDataA;
+    } else if (isZoneUserData(userDataB)) {
+      zoneUserData = userDataB;
+    }
+
+    // Zone color
+    let zoneColor: number;
+    if (hasContact) {
+      zoneColor =
+        zoneUserData.zone.color !== undefined
+          ? zoneUserData.zone.color
+          : 0xffffff;
+    } else {
+      zoneColor = 0xffffff; // Default to white
+    }
+    this.broadcastColor(colorSensorDescriptor, zoneColor);
+  }
+
+  /**
+   * Inform {@link SimColorSensor}s of an update in their state
+   * @private
+   * @param sensor
+   * @param color
+   */
+  private broadcastColor(sensor: ISimSensorDescriptor, color: number): void {
+    const robotSensors = this._complexSensors.get(sensor.robotGuid);
+
+    if (robotSensors === undefined) {
+      return;
+    }
+
+    if (!robotSensors.has(sensor.sensorIdent)) {
+      return;
+    }
+
+    robotSensors.get(sensor.sensorIdent).onSensorEvent({ value: { color } });
+  }
+
   /**
    * Broadcast a collision event to appropriate {@link SimContactSensor} instances
    * @private
@@ -325,7 +408,7 @@ export class EventRegistry extends EventEmitter {
     sensor: ISimSensorDescriptor,
     hasContact: boolean
   ): void {
-    const robotSensors = this._sensors.get(sensor.robotGuid);
+    const robotSensors = this._basicSensors.get(sensor.robotGuid);
 
     if (robotSensors === undefined) {
       return;
@@ -349,12 +432,35 @@ export class EventRegistry extends EventEmitter {
    * @param sensorIdent
    * @param callback
    */
-  registerSensor(robotGuid: string, sensor: SimBasicSensor): void {
-    if (!this._sensors.has(robotGuid)) {
-      this._sensors.set(robotGuid, new Map<string, SimBasicSensor>());
+  registerBasicSensor(robotGuid: string, sensor: SimBasicSensor): void {
+    if (!this._basicSensors.has(robotGuid)) {
+      this._basicSensors.set(robotGuid, new Map<string, SimBasicSensor>());
     }
 
-    const robotSensors: SensorRegisty = this._sensors.get(robotGuid);
+    const robotSensors: BasicSensorRegisty = this._basicSensors.get(robotGuid);
+
+    if (!robotSensors.has(sensor.identifier)) {
+      robotSensors.set(sensor.identifier, sensor);
+    }
+  }
+
+  /**
+   * Register a sensor callback
+   *
+   * This will end up getting called by a {@link SimRobot} instance as part
+   * of its initialization routines
+   * @param robotGuid
+   * @param sensorIdent
+   * @param callback
+   */
+  registerComplexSensor(robotGuid: string, sensor: SimComplexSensor): void {
+    if (!this._complexSensors.has(robotGuid)) {
+      this._complexSensors.set(robotGuid, new Map<string, SimComplexSensor>());
+    }
+
+    const robotSensors: ComplexSensorRegisty = this._complexSensors.get(
+      robotGuid
+    );
 
     if (!robotSensors.has(sensor.identifier)) {
       robotSensors.set(sensor.identifier, sensor);

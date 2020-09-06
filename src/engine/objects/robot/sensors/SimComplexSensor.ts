@@ -1,24 +1,22 @@
 import {
-  BasicSensorOutputChannelType,
-  IBasicSensorValue,
-  IBasicSensorSpec,
+  IComplexSensorValue,
+  IComplexSensorSpec,
 } from "../../../specs/RobotSpecs";
 import { SimObject } from "../../SimObject";
 import { BodyDef, FixtureDef } from "planck-js";
 import { EventRegistry } from "../../../EventRegistry";
 
 /**
- * Abstract base class representing a BasicSensor
+ * Abstract base class representing a ComplexSensor
  *
- * A BasicSensor represents a physical sensor that provides feedback
- * either via a digital channel (HIGH/LOW) or an analog channel (voltage)
+ * A ComplexSensor represents a physical sensor that provides feedback
+ * via a JavsScript Object
  */
-export abstract class SimBasicSensor extends SimObject {
+export abstract class SimComplexSensor extends SimObject {
   protected _channel: number;
-  protected _channelType: BasicSensorOutputChannelType;
   protected _sensorType: string;
 
-  protected _value: IBasicSensorValue;
+  protected _value: IComplexSensorValue;
 
   protected _bodySpecs: BodyDef;
   protected _fixtureSpecs: FixtureDef;
@@ -28,17 +26,11 @@ export abstract class SimBasicSensor extends SimObject {
    */
   protected _robotGuid: string;
 
-  constructor(
-    type: string,
-    channelType: BasicSensorOutputChannelType,
-    robotGuid: string,
-    spec: IBasicSensorSpec
-  ) {
-    super("BasicSensor-" + type);
+  constructor(type: string, robotGuid: string, spec: IComplexSensorSpec) {
+    super("ComplexSensor-" + type);
     this._channel = spec.channel;
-    this._channelType = channelType;
     this._sensorType = type;
-    this._value = { value: 0.0 };
+    this._value = { value: {} };
     this._robotGuid = robotGuid;
   }
 
@@ -57,17 +49,10 @@ export abstract class SimBasicSensor extends SimObject {
   }
 
   /**
-   * Channel type (analog/digital) of this sensor
-   */
-  get channelType(): BasicSensorOutputChannelType {
-    return this._channelType;
-  }
-
-  /**
    * Robot-specific sensor identifier
    */
   get identifier(): string {
-    return `${this._channelType}-${this._channel}`;
+    return `${this._sensorType}-${this._channel}`;
   }
 
   /**
@@ -78,9 +63,10 @@ export abstract class SimBasicSensor extends SimObject {
    * gets via the {@link onSensorEvent} callback into a voltage, and
    * return it here.
    *
-   * In the base case, we just return the raw value as a number
+   * In the base case, we just return an empty object
    */
-  get value(): number {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  get value(): any {
     return this._value.value;
   }
 
@@ -91,7 +77,7 @@ export abstract class SimBasicSensor extends SimObject {
    * @protected
    * @param val
    */
-  protected setValue(val: IBasicSensorValue): void {
+  protected setValue(val: IComplexSensorValue): void {
     this._value = val;
   }
 
@@ -107,7 +93,7 @@ export abstract class SimBasicSensor extends SimObject {
    * Callback triggered whenever a sensor event happens
    * @param val
    */
-  abstract onSensorEvent(val: IBasicSensorValue): void;
+  abstract onSensorEvent(val: IComplexSensorValue): void;
 
   /**
    * Register this sensor with the simulator wide {@link EventRegistry}
@@ -118,6 +104,6 @@ export abstract class SimBasicSensor extends SimObject {
     robotGuid: string,
     eventRegistry: EventRegistry
   ): void {
-    eventRegistry.registerBasicSensor(robotGuid, this);
+    eventRegistry.registerComplexSensor(robotGuid, this);
   }
 }
