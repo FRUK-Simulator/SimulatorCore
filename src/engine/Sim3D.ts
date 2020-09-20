@@ -37,6 +37,7 @@ import { CameraManager } from "./CameraManager";
 import { ZoneHandle } from "./handles/ZoneHandle";
 
 import { EventEmitter } from "events";
+import { wallSpecs } from "./utils/WallUtil";
 
 interface ISimObjectContainer {
   type: string;
@@ -467,70 +468,10 @@ export class Sim3D extends EventEmitter {
     );
     this.scene.add(grid);
 
-    if (worldConfig.perimeter) {
-      // Make a perimeter with the given height and thickness
-      this.addWall({
-        type: "wall",
-        start: { x: -worldConfig.xLength / 2, y: -worldConfig.zLength / 2 },
-        end: { x: worldConfig.xLength / 2, y: -worldConfig.zLength / 2 },
-        baseColor: 0x00ff00,
-        height: worldConfig.perimeter.height,
-        thickness: worldConfig.perimeter.thickness,
-      });
-      this.addWall({
-        type: "wall",
-        start: { x: -worldConfig.xLength / 2, y: worldConfig.zLength / 2 },
-        end: { x: worldConfig.xLength / 2, y: worldConfig.zLength / 2 },
-        baseColor: 0xff0000,
-        height: worldConfig.perimeter.height,
-        thickness: worldConfig.perimeter.thickness,
-      });
-      this.addWall({
-        type: "wall",
-        start: { x: -worldConfig.xLength / 2, y: -worldConfig.zLength / 2 },
-        end: { x: -worldConfig.xLength / 2, y: worldConfig.zLength / 2 },
-        height: worldConfig.perimeter.height,
-        thickness: worldConfig.perimeter.thickness,
-      });
-      this.addWall({
-        type: "wall",
-        start: { x: worldConfig.xLength / 2, y: -worldConfig.zLength / 2 },
-        end: { x: worldConfig.xLength / 2, y: worldConfig.zLength / 2 },
-        height: worldConfig.perimeter.height,
-        thickness: worldConfig.perimeter.thickness,
-      });
-    } else if (worldConfig.walls) {
-      console.warn(
-        "Using worldConfig.walls will be deprecated in favor of the worldConfig.perimeter field"
-      );
-      if (worldConfig.walls.length === 0) {
-        this.addWall({
-          type: "wall",
-          start: { x: -worldConfig.xLength / 2, y: -worldConfig.zLength / 2 },
-          end: { x: worldConfig.xLength / 2, y: -worldConfig.zLength / 2 },
-          baseColor: 0x00ff00,
-        });
-        this.addWall({
-          type: "wall",
-          start: { x: -worldConfig.xLength / 2, y: worldConfig.zLength / 2 },
-          end: { x: worldConfig.xLength / 2, y: worldConfig.zLength / 2 },
-          baseColor: 0xff0000,
-        });
-        this.addWall({
-          type: "wall",
-          start: { x: -worldConfig.xLength / 2, y: -worldConfig.zLength / 2 },
-          end: { x: -worldConfig.xLength / 2, y: worldConfig.zLength / 2 },
-        });
-        this.addWall({
-          type: "wall",
-          start: { x: worldConfig.xLength / 2, y: -worldConfig.zLength / 2 },
-          end: { x: worldConfig.xLength / 2, y: worldConfig.zLength / 2 },
-        });
-      } else {
-        worldConfig.walls.forEach((wallSpec) => {
-          this.addWall(wallSpec);
-        });
-      }
+    const walls = wallSpecs(worldConfig);
+
+    for (const spec of walls) {
+      this.addWall(spec);
     }
 
     // Axes
