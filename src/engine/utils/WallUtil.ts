@@ -27,10 +27,10 @@ export function wallSpecs(config: WorldConfig): IWallSpec[] {
 export function perimeterWallSpecs(
   xLength: number,
   zLength: number,
-  height: number = 1,
-  thickness: number = 0.5
-) {
-  let specs: IWallSpec[] = [];
+  height = 1,
+  thickness = 0.5
+): IWallSpec[] {
+  const specs: IWallSpec[] = [];
   // Make a perimeter with the given height and thickness
   const ht = thickness / 2;
   const hx = xLength / 2;
