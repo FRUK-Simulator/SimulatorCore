@@ -36,6 +36,7 @@ export class SimWall extends SimObject {
 
     const wallThickness =
       spec.thickness !== undefined ? spec.thickness : DEFAULT_WALL_THICKNESS;
+    const wallPanelThickness = 0.05;
     const wallHeight =
       spec.height !== undefined ? spec.height : DEFAULT_WALL_HEIGHT;
     const wallColor =
@@ -45,9 +46,14 @@ export class SimWall extends SimObject {
     const meshGeom = new THREE.BoxGeometry(
       wallLength,
       wallHeight,
-      wallThickness
+      wallPanelThickness
     );
-    const wallMaterial = new THREE.MeshStandardMaterial({ color: wallColor });
+    const wallMaterial = new THREE.MeshPhongMaterial({
+      color: wallColor,
+      opacity: 0.5,
+      transparent: true,
+    });
+    const wallSolidMaterial = new THREE.MeshPhongMaterial({ color: wallColor });
     const wallMesh = new THREE.Mesh(meshGeom, wallMaterial);
 
     // Set position
@@ -63,6 +69,14 @@ export class SimWall extends SimObject {
     wallMesh.rotation.y = wallAngleRadians;
 
     this._mesh = wallMesh;
+
+    const meshEdgeGeom = new THREE.BoxGeometry(wallLength, 0.05, wallThickness);
+    const wallTopMesh = new THREE.Mesh(meshEdgeGeom, wallSolidMaterial);
+    wallTopMesh.position.y = wallHeight / 2;
+    wallMesh.add(wallTopMesh);
+    const wallBottomMesh = new THREE.Mesh(meshEdgeGeom, wallSolidMaterial);
+    wallBottomMesh.position.y = -wallHeight / 2;
+    wallMesh.add(wallBottomMesh);
 
     // Physics
     this.bodySpecs = {
