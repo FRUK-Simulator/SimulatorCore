@@ -459,7 +459,7 @@ export class ColorSensorBuilder implements IColorSensorSpec {
     return this._spec.render;
   }
 
-  get width(): number | undefined {
+  get width(): number {
     return this._spec.width;
   }
 
