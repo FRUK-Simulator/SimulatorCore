@@ -14,6 +14,7 @@ import { IRobotSpec } from "../../specs/RobotSpecs";
 import { IBaseFixtureUserData } from "../../specs/UserDataSpecs";
 import { BasicSensorManager } from "./sensors/BasicSensorManager";
 import { ComplexSensorManager } from "./sensors/ComplexSensorManager";
+import { MechanismManager } from "./mechanisms/MechanismManager";
 import { EventRegistry } from "../../EventRegistry";
 
 const ROBOT_DEFAULT_COLOR = 0x00ff00;
@@ -34,6 +35,7 @@ export class SimRobot extends SimObject {
   private _drivetrain: SimRobotDrivetrain;
   private _basicSensors: BasicSensorManager;
   private _complexSensors: ComplexSensorManager;
+  private _mechanisms: MechanismManager;
 
   private _meshLoader: GLTFLoader | undefined;
   private _usingCustomMesh = false;
@@ -160,6 +162,18 @@ export class SimRobot extends SimObject {
       }
     });
 
+    // Configure Complex Sensors
+    this._mechanisms = new MechanismManager(spec, this.guid);
+
+    // Add the created sensors as children
+    this._mechanisms.mechanisms.forEach((mechanism) => {
+      this.addChild(mechanism);
+
+      if (!this._usingCustomMesh && mechanism.mesh) {
+        mechanism.mesh.translateY(-this._drivetrain.yOffset);
+      }
+    });
+
     if (!this._usingCustomMesh) {
       // Adjust our base mesh up
       this._mesh.translateY(-this._drivetrain.yOffset);
@@ -232,11 +246,29 @@ export class SimRobot extends SimObject {
         )
       );
     });
+
+    // Configure the complex sensors
+    this._mechanisms.mechanisms.forEach((mechanism) => {
+      world.createJoint(
+        new PrismaticJoint(
+          {
+            enableLimit: true,
+            lowerTranslation: 0,
+            upperTranslation: 0,
+          },
+          this._body,
+          mechanism.body,
+          mechanism.body.getWorldCenter(),
+          new Vec2(1, 0)
+        )
+      );
+    });
   }
 
   registerWithEventSystem(eventRegistry: EventRegistry): void {
     this._basicSensors.registerWithEventSystem(this.guid, eventRegistry);
     this._complexSensors.registerWithEventSystem(this.guid, eventRegistry);
+    this._mechanisms.registerWithEventSystem(this.guid, eventRegistry);
   }
 
   // External facing API
