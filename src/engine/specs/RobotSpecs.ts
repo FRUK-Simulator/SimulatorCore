@@ -86,6 +86,7 @@ export interface IRobotSpec extends IBaseSimObjectSpec {
   drivetrain: IDrivetrainSpec;
   basicSensors?: BasicSensorSpec[];
   complexSensors?: ComplexSensorSpec[];
+  mechanisms?: MechanismSpec[];
   // TODO as we add more features to the robot (e.g. sensors or mechanisms)
   // they can get added as properties here
 }
@@ -175,5 +176,46 @@ export interface IColorSensorSpec extends IComplexSensorSpec {
   range?: number;
 }
 
-// Add additional basic sensor types to this union
+// Add additional complex sensor types to this union
 export type ComplexSensorSpec = IColorSensorSpec;
+
+/**
+ * IO channel type for a Mechanism
+ */
+export enum MechanismIOType {
+  PWM = "PWM",
+  DIGITAL_IN = "DIGITAL_IN",
+  DIGITAL_OUT = "DIGITAL_OUT",
+  ANALOG_IN = "ANALOG_IN",
+}
+
+/**
+ * Spec for a Mechanism
+ */
+export interface IMechanismSpec {
+  type: string;
+  mountFace: SensorMountingFace;
+  mountOffset?: Vector3d;
+  ioMap: IMechanismIOConfig[];
+
+  // Getters and setters for the various IO channels
+}
+
+/**
+ * Spec for a Mechanism Config
+ */
+export interface IMechanismIOConfig {
+  id: string;
+  channel: number;
+  ioType: string;
+}
+
+export interface IGripperMechanismSpec extends IMechanismSpec {
+  type: "gripper-mechanism";
+  depth: number;
+  maxWidth: number;
+  minWidth: number;
+}
+
+// Add additional mechanism types to this union
+export type MechanismSpec = IGripperMechanismSpec;

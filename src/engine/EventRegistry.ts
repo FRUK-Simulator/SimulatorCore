@@ -8,11 +8,13 @@ import {
 } from "./specs/UserDataSpecs";
 import { SimBasicSensor } from "./objects/robot/sensors/SimBasicSensor";
 import { SimComplexSensor } from "./objects/robot/sensors/SimComplexSensor";
+import { SimMechanism } from "./objects/robot/mechanisms/SimMechanism";
 import { EventEmitter } from "events";
 
 type BasicSensorRegisty = Map<string, SimBasicSensor>;
 type ComplexSensorRegisty = Map<string, SimComplexSensor>;
 type ObjectPartCount = Map<string, number>; // Object GUID -> number of instances in zone
+type MechanismRegisty = Map<string, SimMechanism>;
 
 function isSensorUserData(
   userData: SimUserData
@@ -130,6 +132,11 @@ export class EventRegistry extends EventEmitter {
   >();
 
   private _onDispose: () => void;
+
+  private _mechanisms: Map<string, MechanismRegisty> = new Map<
+    string,
+    MechanismRegisty
+  >();
 
   /**
    * Create a new EventRegistry and connect it to the provided world
@@ -464,6 +471,27 @@ export class EventRegistry extends EventEmitter {
 
     if (!robotSensors.has(sensor.identifier)) {
       robotSensors.set(sensor.identifier, sensor);
+    }
+  }
+
+  /**
+   * Register a mechanism callback
+   *
+   * This will end up getting called by a {@link SimRobot} instance as part
+   * of its initialization routines
+   * @param robotGuid
+   * @param mechanismIdent
+   * @param callback
+   */
+  registerMechanism(robotGuid: string, mechanism: SimMechanism): void {
+    if (!this._mechanisms.has(robotGuid)) {
+      this._mechanisms.set(robotGuid, new Map<string, SimMechanism>());
+    }
+
+    const robotMechanisms: MechanismRegisty = this._mechanisms.get(robotGuid);
+
+    if (!robotMechanisms.has(mechanism.identifier)) {
+      robotMechanisms.set(mechanism.identifier, mechanism);
     }
   }
 }
