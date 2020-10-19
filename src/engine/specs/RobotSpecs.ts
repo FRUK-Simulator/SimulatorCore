@@ -179,6 +179,13 @@ export interface IColorSensorSpec extends IComplexSensorSpec {
 // Add additional complex sensor types to this union
 export type ComplexSensorSpec = IColorSensorSpec;
 
+// union of all sensor specs
+export type SensorSpec = ComplexSensorSpec | BasicSensorSpec;
+
+export function isComplexSpec(sensorSpec: SensorSpec) {
+  return sensorSpec.type == "color-sensor";
+}
+
 /**
  * IO channel type for a Mechanism
  */

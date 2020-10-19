@@ -225,6 +225,32 @@ function main() {
       z: Math.PI / 2,
     },
   };
+
+  let gripperGrabChannel = 0;
+  let gripperHeldChannel = 1;
+
+  spec.mechanisms = [
+    {
+      type: "gripper-mechanism",
+      ioMap: [
+        {
+          id: "grab",
+          channel: gripperGrabChannel,
+          ioType: "DIGITAL_IN",
+        },
+        {
+          id: "held",
+          channel: gripperHeldChannel,
+          ioType: "DIGITAL_OUT",
+        },
+      ],
+      depth: 1,
+      maxWidth: 2,
+      minWidth: 0.9,
+      mountFace: RobotSpecs.SensorMountingFace.FRONT,
+    },
+  ];
+
   const robot = simulator.addRobot(spec);
 
   const polygonZone = {
@@ -254,6 +280,7 @@ function main() {
     zoneId: "test-zone",
   });
 
+  /*
   enum RobotMode {
     LOOKING,
     RUN_AWAY,
@@ -281,6 +308,90 @@ function main() {
           currMode = RobotMode.LOOKING;
         }
         break;
+    }
+  }, 100);
+
+  */
+
+  enum RobotMode {
+    WAITING,
+    GRABBING,
+    CELEBRATE,
+    SHAME,
+  }
+
+  /*
+  WAITING -> GRABBING
+  GRABBING -> (grabbed==true) -> CELEBRATE
+  GRABBING -> (grabbed==false) -> SHAME
+  CELEBRATE -> WAITING
+  SHAME -> WAITING
+  */
+
+  let currMode: RobotMode = null;
+  let modeStart = new Date();
+  let modeLength = 1000;
+
+  setInterval(() => {
+    let timePassed = new Date().getTime() - modeStart.getTime();
+    if (currMode === null || timePassed < modeLength) {
+      return;
+    }
+
+    let newMode = null;
+
+    // we waitied long enough, do the thing
+    switch (currMode) {
+      case RobotMode.WAITING:
+        newMode = RobotMode.GRABBING;
+        break;
+      case RobotMode.GRABBING:
+        let success = robot.getDigitalInput(gripperHeldChannel);
+
+        newMode = success ? RobotMode.CELEBRATE : RobotMode.SHAME;
+        break;
+      case RobotMode.CELEBRATE:
+        newMode = RobotMode.WAITING;
+        break;
+      case RobotMode.SHAME:
+        newMode = RobotMode.WAITING;
+        break;
+      default:
+    }
+
+    switch (newMode) {
+      case RobotMode.WAITING:
+        // trigger graber to release
+        robot.setDigitalInput(gripperGrabChannel, false);
+        // move forward slowly
+        robot.setMotorPower(0, 0.1);
+        robot.setMotorPower(1, 0.1);
+        break;
+      case RobotMode.GRABBING:
+        // trigger grabbing to start
+        robot.setDigitalInput(gripperGrabChannel, true);
+        // stop motors
+        robot.setMotorPower(0, -0.0);
+        robot.setMotorPower(1, 0.0);
+        break;
+      case RobotMode.CELEBRATE:
+        // set motors to fast spin
+        robot.setMotorPower(0, -0.5);
+        robot.setMotorPower(1, 0.5);
+        break;
+      case RobotMode.SHAME:
+        // set motors to slow spin
+        robot.setMotorPower(0, 0.1);
+        robot.setMotorPower(1, -0.1);
+        break;
+    }
+
+    if (newMode !== null) {
+      // we just entered a new mode!
+      console.log("Switching mode: ", currMode, " -> ", newMode);
+
+      currMode = newMode;
+      modeStart = new Date();
     }
   }, 100);
 }

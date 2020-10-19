@@ -10,7 +10,13 @@ import {
   FixtureDef,
   PrismaticJoint,
 } from "planck-js";
-import { IRobotSpec } from "../../specs/RobotSpecs";
+import {
+  BasicSensorSpec,
+  ComplexSensorSpec,
+  IRobotSpec,
+  isComplexSpec,
+  SensorSpec,
+} from "../../specs/RobotSpecs";
 import { IBaseFixtureUserData } from "../../specs/UserDataSpecs";
 import { BasicSensorManager } from "./sensors/BasicSensorManager";
 import { ComplexSensorManager } from "./sensors/ComplexSensorManager";
@@ -174,6 +180,14 @@ export class SimRobot extends SimObject {
       }
     });
 
+    this._mechanisms.getSensorSpecs().forEach((sensorSpec) => {
+      if (isComplexSpec(sensorSpec)) {
+        this._complexSensors.addSensor(sensorSpec as ComplexSensorSpec);
+      } else {
+        this._basicSensors.addSensor(sensorSpec as BasicSensorSpec);
+      }
+    });
+
     if (!this._usingCustomMesh) {
       // Adjust our base mesh up
       this._mesh.translateY(-this._drivetrain.yOffset);
@@ -282,6 +296,11 @@ export class SimRobot extends SimObject {
 
   getAnalogInput(channel: number): number {
     return this._basicSensors.getAnalogInput(channel);
+  }
+
+  setDigitalInput(channel: number, value: boolean): void {
+    // currently the only place inputs can go is mechanisms (outside of motor control)
+    this._mechanisms.setDigitalInput(channel, value);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
