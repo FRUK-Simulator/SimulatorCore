@@ -1,6 +1,6 @@
 import { SimComplexSensor } from "./SimComplexSensor";
 import { SimColorSensor } from "./SimColorSensor";
-import { IRobotSpec } from "../../../specs/RobotSpecs";
+import { ComplexSensorSpec, IRobotSpec } from "../../../specs/RobotSpecs";
 import { EventRegistry } from "../../../EventRegistry";
 
 /**
@@ -49,6 +49,10 @@ export class ComplexSensorManager {
     });
 
     return result;
+  }
+
+  addSensor(spec: ComplexSensorSpec): void {
+    //TODO(JP): implement
   }
 
   /**

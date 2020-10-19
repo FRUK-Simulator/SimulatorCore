@@ -2,6 +2,7 @@ import { SimBasicSensor } from "./SimBasicSensor";
 import {
   IRobotSpec,
   BasicSensorOutputChannelType,
+  BasicSensorSpec,
 } from "../../../specs/RobotSpecs";
 import { SimContactSensor } from "./SimContactSensor";
 import { EventRegistry } from "../../../EventRegistry";
@@ -56,6 +57,10 @@ export class BasicSensorManager {
     });
 
     return result;
+  }
+
+  addSensor(spec: BasicSensorSpec): void {
+    //TODO(JP): implement
   }
 
   /**

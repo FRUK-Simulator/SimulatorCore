@@ -1,5 +1,5 @@
 import { SimMechanism } from "./SimMechanism";
-import { IRobotSpec } from "../../../specs/RobotSpecs";
+import { IRobotSpec, SensorSpec } from "../../../specs/RobotSpecs";
 //import { SimGripperMechanism } from "./SimGripperMechanism";
 import { EventRegistry } from "../../../EventRegistry";
 
@@ -15,11 +15,18 @@ export class MechanismManager {
     SimMechanism
   >();
 
+  // map used to link robot channel numbers to a mechanism input
+  private _iomap: Map<
+    number,
+    { mechanismId: string; ioIdentifier: string }
+  > = new Map();
+
   constructor(robotSpec: IRobotSpec, robotGuid: string) {
     this.configureMechanisms(robotSpec, robotGuid);
   }
 
   private configureMechanisms(robotSpec: IRobotSpec, robotGuid: string): void {
+    // TODO(JP): implement
     /*if (!robotSpec.mechanisms) {
       return;
     }
@@ -33,7 +40,7 @@ export class MechanismManager {
           robotGuid,
           robotSpec
         );
-      } 
+      }
 
       if (this._mechanisms.has(mechanism.identifier)) {
         throw new Error(
@@ -63,5 +70,25 @@ export class MechanismManager {
     this.mechanisms.forEach((mechanism) => {
       mechanism.registerWithEventSystem(robotGuid, eventRegistry);
     });
+  }
+
+  setDigitalInput(channel: number, value: boolean): void {
+    if (!this._iomap.has(channel)) {
+      return;
+    }
+
+    let mapping = this._iomap.get(channel);
+
+    if (!this._mechanisms.has(mapping.mechanismId)) {
+      return;
+    }
+
+    let mechanism = this._mechanisms.get(mapping.mechanismId);
+    mechanism.setValue(mapping.ioIdentifier, value);
+  }
+
+  getSensorSpecs(): SensorSpec[] {
+    // TODO(JP): generate specs for all input sensors
+    return [];
   }
 }

@@ -24,6 +24,7 @@ export abstract class SimMechanism extends SimObject {
     this._robotGuid = robotGuid;
     this._configs = spec.ioMap;
   }
+
   public abstract getValue(ioIdentifier: string): number | boolean;
   public abstract setValue(ioIdentifier: string, value: number | boolean): void;
 
