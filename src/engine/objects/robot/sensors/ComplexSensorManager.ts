@@ -24,18 +24,7 @@ export class ComplexSensorManager {
       return;
     }
     robotSpec.complexSensors.forEach((sensorSpec) => {
-      let sensor: SimComplexSensor;
-      // TODO move this to a factory
-      if (sensorSpec.type === "color-sensor") {
-        sensor = new SimColorSensor(sensorSpec, robotGuid, robotSpec);
-      }
-
-      if (this._sensors.has(sensor.identifier)) {
-        throw new Error(
-          `Sensor with identifier "${sensor.identifier}" already exists`
-        );
-      }
-      this._sensors.set(sensor.identifier, sensor);
+      this.addSensor(sensorSpec, robotSpec, robotGuid);
     });
   }
 
@@ -51,8 +40,23 @@ export class ComplexSensorManager {
     return result;
   }
 
-  addSensor(spec: ComplexSensorSpec): void {
-    //TODO(JP): implement
+  addSensor(
+    sensorSpec: ComplexSensorSpec,
+    robotSpec: IRobotSpec,
+    robotGuid: string
+  ): void {
+    let sensor: SimComplexSensor;
+    // TODO move this to a factory
+    if (sensorSpec.type === "color-sensor") {
+      sensor = new SimColorSensor(sensorSpec, robotGuid, robotSpec);
+    }
+
+    if (this._sensors.has(sensor.identifier)) {
+      throw new Error(
+        `Sensor with identifier "${sensor.identifier}" already exists`
+      );
+    }
+    this._sensors.set(sensor.identifier, sensor);
   }
 
   /**
