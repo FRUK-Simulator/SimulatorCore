@@ -182,9 +182,17 @@ export class SimRobot extends SimObject {
 
     this._mechanisms.getSensorSpecs().forEach((sensorSpec) => {
       if (isComplexSpec(sensorSpec)) {
-        this._complexSensors.addSensor(sensorSpec as ComplexSensorSpec);
+        this._complexSensors.addSensor(
+          sensorSpec as ComplexSensorSpec,
+          spec,
+          this.guid
+        );
       } else {
-        this._basicSensors.addSensor(sensorSpec as BasicSensorSpec);
+        this._basicSensors.addSensor(
+          sensorSpec as BasicSensorSpec,
+          spec,
+          this.guid
+        );
       }
     });
 

@@ -30,20 +30,7 @@ export class BasicSensorManager {
     }
 
     robotSpec.basicSensors.forEach((sensorSpec) => {
-      let sensor: SimBasicSensor;
-      // TODO move this to a factory
-      if (sensorSpec.type === "contact-sensor") {
-        sensor = new SimContactSensor(sensorSpec, robotGuid, robotSpec);
-      } else if (sensorSpec.type === "distance-sensor") {
-        sensor = new SimDistanceSensor(sensorSpec, robotGuid, robotSpec);
-      }
-
-      if (this._sensors.has(sensor.identifier)) {
-        throw new Error(
-          `Sensor with identifier "${sensor.identifier}" already exists`
-        );
-      }
-      this._sensors.set(sensor.identifier, sensor);
+      this.addSensor(sensorSpec, robotSpec, robotGuid);
     });
   }
 
@@ -59,8 +46,25 @@ export class BasicSensorManager {
     return result;
   }
 
-  addSensor(spec: BasicSensorSpec): void {
-    //TODO(JP): implement
+  addSensor(
+    sensorSpec: BasicSensorSpec,
+    robotSpec: IRobotSpec,
+    robotGuid: string
+  ): void {
+    let sensor: SimBasicSensor;
+    // TODO move this to a factory
+    if (sensorSpec.type === "contact-sensor") {
+      sensor = new SimContactSensor(sensorSpec, robotGuid, robotSpec);
+    } else if (sensorSpec.type === "distance-sensor") {
+      sensor = new SimDistanceSensor(sensorSpec, robotGuid, robotSpec);
+    }
+
+    if (this._sensors.has(sensor.identifier)) {
+      throw new Error(
+        `Sensor with identifier "${sensor.identifier}" already exists`
+      );
+    }
+    this._sensors.set(sensor.identifier, sensor);
   }
 
   /**
