@@ -632,7 +632,10 @@ export class Sim3D extends EventEmitter {
    * @param simObject
    */
   private addToScene(simObject: SimObject): void {
-    this.scene.add(simObject.mesh);
+    if (simObject.mesh) {
+      this.scene.add(simObject.mesh);
+    }
+
     simObject.children.forEach((simObj) => {
       this.addToScene(simObj);
     });

@@ -237,6 +237,9 @@ export class SimRobot extends SimObject {
 
     // Configure the basic sensors
     this._basicSensors.sensors.forEach((sensor) => {
+      if (!sensor.body) {
+        return;
+      }
       world.createJoint(
         new PrismaticJoint(
           {
@@ -254,6 +257,9 @@ export class SimRobot extends SimObject {
 
     // Configure the complex sensors
     this._complexSensors.sensors.forEach((sensor) => {
+      if (!sensor.body) {
+        return;
+      }
       world.createJoint(
         new PrismaticJoint(
           {

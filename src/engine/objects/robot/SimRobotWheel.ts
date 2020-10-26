@@ -155,7 +155,7 @@ export class SimRobotWheel extends SimObject {
     forceVector.mul(this._forceMagnitude);
 
     // TODO take into account static friction?
-    if (forceVector.lengthSquared() > 0.0005) {
+    if (forceVector.lengthSquared() > 0.00000005) {
       // Apply the force, simulating the wheel pushing against ground friction
       this._body.applyForce(forceVector, this._body.getWorldCenter(), true);
     }

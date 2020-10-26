@@ -145,8 +145,22 @@ export interface IDistanceSensorSpec extends IBasicSensorSpec {
   detectionAngle?: number;
 }
 
+/**
+ * Spec for a MechanismProxySensor
+ *
+ * this is not intended to be created by users. Instead sensors of this
+ * type are added when the user specs a mechanism
+ */
+export interface IMechanismProxySensorSpec extends IBasicSensorSpec {
+  type: "mechanism-sensor";
+  getValueCallback: () => number;
+}
+
 // Add additional basic sensor types to this union
-export type BasicSensorSpec = IContactSensorSpec | IDistanceSensorSpec;
+export type BasicSensorSpec =
+  | IContactSensorSpec
+  | IDistanceSensorSpec
+  | IMechanismProxySensorSpec;
 
 /**
  * Interface representing a BasicSensor value (e.g. simple digital/analog)

@@ -2,6 +2,7 @@ import { SimMechanism } from "./SimMechanism";
 import { IRobotSpec, SensorSpec } from "../../../specs/RobotSpecs";
 //import { SimGripperMechanism } from "./SimGripperMechanism";
 import { EventRegistry } from "../../../EventRegistry";
+import { SimGripperMechanism } from "./SimGripperMechanism";
 
 /**
  * Class representing a collection of robot mechanisms
@@ -26,8 +27,7 @@ export class MechanismManager {
   }
 
   private configureMechanisms(robotSpec: IRobotSpec, robotGuid: string): void {
-    // TODO(JP): implement
-    /*if (!robotSpec.mechanisms) {
+    if (!robotSpec.mechanisms) {
       return;
     }
 
@@ -36,8 +36,8 @@ export class MechanismManager {
 
       if (mechanismSpec.type === "gripper-mechanism") {
         mechanism = new SimGripperMechanism(
-          mechanismSpec,
           robotGuid,
+          mechanismSpec,
           robotSpec
         );
       }
@@ -48,7 +48,7 @@ export class MechanismManager {
         );
       }
       this._mechanisms.set(mechanism.identifier, mechanism);
-    });  */
+    });
   }
 
   /**
@@ -88,7 +88,12 @@ export class MechanismManager {
   }
 
   getSensorSpecs(): SensorSpec[] {
-    // TODO(JP): generate specs for all input sensors
-    return [];
+    let specs: SensorSpec[] = [];
+    this._mechanisms.forEach((value: SimMechanism, key: string) => {
+      let mechProxySensors = value.getProxySensors();
+
+      specs.push(...mechProxySensors);
+    });
+    return specs;
   }
 }
