@@ -314,10 +314,10 @@ function main() {
   */
 
   enum RobotMode {
-    WAITING,
-    GRABBING,
-    CELEBRATE,
-    SHAME,
+    WAITING = "Waiting",
+    GRABBING = "Grabbing",
+    CELEBRATE = "Celebraiting",
+    SHAME = "Shame",
   }
 
   /*
@@ -330,11 +330,11 @@ function main() {
 
   let currMode: RobotMode = null;
   let modeStart = new Date();
-  let modeLength = 1000;
+  let modeLength = 4000;
 
   setInterval(() => {
     let timePassed = new Date().getTime() - modeStart.getTime();
-    if (currMode === null || timePassed < modeLength) {
+    if (currMode !== null && timePassed < modeLength) {
       return;
     }
 
@@ -357,6 +357,7 @@ function main() {
         newMode = RobotMode.WAITING;
         break;
       default:
+        newMode = RobotMode.WAITING;
     }
 
     switch (newMode) {

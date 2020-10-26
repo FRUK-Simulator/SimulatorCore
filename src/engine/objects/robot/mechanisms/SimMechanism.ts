@@ -1,4 +1,8 @@
-import { IMechanismSpec, IMechanismIOConfig } from "../../../specs/RobotSpecs";
+import {
+  IMechanismSpec,
+  IMechanismIOConfig,
+  SensorSpec,
+} from "../../../specs/RobotSpecs";
 import { SimObject } from "../../SimObject";
 import { BodyDef, FixtureDef } from "planck-js";
 import { EventRegistry } from "../../../EventRegistry";
@@ -34,6 +38,11 @@ export abstract class SimMechanism extends SimObject {
 
   getFixtureDef(): FixtureDef {
     return this._fixtureSpecs;
+  }
+
+  // returns the proxy sensors to be added to the robots sensor manager
+  getProxySensors(): SensorSpec[] {
+    return [];
   }
 
   /**
