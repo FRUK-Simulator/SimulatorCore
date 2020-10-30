@@ -4,7 +4,7 @@ import {
   SensorSpec,
 } from "../../../specs/RobotSpecs";
 import { SimObject } from "../../SimObject";
-import { BodyDef, FixtureDef } from "planck-js";
+import { BodyDef, FixtureDef, World } from "planck-js";
 import { EventRegistry } from "../../../EventRegistry";
 
 /**
@@ -62,5 +62,9 @@ export abstract class SimMechanism extends SimObject {
     eventRegistry: EventRegistry
   ): void {
     eventRegistry.registerMechanism(robotGuid, this);
+  }
+
+  configureFixtureLinks(world: World) {
+    // empty default implementation
   }
 }
