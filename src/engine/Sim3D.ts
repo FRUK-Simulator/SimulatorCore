@@ -240,11 +240,13 @@ export class Sim3D extends EventEmitter {
     robot.setBody(robotBody);
     robotBody.createFixture(robot.getFixtureDef());
 
+    let world = this.world;
     // Create bodies and fixtures for the children
-    robot.children.forEach((child) => {
-      const childBody = this.world.createBody(child.getBodySpecs());
+    robot.children.forEach(function init_bodies(child) {
+      const childBody = world.createBody(child.getBodySpecs());
       child.setBody(childBody);
       childBody.createFixture(child.getFixtureDef());
+      child.children.forEach(init_bodies);
     });
 
     // Tell the robot to configure the joints appropriately
