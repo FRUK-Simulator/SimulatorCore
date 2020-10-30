@@ -290,6 +290,7 @@ export class SimRobot extends SimObject {
           new Vec2(1, 0)
         )
       );
+      mechanism.configureFixtureLinks(world);
     });
   }
 
