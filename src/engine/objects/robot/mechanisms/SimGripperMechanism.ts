@@ -1,4 +1,4 @@
-import { Box, Vec2 } from "planck-js";
+import { Box, PrismaticJoint, Vec2, World } from "planck-js";
 import { getSensorMountPosition } from "../../../utils/RobotUtils";
 import {
   IMechanismSpec,
@@ -7,6 +7,8 @@ import {
   SensorSpec,
 } from "../../../specs/RobotSpecs";
 import { SimMechanism } from "./SimMechanism";
+import * as THREE from "three";
+import { SimGripperJaw } from "./SimGripperJaw";
 
 enum GripperState {
   OPEN,
@@ -19,10 +21,36 @@ enum GripperState {
 const IO_TYPE_HELD = "held"; // held == 1 -> grabbed something, held == 0 nothing grabbed
 const IO_TYPE_GRAB = "grab"; // set to 1 to start grabbing, set to 0 to open grabber
 
+/**
+ * This mechanism enables the robot to grab objects in the scene.
+ *
+ * The physical model for this mechanism looks like this (top down):
+ *
+ *     |      |
+ *     |......|
+ *     ********
+ *     *      *
+ *     *      *
+ *     ********
+ *
+ * Where *'s are the robots body, and the |'s are the jaws of the grabber and the .'s are the 'backboard'
+ *
+ * The mechanism has one input chanel and one output channel.
+ *
+ * The input channel IO_TYPE_GRAB informs the mechanism to either open the jaws:
+ *    ...||...  ->  |.....|
+ * or close the jaws
+ *    |......|  ->  ...|...
+ * the time it takes the jaws to close or open is fixed
+ *
+ * The output chanel IO_TYPE_HELD allows the operator to check if the grabbers are holding an item or not.
+ * A value of 1.0 indicates that the grabber has hold of an object and 0.0 indicates the grabber is empty.
+ */
 export class SimGripperMechanism extends SimMechanism {
   private _state: GripperState = GripperState.OPEN;
   private _heldSensorChanel: number;
   private _mountFace: SensorMountingFace;
+  private _jaws: [SimGripperJaw, SimGripperJaw];
 
   constructor(robotGuid: string, spec: IMechanismSpec, robotSpec: IRobotSpec) {
     super("Gripper", robotGuid, spec);
@@ -45,28 +73,28 @@ export class SimGripperMechanism extends SimMechanism {
       spec.mountOffset
     );
 
-    let sensorDimensionX = 0;
-    let sensorDimensionZ = 0;
+    // Backboard object
+    let backboardDimensionX = 0;
+    let backboardDimensionZ = 0;
 
-    let range = 0.05;
-    let width = 0.1;
+    let range = 0.15;
+    let backboard = 0.01;
+    let jawThickness = 0.02;
+    let width = robotSpec.dimensions.x;
 
     switch (spec.mountFace) {
       case SensorMountingFace.LEFT:
       case SensorMountingFace.RIGHT:
-        sensorDimensionX = range * 2;
-        sensorDimensionZ = width;
+        backboardDimensionX = backboard;
+        backboardDimensionZ = width;
         break;
       case SensorMountingFace.FRONT:
       case SensorMountingFace.REAR:
-        sensorDimensionX = width;
-        sensorDimensionZ = range * 2;
+        backboardDimensionX = width;
+        backboardDimensionZ = backboard;
         break;
     }
 
-    //TODO(jp)
-    // Create physics bodies
-    // Set up the body and fixture
     this._bodySpecs = {
       type: "dynamic", // sensors are always dynamic
       position: new Vec2(sensorPosition.x, sensorPosition.z),
@@ -74,12 +102,42 @@ export class SimGripperMechanism extends SimMechanism {
       bullet: true,
     };
     this._fixtureSpecs = {
-      shape: new Box(sensorDimensionX / 2, sensorDimensionZ / 2),
+      shape: new Box(backboardDimensionX / 2, backboardDimensionZ / 2),
       density: 1,
-      isSensor: true,
+      friction: 1,
+      restitution: 0,
+      isSensor: false,
     };
-
+    let backboardGeom = new THREE.BoxGeometry(
+      backboardDimensionX,
+      robotSpec.dimensions.y,
+      backboardDimensionZ
+    );
     // Create meshes
+    this._mesh = new THREE.Mesh(
+      backboardGeom,
+      new THREE.MeshStandardMaterial({ color: 0x003377 })
+    );
+
+    // Create jaws
+    this._jaws = [
+      new SimGripperJaw(
+        jawThickness,
+        range,
+        -robotSpec.dimensions.x / 2,
+        spec,
+        robotSpec
+      ),
+      new SimGripperJaw(
+        jawThickness,
+        range,
+        robotSpec.dimensions.x / 2,
+        spec,
+        robotSpec
+      ),
+    ];
+
+    this._jaws.forEach(this.addChild.bind(this));
   }
 
   public getValue(ioIdentifier: string): number {
@@ -105,14 +163,40 @@ export class SimGripperMechanism extends SimMechanism {
     switch (action) {
       case Action.OPEN:
         throw new Error("Method not implemented.");
-        break;
       case Action.CLOSE:
         throw new Error("Method not implemented.");
-        break;
     }
   }
 
+  public configureFixtureLinks(world: World) {
+    // link jaw bodies to backboard
+    this._jaws.forEach((jaw) => {
+      world.createJoint(
+        new PrismaticJoint(
+          {
+            enableLimit: true,
+            lowerTranslation: 0,
+            upperTranslation: 0,
+          },
+          this._body,
+          jaw.body,
+          jaw.body.getWorldCenter(),
+          new Vec2(1, 0)
+        )
+      );
+    });
+  }
+
   public update(ms: number): void {
+    const bodyCenter = this._body.getWorldCenter();
+    this._mesh.position.x = bodyCenter.x;
+    this._mesh.position.z = bodyCenter.y;
+
+    this._mesh.rotation.y = -this._body.getAngle();
+
+    this._children.forEach((child) => {
+      child.update(ms);
+    });
     //TODO(jp) implement
     // if the gripper is openning, continue releasing grip.
     // if the gripper is closing, continue closing grippers.

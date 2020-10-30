@@ -41,13 +41,19 @@ const demoOptions = {
 function main() {
   const canvas = <HTMLCanvasElement>document.getElementById("demo1");
 
+  let debug_mode_default = false;
+  //debug_mode_default = true;
+
   simulator = new Sim3D(canvas, simConfig);
   simulator.onresize();
   simulator.beginRendering();
+  simulator.setDebugMode(debug_mode_default);
 
   gui = new GUI();
   const debugFolder = gui.addFolder("Debug Options");
-  const debugModeController = debugFolder.add(demoOptions, "debugMode");
+  const debugModeController = debugFolder
+    .add(demoOptions, "debugMode")
+    .setValue(debug_mode_default);
 
   debugModeController.onChange((val) => {
     simulator.setDebugMode(val);
@@ -161,9 +167,9 @@ function main() {
   // });
 
   const robotBuilder = new RobotBuilder.Builder();
-  const wheel = new RobotBuilder.WheelBuilder(0.09)
+  const wheel = new RobotBuilder.WheelBuilder(0.1, 0.02)
     .setMountPoint(RobotSpecs.WheelMountingPoint.LEFT_FRONT)
-    .setMountOffset({ x: -0.0075, y: -0.25, z: 0.033 });
+    .setMountOffset({ x: -0.0075, y: -0.05, z: 0.033 });
   const motor = new RobotBuilder.MotorBuilder().setChannel(0).setMaxForce(0.25);
 
   const distanceSensor = new RobotBuilder.DistanceSensorBuilder(0)
@@ -176,8 +182,13 @@ function main() {
     .setRange(5);
 
   robotBuilder
-    .setDimensions({ x: 0.225, y: 0.225, z: 0.255 })
-    .addBasicSensor(distanceSensor)
+    .setDimensions({ x: 0.225, y: 0.125, z: 0.255 })
+    .addBasicSensor(
+      distanceSensor
+        .copy()
+        // move infront of the grabber
+        .setMountOffset({ x: 0, y: 0, z: -0.02 })
+    )
     .addBasicSensor(
       distanceSensor
         .copy()
@@ -197,34 +208,34 @@ function main() {
       wheel
         .copy()
         .setMountPoint(RobotSpecs.WheelMountingPoint.LEFT_REAR)
-        .setMountOffset({ x: -0.0075, y: -0.25, z: -0.033 })
+        .setMountOffset({ x: -0.0075, y: -0.05, z: -0.033 })
     )
     .addWheel(
       "right-drive",
       wheel
         .copy()
         .setMountPoint(RobotSpecs.WheelMountingPoint.RIGHT_FRONT)
-        .setMountOffset({ x: 0.0075, y: -0.25, z: 0.033 })
+        .setMountOffset({ x: 0.0075, y: -0.05, z: 0.033 })
     )
     .addWheel(
       "right-drive",
       wheel
         .copy()
         .setMountPoint(RobotSpecs.WheelMountingPoint.RIGHT_REAR)
-        .setMountOffset({ x: 0.0075, y: -0.25, z: -0.033 })
+        .setMountOffset({ x: 0.0075, y: -0.05, z: -0.033 })
     )
     .addMotor("left-drive", motor)
     .addMotor("right-drive", motor.copy().setChannel(1));
 
   const spec = robotBuilder.generateSpec();
-  spec.customMesh = {
-    filePath: "assets/models/edubot-lores.gltf",
-    rotation: {
-      x: -Math.PI / 2,
-      y: 0,
-      z: Math.PI / 2,
-    },
-  };
+  // spec.customMesh = {
+  //   filePath: "assets/models/edubot-lores.gltf",
+  //   rotation: {
+  //     x: -Math.PI / 2,
+  //     y: 0,
+  //     z: Math.PI / 2,
+  //   },
+  // };
 
   let gripperGrabChannel = 0;
   let gripperHeldChannel = 1;
@@ -247,6 +258,7 @@ function main() {
       depth: 1,
       maxWidth: 2,
       minWidth: 0.9,
+      mountOffset: { x: 0, y: 0, z: -0.01 },
       mountFace: RobotSpecs.SensorMountingFace.FRONT,
     },
   ];
