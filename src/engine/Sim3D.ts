@@ -491,7 +491,7 @@ export class Sim3D extends EventEmitter {
     const floorMaterial = new THREE.MeshStandardMaterial({ map: floorTexture });
     const floor = new THREE.Mesh(floorGeometry, floorMaterial);
     floor.rotateX(-Math.PI / 2);
-    floor.position.y = -0.1;
+    floor.position.y = -0.01;
     this.scene.add(floor);
 
     const blockGeometry = new THREE.BoxGeometry(1, 1, 1);
