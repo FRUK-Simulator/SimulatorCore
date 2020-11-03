@@ -1,6 +1,15 @@
-import { Box, PrismaticJoint, Vec2, World } from "planck-js";
+import {
+  Box,
+  PrismaticJoint,
+  Vec2,
+  World,
+  WeldJoint,
+  WeldJointDef,
+  PrismaticJointDef,
+} from "planck-js";
 import { getSensorMountPosition } from "../../../utils/RobotUtils";
 import {
+  IMechanismIOConfig,
   IMechanismSpec,
   IRobotSpec,
   SensorMountingFace,
@@ -50,7 +59,10 @@ export class SimGripperMechanism extends SimMechanism {
   private _state: GripperState = GripperState.OPEN;
   private _heldSensorChanel: number;
   private _mountFace: SensorMountingFace;
-  private _jaws: [SimGripperJaw, SimGripperJaw];
+  private _jaws: SimGripperJaw[];
+  private _slideJoint: PrismaticJoint;
+  private _closeSpeed: number;
+  private _openSpeed: number;
 
   constructor(robotGuid: string, spec: IMechanismSpec, robotSpec: IRobotSpec) {
     super("Gripper", robotGuid, spec);
@@ -77,10 +89,13 @@ export class SimGripperMechanism extends SimMechanism {
     let backboardDimensionX = 0;
     let backboardDimensionZ = 0;
 
-    let range = 0.15;
+    let range = 0.1;
     let backboard = 0.01;
     let jawThickness = 0.02;
     let width = robotSpec.dimensions.x;
+
+    this._closeSpeed = 0.1;
+    this._openSpeed = -0.1;
 
     switch (spec.mountFace) {
       case SensorMountingFace.LEFT:
@@ -160,31 +175,55 @@ export class SimGripperMechanism extends SimMechanism {
 
     let action = value >= 0.5 ? Action.CLOSE : Action.OPEN;
 
+    console.log("Gripper setValue", value, action);
     switch (action) {
       case Action.OPEN:
-        throw new Error("Method not implemented.");
+        this._slideJoint.setMotorSpeed(this._closeSpeed);
+        break;
       case Action.CLOSE:
-        throw new Error("Method not implemented.");
+        this._slideJoint.setMotorSpeed(this._openSpeed);
+        break;
     }
   }
 
   public configureFixtureLinks(world: World) {
     // link jaw bodies to backboard
-    this._jaws.forEach((jaw) => {
-      world.createJoint(
-        new PrismaticJoint(
-          {
-            enableLimit: true,
-            lowerTranslation: 0,
-            upperTranslation: 0,
-          },
-          this._body,
-          jaw.body,
-          jaw.body.getWorldCenter(),
-          new Vec2(1, 0)
-        )
-      );
-    });
+    let fixedJaw = this._jaws[0];
+    let slideJaw = this._jaws[1];
+
+    let jawAnchorFixed = fixedJaw.getInitialPosition();
+    let jawAnchorSlide = slideJaw.getInitialPosition();
+
+    let spec: WeldJointDef = {
+      bodyA: this._body,
+      bodyB: fixedJaw.body,
+      localAnchorA: new Vec2(jawAnchorFixed.x, jawAnchorFixed.z),
+      localAnchorB: new Vec2(0, -fixedJaw.getFrontOffset()),
+    };
+
+    console.log(spec);
+
+    world.createJoint(new WeldJoint(spec));
+
+    let slideSpec: PrismaticJointDef = {
+      bodyA: this._body,
+      bodyB: slideJaw.body,
+      referenceAngle: 0,
+      localAnchorA: new Vec2(0, jawAnchorSlide.z),
+      localAnchorB: new Vec2(0, -fixedJaw.getFrontOffset()),
+      localAxisA: new Vec2(1, 0),
+      enableLimit: true,
+      lowerTranslation: jawAnchorFixed.x + 0.1,
+      upperTranslation: jawAnchorSlide.x,
+      enableMotor: true,
+      maxMotorForce: 500,
+      motorSpeed: this._openSpeed,
+    };
+
+    console.log(slideSpec);
+
+    this._slideJoint = new PrismaticJoint(slideSpec);
+    world.createJoint(this._slideJoint);
   }
 
   public update(ms: number): void {
@@ -198,8 +237,11 @@ export class SimGripperMechanism extends SimMechanism {
       child.update(ms);
     });
     //TODO(jp) implement
-    // if the gripper is openning, continue releasing grip.
-    // if the gripper is closing, continue closing grippers.
+    // If grabber opening:
+    //    if grabber is holding object, drop object.
+    // if grabber is closing:
+    //    check if there is anything between the grippers.
+    //    grab item
   }
 
   public getProxySensors(): SensorSpec[] {
