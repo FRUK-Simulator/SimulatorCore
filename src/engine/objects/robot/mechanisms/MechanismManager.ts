@@ -23,6 +23,7 @@ export class MechanismManager {
   > = new Map();
 
   constructor(robotSpec: IRobotSpec, robotGuid: string) {
+    this._iomap = new Map();
     this.configureMechanisms(robotSpec, robotGuid);
   }
 
@@ -48,6 +49,13 @@ export class MechanismManager {
         );
       }
       this._mechanisms.set(mechanism.identifier, mechanism);
+
+      for (let iomapping of mechanismSpec.ioMap) {
+        this._iomap.set(iomapping.channel, {
+          mechanismId: mechanism.identifier,
+          ioIdentifier: iomapping.id,
+        });
+      }
     });
   }
 
