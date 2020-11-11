@@ -18,6 +18,7 @@ import {
 import { SimMechanism } from "./SimMechanism";
 import * as THREE from "three";
 import { SimGripperJaw } from "./SimGripperJaw";
+import { SimContactSensor } from "../sensors/SimContactSensor";
 import { EntityCategory, EntityMask } from "../RobotCollisionConstants";
 
 enum GripperState {
@@ -61,9 +62,13 @@ export class SimGripperMechanism extends SimMechanism {
   private _heldSensorChanel: number;
   private _mountFace: SensorMountingFace;
   private _jaws: SimGripperJaw[];
+  private _sensor: SimContactSensor;
   private _slideJoint: PrismaticJoint;
   private _closeSpeed: number;
   private _openSpeed: number;
+  private _width: number;
+  private _spec: IMechanismSpec;
+  private _range: number;
 
   constructor(robotGuid: string, spec: IMechanismSpec, robotSpec: IRobotSpec) {
     super("Gripper", robotGuid, spec);
@@ -92,9 +97,12 @@ export class SimGripperMechanism extends SimMechanism {
 
     let range = 0.1;
     let backboard = 0.01;
-    let jawThickness = 0.02;
-    let width = robotSpec.dimensions.x;
+    let jawThickness = 0.01;
+    let width = 0.4;
 
+    this._spec = spec;
+    this._range = range;
+    this._width = width;
     this._closeSpeed = 0.1;
     this._openSpeed = -0.1;
 
@@ -115,14 +123,11 @@ export class SimGripperMechanism extends SimMechanism {
       type: "dynamic", // sensors are always dynamic
       position: new Vec2(sensorPosition.x, sensorPosition.z),
       angle: 0,
-      bullet: true,
     };
     this._fixtureSpecs = {
       shape: new Box(backboardDimensionX / 2, backboardDimensionZ / 2),
-      density: 1,
-      friction: 1,
-      restitution: 0,
       isSensor: false,
+      density: 1,
       filterCategoryBits: EntityCategory.ROBOT_PART,
       filterMaskBits: EntityMask.ROBOT_PART,
     };
@@ -139,20 +144,8 @@ export class SimGripperMechanism extends SimMechanism {
 
     // Create jaws
     this._jaws = [
-      new SimGripperJaw(
-        jawThickness,
-        range,
-        -robotSpec.dimensions.x / 2,
-        spec,
-        robotSpec
-      ),
-      new SimGripperJaw(
-        jawThickness,
-        range,
-        robotSpec.dimensions.x / 2,
-        spec,
-        robotSpec
-      ),
+      new SimGripperJaw(jawThickness, range, -width / 2, spec, robotSpec),
+      new SimGripperJaw(jawThickness, range, width / 2, spec, robotSpec),
     ];
 
     this._jaws.forEach(this.addChild.bind(this));
@@ -195,37 +188,38 @@ export class SimGripperMechanism extends SimMechanism {
     let slideJaw = this._jaws[1];
 
     let jawAnchorFixed = fixedJaw.getInitialPosition();
-    let jawAnchorSlide = slideJaw.getInitialPosition();
 
-    let spec: WeldJointDef = {
-      bodyA: this._body,
-      bodyB: fixedJaw.body,
-      localAnchorA: new Vec2(jawAnchorFixed.x, jawAnchorFixed.z),
-      localAnchorB: new Vec2(0, -fixedJaw.getFrontOffset()),
-    };
+    world.createJoint(
+      new PrismaticJoint(
+        {
+          enableLimit: true,
+          lowerTranslation: 0,
+          upperTranslation: 0,
+        },
+        this._body,
+        fixedJaw.body,
+        fixedJaw.body.getWorldCenter(),
+        new Vec2(1, 0)
+      )
+    );
 
-    console.log(spec);
-
-    world.createJoint(new WeldJoint(spec));
-
-    let slideSpec: PrismaticJointDef = {
-      bodyA: this._body,
-      bodyB: slideJaw.body,
-      referenceAngle: 0,
-      localAnchorA: new Vec2(0, jawAnchorSlide.z),
-      localAnchorB: new Vec2(0, -fixedJaw.getFrontOffset()),
-      localAxisA: new Vec2(1, 0),
+    let slideSpec = {
       enableLimit: true,
-      lowerTranslation: jawAnchorFixed.x + 0.1,
-      upperTranslation: jawAnchorSlide.x,
+      lowerTranslation: -this._width,
+      upperTranslation: 0,
       enableMotor: true,
-      maxMotorForce: 500,
+      maxMotorForce: 1,
       motorSpeed: this._openSpeed,
     };
 
-    console.log(slideSpec);
+    this._slideJoint = new PrismaticJoint(
+      slideSpec,
+      this._body,
+      slideJaw.body,
+      slideJaw.body.getWorldCenter(),
+      new Vec2(1, 0)
+    );
 
-    this._slideJoint = new PrismaticJoint(slideSpec);
     world.createJoint(this._slideJoint);
   }
 
@@ -254,6 +248,19 @@ export class SimGripperMechanism extends SimMechanism {
         channel: this._heldSensorChanel,
         mountFace: this._mountFace,
         getValueCallback: this.getValue.bind(this, "held"),
+      },
+      {
+        type: "contact-sensor",
+        mountFace: this._spec.mountFace,
+        mountOffset: {
+          x: this._spec.mountOffset.x,
+          y: this._spec.mountOffset.y,
+          z: this._spec.mountOffset.z - this._range,
+        },
+        width: (this._width * 3) / 4,
+        range: this._range,
+        channel: -1,
+        render: true,
       },
     ];
   }
