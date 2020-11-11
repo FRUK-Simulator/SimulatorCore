@@ -426,7 +426,7 @@ export class Sim3D extends EventEmitter {
     debugMaterial.color = new THREE.Color("black");
     debugMaterial.wireframe = true;
     this.debugMesh = new THREE.Mesh(emptyGeometry, debugMaterial);
-    this.debugMesh.visible = false;
+    this.debugMesh.visible = window.location.hash.includes("debug");
     this.scene.add(this.debugMesh);
   }
 
