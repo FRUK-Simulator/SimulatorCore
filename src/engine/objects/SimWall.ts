@@ -10,6 +10,7 @@ import { Vec2, Box } from "planck-js";
 import { IWallSpec } from "../specs/CoreSpecs";
 import { FixtureDef } from "planck-js";
 import { BodyDef } from "planck-js";
+import { EntityCategory, EntityMask } from "./robot/RobotCollisionConstants";
 
 export const DEFAULT_WALL_THICKNESS = 0.1;
 export const DEFAULT_WALL_HEIGHT = 1;
@@ -89,6 +90,8 @@ export class SimWall extends SimObject {
       shape: new Box(wallLength / 2, wallThickness / 2),
       density: 1,
       isSensor: false,
+      filterCategoryBits: EntityCategory.WALL,
+      filterMaskBits: EntityMask.WALL,
     };
   }
 

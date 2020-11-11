@@ -5,6 +5,7 @@ import * as THREE from "three";
 import { SimObject } from "../../SimObject";
 import { getSensorMountPosition } from "../../../utils/RobotUtils";
 import { Vector3d } from "../../../SimTypes";
+import { EntityCategory, EntityMask } from "../RobotCollisionConstants";
 
 export class SimGripperJaw extends SimObject {
   private _bodySpecs: BodyDef;
@@ -39,8 +40,10 @@ export class SimGripperJaw extends SimObject {
     };
     this._fixtureSpecs = {
       shape: new Box(thickness / 2, depth),
-      density: 1,
+      density: 3,
       isSensor: false,
+      filterCategoryBits: EntityCategory.ROBOT_PART,
+      filterMaskBits: EntityMask.ROBOT_PART,
     };
 
     // Set mesh

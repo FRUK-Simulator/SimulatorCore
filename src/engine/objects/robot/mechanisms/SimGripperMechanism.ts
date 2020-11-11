@@ -18,6 +18,7 @@ import {
 import { SimMechanism } from "./SimMechanism";
 import * as THREE from "three";
 import { SimGripperJaw } from "./SimGripperJaw";
+import { EntityCategory, EntityMask } from "../RobotCollisionConstants";
 
 enum GripperState {
   OPEN,
@@ -122,6 +123,8 @@ export class SimGripperMechanism extends SimMechanism {
       friction: 1,
       restitution: 0,
       isSensor: false,
+      filterCategoryBits: EntityCategory.ROBOT_PART,
+      filterMaskBits: EntityMask.ROBOT_PART,
     };
     let backboardGeom = new THREE.BoxGeometry(
       backboardDimensionX,

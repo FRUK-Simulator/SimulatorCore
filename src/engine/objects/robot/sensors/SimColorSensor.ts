@@ -10,6 +10,7 @@ import {
 import { ISensorFixtureUserData } from "../../../specs/UserDataSpecs";
 import { Vec2, Box } from "planck-js";
 import { getSensorMountPosition } from "../../../utils/RobotUtils";
+import { EntityCategory, EntityMask } from "../RobotCollisionConstants";
 
 /**
  * Simulated Color Sensor
@@ -78,6 +79,8 @@ export class SimColorSensor extends SimComplexSensor {
       density: 1,
       isSensor: true,
       userData,
+      filterCategoryBits: EntityCategory.SENSORS,
+      filterMaskBits: EntityMask.SENSORS,
     };
   }
 

@@ -11,6 +11,7 @@ import {
 import { ISensorFixtureUserData } from "../../../specs/UserDataSpecs";
 import { Vec2, Box } from "planck-js";
 import { getSensorMountPosition } from "../../../utils/RobotUtils";
+import { EntityCategory, EntityMask } from "../RobotCollisionConstants";
 
 const SENSOR_INACTIVE_COLOR = 0xaaaaaa;
 const SENSOR_ACTIVE_COLOR = 0xff0000;
@@ -115,6 +116,8 @@ export class SimContactSensor extends SimBasicSensor {
       density: 1,
       isSensor: true,
       userData: userData,
+      filterCategoryBits: EntityCategory.SENSORS,
+      filterMaskBits: EntityMask.SENSORS,
     };
   }
 
