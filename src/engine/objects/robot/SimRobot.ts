@@ -139,17 +139,46 @@ export class SimRobot extends SimObject {
       filterMaskBits: EntityMask.ROBOT_PART,
     };
 
-    // Configure the drivetrain
+    // Create managers
+    this._mechanisms = new MechanismManager(spec, this.guid);
     this._drivetrain = new SimRobotDrivetrain(spec, this.guid);
+    this._basicSensors = new BasicSensorManager(spec, this.guid);
 
+    // Configure Mechanisms
+    // Add the created sensors as children
+    this._mechanisms.mechanisms.forEach((mechanism) => {
+      this.addChild(mechanism);
+
+      if (!this._usingCustomMesh && mechanism.mesh) {
+        mechanism.mesh.translateY(-this._drivetrain.yOffset);
+      }
+    });
+
+    // Mechanism sensors must be added before the other sensors are configured.
+    // Mechanisms may add their own sensor specs to the robot
+    this._mechanisms.getSensorSpecs().forEach((sensorSpec) => {
+      if (isComplexSpec(sensorSpec)) {
+        this._complexSensors.addSensor(
+          sensorSpec as ComplexSensorSpec,
+          spec,
+          this.guid
+        );
+      } else {
+        this._basicSensors.addSensor(
+          sensorSpec as BasicSensorSpec,
+          spec,
+          this.guid
+        );
+      }
+    });
+
+    // Configure the drivetrain
     // Add the created wheels as children
     this._drivetrain.wheelObjects.forEach((wheel) => {
       this.addChild(wheel);
     });
 
     // Configure Basic Sensors
-    this._basicSensors = new BasicSensorManager(spec, this.guid);
-
     // Add the created sensors as children
     this._basicSensors.sensors.forEach((sensor) => {
       this.addChild(sensor);
@@ -168,34 +197,6 @@ export class SimRobot extends SimObject {
 
       if (!this._usingCustomMesh && sensor.mesh) {
         sensor.mesh.translateY(-this._drivetrain.yOffset);
-      }
-    });
-
-    // Configure Complex Sensors
-    this._mechanisms = new MechanismManager(spec, this.guid);
-
-    // Add the created sensors as children
-    this._mechanisms.mechanisms.forEach((mechanism) => {
-      this.addChild(mechanism);
-
-      if (!this._usingCustomMesh && mechanism.mesh) {
-        mechanism.mesh.translateY(-this._drivetrain.yOffset);
-      }
-    });
-
-    this._mechanisms.getSensorSpecs().forEach((sensorSpec) => {
-      if (isComplexSpec(sensorSpec)) {
-        this._complexSensors.addSensor(
-          sensorSpec as ComplexSensorSpec,
-          spec,
-          this.guid
-        );
-      } else {
-        this._basicSensors.addSensor(
-          sensorSpec as BasicSensorSpec,
-          spec,
-          this.guid
-        );
       }
     });
 
