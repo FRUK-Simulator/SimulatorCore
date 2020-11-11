@@ -13,6 +13,7 @@ import {
 } from "../../../specs/UserDataSpecs";
 import { getSensorMountPosition } from "../../../utils/RobotUtils";
 import { Vec2, Box, Fixture } from "planck-js";
+import { EntityCategory, EntityMask } from "../RobotCollisionConstants";
 
 /**
  * Simulated Distance Sensor
@@ -108,6 +109,8 @@ export class SimDistanceSensor extends SimBasicSensor {
       density: 1,
       isSensor: true,
       userData,
+      filterCategoryBits: EntityCategory.ROBOT_PART,
+      filterMaskBits: EntityMask.ROBOT_PART,
     };
   }
 

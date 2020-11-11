@@ -9,6 +9,7 @@ import {
 import { SimObject } from "./SimObject";
 import { Vector2d } from "../SimTypes";
 import { IZoneFixtureUserData } from "../specs/UserDataSpecs";
+import { EntityCategory, EntityMask } from "./robot/RobotCollisionConstants";
 
 /**
  * Factory method for creating a Zone
@@ -137,6 +138,8 @@ export class Zone extends SimObject {
       shape: fixtureShape,
       isSensor: true,
       userData,
+      filterCategoryBits: EntityCategory.ZONES,
+      filterMaskBits: EntityMask.ZONES,
     };
   }
 

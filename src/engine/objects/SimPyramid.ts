@@ -5,6 +5,7 @@ import { IPyramidSpec } from "../specs/CoreSpecs";
 import { Vector2d } from "../SimTypes";
 import { FixtureDef } from "planck-js";
 import { BodyDef } from "planck-js";
+import { EntityCategory, EntityMask } from "./robot/RobotCollisionConstants";
 
 const DEFAULT_PYRAMID_COLOR = 0x0000ff;
 
@@ -79,6 +80,8 @@ export class SimPyramid extends SimObject {
       isSensor: false,
       friction: 0.3,
       restitution: 0.4,
+      filterCategoryBits: EntityCategory.OBJECTS,
+      filterMaskBits: EntityMask.OBJECTS,
     };
   }
 

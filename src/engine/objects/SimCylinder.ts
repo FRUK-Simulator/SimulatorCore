@@ -6,6 +6,7 @@ import { Vector2d } from "../SimTypes";
 import { FixtureDef } from "planck-js";
 import { BodyDef } from "planck-js";
 import { IBaseFixtureUserData } from "../specs/UserDataSpecs";
+import { EntityCategory, EntityMask } from "./robot/RobotCollisionConstants";
 
 const DEFAULT_CYLINDER_COLOR = 0xffff00;
 
@@ -71,6 +72,8 @@ export class SimCylinder extends SimObject {
       friction: 0.3,
       restitution: 0.4,
       userData,
+      filterCategoryBits: EntityCategory.OBJECTS,
+      filterMaskBits: EntityMask.OBJECTS,
     };
   }
 

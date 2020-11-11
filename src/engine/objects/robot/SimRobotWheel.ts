@@ -4,6 +4,7 @@ import { Vec2, Box, BodyDef, FixtureDef } from "planck-js";
 import { IRobotWheelSpec } from "../../specs/RobotSpecs";
 import { IBaseFixtureUserData } from "../../specs/UserDataSpecs";
 import { Vector3d } from "../../SimTypes";
+import { EntityCategory, EntityMask } from "./RobotCollisionConstants";
 
 const DEFAULT_WHEEL_COLOR = 0x000000;
 const DEFAULT_WHEEL_THICKNESS = 0.15;
@@ -83,8 +84,10 @@ export class SimRobotWheel extends SimObject {
     this._fixtureSpecs = {
       shape: new Box(thickness / 2, spec.radius),
       density: 1,
-      isSensor: false,
+      isSensor: true,
       userData,
+      filterCategoryBits: EntityCategory.ROBOT_PART,
+      filterMaskBits: EntityMask.ROBOT_PART,
     };
   }
 

@@ -22,6 +22,7 @@ import { BasicSensorManager } from "./sensors/BasicSensorManager";
 import { ComplexSensorManager } from "./sensors/ComplexSensorManager";
 import { MechanismManager } from "./mechanisms/MechanismManager";
 import { EventRegistry } from "../../EventRegistry";
+import { EntityCategory, EntityMask } from "./RobotCollisionConstants";
 
 const ROBOT_DEFAULT_COLOR = 0x00ff00;
 
@@ -134,6 +135,8 @@ export class SimRobot extends SimObject {
       friction: 0.3,
       restitution: 0.4,
       userData: userData,
+      filterCategoryBits: EntityCategory.ROBOT_PART,
+      filterMaskBits: EntityMask.ROBOT_PART,
     };
 
     // Configure the drivetrain
