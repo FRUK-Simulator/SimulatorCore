@@ -50,7 +50,8 @@ function generateDebugGeometryPolygon(
   const translation = body.getPosition();
   const rotation = body.getAngle();
   const polygonVertices = shape.m_vertices;
-  const height = 3;
+  const height = 0.01;
+  const base = 1.0;
 
   const l = 2 * polygonVertices.length;
   polygonVertices.forEach((vertex, index) => {
@@ -63,8 +64,8 @@ function generateDebugGeometryPolygon(
       vertex.y * Math.cos(rotation) +
       translation.y;
 
-    geom.vertices.push(new THREE.Vector3(x, 0, z));
-    geom.vertices.push(new THREE.Vector3(x, height, z));
+    geom.vertices.push(new THREE.Vector3(x, base, z));
+    geom.vertices.push(new THREE.Vector3(x, base + height, z));
 
     geom.faces.push(
       new THREE.Face3(
