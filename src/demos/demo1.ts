@@ -42,7 +42,7 @@ function main() {
   const canvas = <HTMLCanvasElement>document.getElementById("demo1");
 
   let debug_mode_default = false;
-  //debug_mode_default = true;
+  debug_mode_default = true;
 
   simulator = new Sim3D(canvas, simConfig);
   simulator.onresize();
@@ -292,6 +292,12 @@ function main() {
     zoneId: "test-zone",
   });
 
+  simulator.addBox({
+    type: "box",
+    dimensions: { x: 0.1, y: 0.1, z: 0.1 },
+    initialPosition: { x: 0, y: -2 },
+  });
+
   /*
   enum RobotMode {
     LOOKING,
@@ -375,13 +381,15 @@ function main() {
     switch (newMode) {
       case RobotMode.WAITING:
         // trigger graber to release
+        console.log("Release Grabber");
         robot.setDigitalInput(gripperGrabChannel, false);
         // move forward slowly
-        robot.setMotorPower(0, 0.1);
-        robot.setMotorPower(1, 0.1);
+        robot.setMotorPower(0, 0.05);
+        robot.setMotorPower(1, 0.05);
         break;
       case RobotMode.GRABBING:
         // trigger grabbing to start
+        console.log("Close Grabber");
         robot.setDigitalInput(gripperGrabChannel, true);
         // stop motors
         robot.setMotorPower(0, -0.0);
