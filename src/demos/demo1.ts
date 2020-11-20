@@ -42,7 +42,7 @@ function main() {
   const canvas = <HTMLCanvasElement>document.getElementById("demo1");
 
   let debug_mode_default = false;
-  debug_mode_default = true;
+  //debug_mode_default = true;
 
   simulator = new Sim3D(canvas, simConfig);
   simulator.onresize();

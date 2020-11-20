@@ -3,6 +3,7 @@ import { IRobotSpec, SensorSpec } from "../../../specs/RobotSpecs";
 //import { SimGripperMechanism } from "./SimGripperMechanism";
 import { EventRegistry } from "../../../EventRegistry";
 import { SimGripperMechanism } from "./SimGripperMechanism";
+import { SimRobot } from "../SimRobot";
 
 /**
  * Class representing a collection of robot mechanisms
@@ -22,12 +23,16 @@ export class MechanismManager {
     { mechanismId: string; ioIdentifier: string }
   > = new Map();
 
-  constructor(robotSpec: IRobotSpec, robotGuid: string) {
+  constructor(robotSpec: IRobotSpec, robotGuid: string, robot: SimRobot) {
     this._iomap = new Map();
-    this.configureMechanisms(robotSpec, robotGuid);
+    this.configureMechanisms(robotSpec, robotGuid, robot);
   }
 
-  private configureMechanisms(robotSpec: IRobotSpec, robotGuid: string): void {
+  private configureMechanisms(
+    robotSpec: IRobotSpec,
+    robotGuid: string,
+    robot: SimRobot
+  ): void {
     if (!robotSpec.mechanisms) {
       return;
     }
@@ -39,7 +44,8 @@ export class MechanismManager {
         mechanism = new SimGripperMechanism(
           robotGuid,
           mechanismSpec,
-          robotSpec
+          robotSpec,
+          robot
         );
       }
 

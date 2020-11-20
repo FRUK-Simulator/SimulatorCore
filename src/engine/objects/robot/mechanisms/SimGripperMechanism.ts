@@ -1,12 +1,4 @@
-import {
-  Box,
-  PrismaticJoint,
-  Vec2,
-  World,
-  WeldJoint,
-  WeldJointDef,
-  PrismaticJointDef,
-} from "planck-js";
+import { Box, PrismaticJoint, Vec2, World, Body, WeldJoint } from "planck-js";
 import { getSensorMountPosition } from "../../../utils/RobotUtils";
 import {
   IMechanismIOConfig,
@@ -18,11 +10,11 @@ import {
 import { SimMechanism } from "./SimMechanism";
 import * as THREE from "three";
 import { SimGripperJaw } from "./SimGripperJaw";
-import { SimContactSensor } from "../sensors/SimContactSensor";
 import { EntityCategory, EntityMask } from "../RobotCollisionConstants";
+import { SimRobot } from "../SimRobot";
+import { getObjectsBetween } from "../../../utils/PhysicsUtil";
 
 enum GripperState {
-  OPEN,
   CLOSING,
   OPENING,
   CLOSED_EMPTY,
@@ -32,6 +24,9 @@ enum GripperState {
 const IO_TYPE_HELD = "held"; // held == 1 -> grabbed something, held == 0 nothing grabbed
 const IO_TYPE_GRAB = "grab"; // set to 1 to start grabbing, set to 0 to open grabber
 
+const GRABBER_SENSOR_CHANNEL = -1; // TODO(jp) each instance needs its own channel. this sensor is not exposed outside the robot
+
+const GRABBER_EMPTY_THRESH = 0.02;
 /**
  * This mechanism enables the robot to grab objects in the scene.
  *
@@ -58,19 +53,25 @@ const IO_TYPE_GRAB = "grab"; // set to 1 to start grabbing, set to 0 to open gra
  * A value of 1.0 indicates that the grabber has hold of an object and 0.0 indicates the grabber is empty.
  */
 export class SimGripperMechanism extends SimMechanism {
-  private _state: GripperState = GripperState.OPEN;
+  private _state: GripperState;
   private _heldSensorChanel: number;
   private _mountFace: SensorMountingFace;
   private _jaws: SimGripperJaw[];
-  private _sensor: SimContactSensor;
   private _slideJoint: PrismaticJoint;
   private _closeSpeed: number;
   private _openSpeed: number;
   private _width: number;
   private _spec: IMechanismSpec;
   private _range: number;
+  private _robot: SimRobot;
+  private _grabbed: PrismaticJoint;
 
-  constructor(robotGuid: string, spec: IMechanismSpec, robotSpec: IRobotSpec) {
+  constructor(
+    robotGuid: string,
+    spec: IMechanismSpec,
+    robotSpec: IRobotSpec,
+    robot: SimRobot
+  ) {
     super("Gripper", robotGuid, spec);
 
     this._heldSensorChanel = spec.ioMap.find(
@@ -105,6 +106,8 @@ export class SimGripperMechanism extends SimMechanism {
     this._width = width;
     this._closeSpeed = 0.1;
     this._openSpeed = -0.1;
+    this._robot = robot;
+    this._state = GripperState.OPENING;
 
     switch (spec.mountFace) {
       case SensorMountingFace.LEFT:
@@ -174,9 +177,11 @@ export class SimGripperMechanism extends SimMechanism {
     console.log("Gripper setValue", value, action);
     switch (action) {
       case Action.OPEN:
+        this._state = GripperState.OPENING;
         this._slideJoint.setMotorSpeed(this._closeSpeed);
         break;
       case Action.CLOSE:
+        this._state = GripperState.CLOSING;
         this._slideJoint.setMotorSpeed(this._openSpeed);
         break;
     }
@@ -186,8 +191,6 @@ export class SimGripperMechanism extends SimMechanism {
     // link jaw bodies to backboard
     let fixedJaw = this._jaws[0];
     let slideJaw = this._jaws[1];
-
-    let jawAnchorFixed = fixedJaw.getInitialPosition();
 
     world.createJoint(
       new PrismaticJoint(
@@ -233,12 +236,77 @@ export class SimGripperMechanism extends SimMechanism {
     this._children.forEach((child) => {
       child.update(ms);
     });
-    //TODO(jp) implement
-    // If grabber opening:
-    //    if grabber is holding object, drop object.
-    // if grabber is closing:
-    //    check if there is anything between the grippers.
-    //    grab item
+
+    switch (this._state) {
+      case GripperState.CLOSED_EMPTY:
+        break;
+      case GripperState.CLOSED_FULL:
+        break;
+      case GripperState.CLOSING:
+        let distance = this.getGrabberWidth();
+        if (distance < GRABBER_EMPTY_THRESH) {
+          // grabbers are empty
+          this._state = GripperState.CLOSED_EMPTY;
+          break;
+        }
+
+        // check if there is anything between the grippers
+        if (!this._robot.getDigitalInput(GRABBER_SENSOR_CHANNEL)) {
+          // continue closing
+          break;
+        }
+
+        let objects = getObjectsBetween(this._jaws[0].body, this._jaws[1].body);
+        if (objects.length > 0) {
+          let object = objects[0];
+          this.grabObject(object);
+          this._state = GripperState.CLOSED_FULL;
+        }
+        break;
+      case GripperState.OPENING:
+        // drop object
+        this.releaseObject();
+        break;
+    }
+  }
+  releaseObject() {
+    if (!this._grabbed) {
+      return; // no object grabbed
+    }
+
+    // release object
+    this._body.getWorld().destroyJoint(this._grabbed);
+
+    this._grabbed = null;
+  }
+  grabObject(object: Body) {
+    if (this._grabbed) {
+      return; // already grabbed object
+    }
+
+    // grab object
+    let world = this._body.getWorld();
+
+    this._grabbed = world.createJoint(
+      new PrismaticJoint(
+        {
+          // allow grabbed object to move horizontally between the jaws
+          enableLimit: true,
+          lowerTranslation: -1,
+          upperTranslation: 1,
+        },
+        this._body,
+        object,
+        object.getWorldCenter(),
+        new Vec2(1, 0)
+      )
+    );
+  }
+  getGrabberWidth(): number {
+    let pointA = this._jaws[0].body.getWorldCenter();
+    let pointB = this._jaws[1].body.getWorldCenter();
+
+    return pointA.clone().sub(pointB).length();
   }
 
   public getProxySensors(): SensorSpec[] {
@@ -255,12 +323,12 @@ export class SimGripperMechanism extends SimMechanism {
         mountOffset: {
           x: this._spec.mountOffset.x,
           y: this._spec.mountOffset.y,
-          z: this._spec.mountOffset.z - this._range,
+          z: this._spec.mountOffset.z - this._range / 2,
         },
         width: (this._width * 3) / 4,
-        range: this._range,
-        channel: -1,
-        render: true,
+        range: this._range / 3,
+        channel: GRABBER_SENSOR_CHANNEL,
+        render: false,
       },
     ];
   }

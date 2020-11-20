@@ -140,9 +140,9 @@ export class SimRobot extends SimObject {
     };
 
     // Create managers
-    this._mechanisms = new MechanismManager(spec, this.guid);
-    this._drivetrain = new SimRobotDrivetrain(spec, this.guid);
     this._basicSensors = new BasicSensorManager(spec, this.guid);
+    this._mechanisms = new MechanismManager(spec, this.guid, this);
+    this._drivetrain = new SimRobotDrivetrain(spec, this.guid);
 
     // Configure Mechanisms
     // Add the created sensors as children
