@@ -247,12 +247,12 @@ function main() {
         {
           id: "grab",
           channel: gripperGrabChannel,
-          ioType: "DIGITAL_IN",
+          ioType: RobotSpecs.MechanismIOType.DIGITAL_OUT,
         },
         {
           id: "held",
           channel: gripperHeldChannel,
-          ioType: "DIGITAL_OUT",
+          ioType: RobotSpecs.MechanismIOType.DIGITAL_IN,
         },
       ],
       depth: 1,
@@ -382,7 +382,7 @@ function main() {
       case RobotMode.WAITING:
         // trigger graber to release
         console.log("Release Grabber");
-        robot.setDigitalInput(gripperGrabChannel, false);
+        robot.setDigitalOutput(gripperGrabChannel, false);
         // move forward slowly
         robot.setMotorPower(0, 0.05);
         robot.setMotorPower(1, 0.05);
@@ -390,7 +390,7 @@ function main() {
       case RobotMode.GRABBING:
         // trigger grabbing to start
         console.log("Close Grabber");
-        robot.setDigitalInput(gripperGrabChannel, true);
+        robot.setDigitalOutput(gripperGrabChannel, true);
         // stop motors
         robot.setMotorPower(0, -0.0);
         robot.setMotorPower(1, 0.0);

@@ -47,6 +47,8 @@ export class MechanismManager {
           robotSpec,
           robot
         );
+      } else {
+        throw new Error(`Mechanism type not understood: ${mechanismSpec.type}`);
       }
 
       if (this._mechanisms.has(mechanism.identifier)) {
@@ -86,7 +88,7 @@ export class MechanismManager {
     });
   }
 
-  setDigitalInput(channel: number, value: boolean): void {
+  setDigitalOutput(channel: number, value: boolean): void {
     if (!this._iomap.has(channel)) {
       return;
     }
