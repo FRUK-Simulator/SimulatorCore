@@ -1,7 +1,6 @@
-import { Box, PrismaticJoint, Vec2, World, Body, WeldJoint } from "planck-js";
+import { Box, PrismaticJoint, Vec2, World } from "planck-js";
 import { getSensorMountPosition } from "../../../utils/RobotUtils";
 import {
-  IMechanismIOConfig,
   IMechanismSpec,
   IRobotSpec,
   SensorMountingFace,
@@ -96,10 +95,10 @@ export class SimGripperMechanism extends SimMechanism {
     let backboardDimensionX = 0;
     let backboardDimensionZ = 0;
 
-    let range = 0.1;
-    let backboard = 0.01;
-    let jawThickness = 0.01;
-    let width = 0.4;
+    const range = 0.1;
+    const backboard = 0.01;
+    const jawThickness = 0.01;
+    const width = 0.4;
 
     this._spec = spec;
     this._range = range;
@@ -134,7 +133,7 @@ export class SimGripperMechanism extends SimMechanism {
       filterCategoryBits: EntityCategory.ROBOT_PART,
       filterMaskBits: EntityMask.ROBOT_PART,
     };
-    let backboardGeom = new THREE.BoxGeometry(
+    const backboardGeom = new THREE.BoxGeometry(
       backboardDimensionX,
       robotSpec.dimensions.y,
       backboardDimensionZ
@@ -172,7 +171,7 @@ export class SimGripperMechanism extends SimMechanism {
       OPEN,
     }
 
-    let action = value >= 0.5 ? Action.CLOSE : Action.OPEN;
+    const action = value >= 0.5 ? Action.CLOSE : Action.OPEN;
 
     console.log("Gripper setValue", value, action);
     switch (action) {
@@ -187,10 +186,10 @@ export class SimGripperMechanism extends SimMechanism {
     }
   }
 
-  public configureFixtureLinks(world: World) {
+  public configureFixtureLinks(world: World): void {
     // link jaw bodies to backboard
-    let fixedJaw = this._jaws[0];
-    let slideJaw = this._jaws[1];
+    const fixedJaw = this._jaws[0];
+    const slideJaw = this._jaws[1];
 
     world.createJoint(
       new PrismaticJoint(
@@ -206,7 +205,7 @@ export class SimGripperMechanism extends SimMechanism {
       )
     );
 
-    let slideSpec = {
+    const slideSpec = {
       enableLimit: true,
       lowerTranslation: -this._width,
       upperTranslation: 0,
@@ -243,8 +242,7 @@ export class SimGripperMechanism extends SimMechanism {
       case GripperState.CLOSED_FULL:
         break;
       case GripperState.CLOSING:
-        let distance = this.getGrabberWidth();
-        if (distance < GRABBER_EMPTY_THRESH) {
+        if (this.getGrabberWidth() < GRABBER_EMPTY_THRESH) {
           // grabbers are empty
           this._state = GripperState.CLOSED_EMPTY;
           break;
@@ -256,12 +254,7 @@ export class SimGripperMechanism extends SimMechanism {
           break;
         }
 
-        let objects = getObjectsBetween(this._jaws[0].body, this._jaws[1].body);
-        if (objects.length > 0) {
-          let object = objects[0];
-          this.grabObject(object);
-          this._state = GripperState.CLOSED_FULL;
-        }
+        this.grabObject();
         break;
       case GripperState.OPENING:
         // drop object
@@ -269,7 +262,7 @@ export class SimGripperMechanism extends SimMechanism {
         break;
     }
   }
-  releaseObject() {
+  releaseObject(): void {
     if (!this._grabbed) {
       return; // no object grabbed
     }
@@ -279,13 +272,22 @@ export class SimGripperMechanism extends SimMechanism {
 
     this._grabbed = null;
   }
-  grabObject(object: Body) {
+  grabObject(): void {
     if (this._grabbed) {
       return; // already grabbed object
     }
 
+    const objects = getObjectsBetween(this._jaws[0].body, this._jaws[1].body);
+
+    if (objects.length == 0) {
+      return; // no object to grab
+    }
+
+    const object = objects[0];
+    this._state = GripperState.CLOSED_FULL;
+
     // grab object
-    let world = this._body.getWorld();
+    const world = this._body.getWorld();
 
     this._grabbed = world.createJoint(
       new PrismaticJoint(
@@ -303,8 +305,8 @@ export class SimGripperMechanism extends SimMechanism {
     );
   }
   getGrabberWidth(): number {
-    let pointA = this._jaws[0].body.getWorldCenter();
-    let pointB = this._jaws[1].body.getWorldCenter();
+    const pointA = this._jaws[0].body.getWorldCenter();
+    const pointB = this._jaws[1].body.getWorldCenter();
 
     return pointA.clone().sub(pointB).length();
   }

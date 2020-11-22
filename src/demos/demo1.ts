@@ -41,7 +41,7 @@ const demoOptions = {
 function main() {
   const canvas = <HTMLCanvasElement>document.getElementById("demo1");
 
-  let debug_mode_default = false;
+  const debug_mode_default = false;
   //debug_mode_default = true;
 
   simulator = new Sim3D(canvas, simConfig);
@@ -237,8 +237,8 @@ function main() {
   //   },
   // };
 
-  let gripperGrabChannel = 0;
-  let gripperHeldChannel = 1;
+  const gripperGrabChannel = 0;
+  const gripperHeldChannel = 1;
 
   spec.mechanisms = [
     {
@@ -265,6 +265,7 @@ function main() {
 
   const robot = simulator.addRobot(spec);
 
+  /*
   const polygonZone = {
     type: "polygon",
     points: [
@@ -274,6 +275,7 @@ function main() {
       { x: -2, y: -2 },
     ],
   };
+  */
 
   simulator.addZone({
     type: "zone",
@@ -348,10 +350,10 @@ function main() {
 
   let currMode: RobotMode = null;
   let modeStart = new Date();
-  let modeLength = 4000;
+  const modeLength = 4000;
 
   setInterval(() => {
-    let timePassed = new Date().getTime() - modeStart.getTime();
+    const timePassed = new Date().getTime() - modeStart.getTime();
     if (currMode !== null && timePassed < modeLength) {
       return;
     }
@@ -364,9 +366,9 @@ function main() {
         newMode = RobotMode.GRABBING;
         break;
       case RobotMode.GRABBING:
-        let success = robot.getDigitalInput(gripperHeldChannel);
-
-        newMode = success ? RobotMode.CELEBRATE : RobotMode.SHAME;
+        newMode = robot.getDigitalInput(gripperHeldChannel)
+          ? RobotMode.CELEBRATE
+          : RobotMode.SHAME;
         break;
       case RobotMode.CELEBRATE:
         newMode = RobotMode.WAITING;

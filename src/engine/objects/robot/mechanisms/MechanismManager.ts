@@ -58,7 +58,7 @@ export class MechanismManager {
       }
       this._mechanisms.set(mechanism.identifier, mechanism);
 
-      for (let iomapping of mechanismSpec.ioMap) {
+      for (const iomapping of mechanismSpec.ioMap) {
         this._iomap.set(iomapping.channel, {
           mechanismId: mechanism.identifier,
           ioIdentifier: iomapping.id,
@@ -93,20 +93,20 @@ export class MechanismManager {
       return;
     }
 
-    let mapping = this._iomap.get(channel);
+    const mapping = this._iomap.get(channel);
 
     if (!this._mechanisms.has(mapping.mechanismId)) {
       return;
     }
 
-    let mechanism = this._mechanisms.get(mapping.mechanismId);
+    const mechanism = this._mechanisms.get(mapping.mechanismId);
     mechanism.setValue(mapping.ioIdentifier, value);
   }
 
   getSensorSpecs(): SensorSpec[] {
-    let specs: SensorSpec[] = [];
-    this._mechanisms.forEach((value: SimMechanism, key: string) => {
-      let mechProxySensors = value.getProxySensors();
+    const specs: SensorSpec[] = [];
+    this._mechanisms.forEach((value: SimMechanism) => {
+      const mechProxySensors = value.getProxySensors();
 
       specs.push(...mechProxySensors);
     });

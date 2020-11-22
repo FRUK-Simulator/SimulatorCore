@@ -64,7 +64,8 @@ export abstract class SimMechanism extends SimObject {
     eventRegistry.registerMechanism(robotGuid, this);
   }
 
-  configureFixtureLinks(world: World) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  configureFixtureLinks(world: World): void {
     // empty default implementation
   }
 }

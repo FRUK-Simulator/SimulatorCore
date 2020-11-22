@@ -15,7 +15,6 @@ import {
   ComplexSensorSpec,
   IRobotSpec,
   isComplexSpec,
-  SensorSpec,
 } from "../../specs/RobotSpecs";
 import { IBaseFixtureUserData } from "../../specs/UserDataSpecs";
 import { BasicSensorManager } from "./sensors/BasicSensorManager";

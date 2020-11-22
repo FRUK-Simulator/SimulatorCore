@@ -196,7 +196,7 @@ export type ComplexSensorSpec = IColorSensorSpec;
 // union of all sensor specs
 export type SensorSpec = ComplexSensorSpec | BasicSensorSpec;
 
-export function isComplexSpec(sensorSpec: SensorSpec) {
+export function isComplexSpec(sensorSpec: SensorSpec): boolean {
   return sensorSpec.type == "color-sensor";
 }
 

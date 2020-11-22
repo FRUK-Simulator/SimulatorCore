@@ -47,7 +47,7 @@ export class SimGripperJaw extends SimObject {
     };
 
     // Set mesh
-    let jawGeom = new THREE.BoxGeometry(thickness, 0.1, depth * 2);
+    const jawGeom = new THREE.BoxGeometry(thickness, 0.1, depth * 2);
     this._mesh = new THREE.Mesh(
       jawGeom,
       new THREE.MeshStandardMaterial({ color: 0x003377 })
@@ -64,7 +64,7 @@ export class SimGripperJaw extends SimObject {
     return this._forwardOffset;
   }
 
-  public update(ms: number): void {
+  public update(): void {
     const bodyCenter = this._body.getWorldCenter();
     this._mesh.position.x = bodyCenter.x;
     this._mesh.position.z = bodyCenter.y;
