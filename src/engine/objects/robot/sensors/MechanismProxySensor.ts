@@ -1,9 +1,6 @@
 import {
   IBasicSensorValue,
   BasicSensorOutputChannelType,
-  IMechanismSpec,
-  IBasicSensorSpec,
-  SensorMountingFace,
   IMechanismProxySensorSpec,
 } from "../../../specs/RobotSpecs";
 import { SimBasicSensor } from "./SimBasicSensor";
@@ -35,8 +32,10 @@ export class MechanismProxySensor extends SimBasicSensor {
     this._getValueCallback = spec.getValueCallback;
   }
 
+  // eslint-disable-next-line -- ignore empty function
   onSensorEvent(val: IBasicSensorValue): void {}
 
+  // eslint-disable-next-line -- ignore empty function
   public update(ms: number): void {}
 
   get value(): number {

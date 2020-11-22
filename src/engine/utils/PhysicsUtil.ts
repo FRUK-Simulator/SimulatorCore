@@ -1,15 +1,15 @@
 import { Body } from "planck-js";
 
 export function getObjectsBetween(bodyA: Body, bodyB: Body): Body[] {
-  let world = bodyA.m_world;
+  const world = bodyA.m_world;
 
-  let pointA = bodyA.getWorldCenter();
-  let pointB = bodyB.getWorldCenter();
+  const pointA = bodyA.getWorldCenter();
+  const pointB = bodyB.getWorldCenter();
 
-  let bodies = new Set<Body>();
+  const bodies = new Set<Body>();
 
-  world.rayCast(pointA, pointB, (fixture, point, normal, fraction) => {
-    let body = fixture.getBody();
+  world.rayCast(pointA, pointB, (fixture) => {
+    const body = fixture.getBody();
     bodies.add(body);
     return 1;
   });

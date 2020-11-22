@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 // These will become bitmasks, each needs to be a power of two.
 export const EntityCategory = {
   ROBOT_PART: 1,
