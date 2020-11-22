@@ -279,7 +279,7 @@ export class SimRobot extends SimObject {
       );
     });
 
-    // Configure the complex sensors
+    // Configure the mechanisms
     this._mechanisms.mechanisms.forEach((mechanism) => {
       world.createJoint(
         new PrismaticJoint(
@@ -317,9 +317,9 @@ export class SimRobot extends SimObject {
     return this._basicSensors.getAnalogInput(channel);
   }
 
-  setDigitalInput(channel: number, value: boolean): void {
+  setDigitalOutput(channel: number, value: boolean): void {
     // currently the only place inputs can go is mechanisms (outside of motor control)
-    this._mechanisms.setDigitalInput(channel, value);
+    this._mechanisms.setDigitalOutput(channel, value);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any

@@ -41,7 +41,7 @@ const GRABBER_EMPTY_THRESH = 0.02;
  *
  * Where *'s are the robots body, and the |'s are the jaws of the grabber and the .'s are the 'backboard'
  *
- * The mechanism has one input chanel and one output channel.
+ * The mechanism has one input channel and one output channel.
  *
  * The input channel IO_TYPE_GRAB informs the mechanism to either open the jaws:
  *    ...||...  ->  |.....|
@@ -49,12 +49,12 @@ const GRABBER_EMPTY_THRESH = 0.02;
  *    |......|  ->  ...|...
  * the time it takes the jaws to close or open is fixed
  *
- * The output chanel IO_TYPE_HELD allows the operator to check if the grabbers are holding an item or not.
+ * The output channel IO_TYPE_HELD allows the operator to check if the grabbers are holding an item or not.
  * A value of 1.0 indicates that the grabber has hold of an object and 0.0 indicates the grabber is empty.
  */
 export class SimGripperMechanism extends SimMechanism {
   private _state: GripperState;
-  private _heldSensorChanel: number;
+  private _heldSensorChannel: number;
   private _mountFace: SensorMountingFace;
   private _jaws: SimGripperJaw[];
   private _slideJoint: PrismaticJoint;
@@ -74,12 +74,12 @@ export class SimGripperMechanism extends SimMechanism {
   ) {
     super("Gripper", robotGuid, spec);
 
-    this._heldSensorChanel = spec.ioMap.find(
+    this._heldSensorChannel = spec.ioMap.find(
       (io) => io.id == IO_TYPE_HELD
     )?.channel;
     this._mountFace = spec.mountFace;
 
-    if (!this._heldSensorChanel) {
+    if (!this._heldSensorChannel) {
       throw new Error(
         `Gripper Mechanism is missing '${IO_TYPE_HELD}' iomap entry`
       );
@@ -313,7 +313,7 @@ export class SimGripperMechanism extends SimMechanism {
     return [
       {
         type: "mechanism-sensor",
-        channel: this._heldSensorChanel,
+        channel: this._heldSensorChannel,
         mountFace: this._mountFace,
         getValueCallback: this.getValue.bind(this, "held"),
       },

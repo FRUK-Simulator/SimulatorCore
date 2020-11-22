@@ -14,8 +14,8 @@ export class RobotHandle extends ObjectHandle<SimRobot> {
     return this._rootObject.getAnalogInput(channel);
   }
 
-  setDigitalInput(channel: number, value: boolean): void {
-    this._rootObject.setDigitalInput(channel, value);
+  setDigitalOutput(channel: number, value: boolean): void {
+    this._rootObject.setDigitalOutput(channel, value);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
