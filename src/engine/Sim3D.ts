@@ -38,6 +38,7 @@ import { ZoneHandle } from "./handles/ZoneHandle";
 
 import { EventEmitter } from "events";
 import { wallSpecs } from "./utils/WallUtil";
+import Stats from "stats.js";
 
 interface ISimObjectContainer {
   type: string;
@@ -68,6 +69,8 @@ export class Sim3D extends EventEmitter {
   private renderer: THREE.Renderer;
 
   private debugMesh: THREE.Mesh;
+  private perfMonitor: Stats;
+  private fpsIndicator?: Node;
 
   private camera: THREE.PerspectiveCamera;
   private cameraControls: OrbitControls;
@@ -99,6 +102,9 @@ export class Sim3D extends EventEmitter {
     }
 
     this.config = config;
+
+    this.perfMonitor = new Stats();
+    this.perfMonitor.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
 
     this.resetSimulator();
   }
@@ -153,11 +159,19 @@ export class Sim3D extends EventEmitter {
       const dt = (time - this.lastAnimateTime) / 1000;
       this.lastAnimateTime = time;
 
+      if (this.isDebugMode()) {
+        this.perfMonitor.begin();
+      }
+
       window.requestAnimationFrame(r);
       if (this.physicsActive) {
         this.updatePhysics(dt);
       }
       this.render(dt);
+
+      if (this.isDebugMode()) {
+        this.perfMonitor.end();
+      }
     };
 
     this.isRendering = true;
@@ -307,6 +321,12 @@ export class Sim3D extends EventEmitter {
 
   setDebugMode(enabled: boolean): void {
     this.debugMesh.visible = enabled;
+    if (enabled) {
+      this.fpsIndicator = document.body.appendChild(this.perfMonitor.dom);
+    } else {
+      document.body.removeChild(this.fpsIndicator!);
+      this.fpsIndicator = undefined;
+    }
   }
 
   setCameraMode(spec: CameraModeSpec): void {
