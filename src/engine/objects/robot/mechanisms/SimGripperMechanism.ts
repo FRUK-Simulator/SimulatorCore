@@ -1,7 +1,7 @@
 import { Box, PrismaticJoint, Vec2, World } from "planck-js";
 import { getSensorMountPosition } from "../../../utils/RobotUtils";
 import {
-  IMechanismSpec,
+  IGripperMechanismSpec,
   IRobotSpec,
   SensorMountingFace,
   SensorSpec,
@@ -60,14 +60,14 @@ export class SimGripperMechanism extends SimMechanism {
   private _closeSpeed: number;
   private _openSpeed: number;
   private _width: number;
-  private _spec: IMechanismSpec;
+  private _spec: IGripperMechanismSpec;
   private _range: number;
   private _robot: SimRobot;
   private _grabbed: PrismaticJoint;
 
   constructor(
     robotGuid: string,
-    spec: IMechanismSpec,
+    spec: IGripperMechanismSpec,
     robotSpec: IRobotSpec,
     robot: SimRobot
   ) {
@@ -95,16 +95,14 @@ export class SimGripperMechanism extends SimMechanism {
     let backboardDimensionX = 0;
     let backboardDimensionZ = 0;
 
-    const range = 0.1;
-    const backboard = 0.01;
-    const jawThickness = 0.01;
-    const width = 0.4;
+    const backboard = spec.jawStop || 0.02;
+    const jawThickness = spec.jawThickness || 0.01;
 
     this._spec = spec;
-    this._range = range;
-    this._width = width;
-    this._closeSpeed = 0.1;
-    this._openSpeed = -0.1;
+    this._range = spec.depth;
+    this._width = spec.maxWidth;
+    this._closeSpeed = spec.closeSpeed || 0.1;
+    this._openSpeed = -this._closeSpeed;
     this._robot = robot;
     this._state = GripperState.OPENING;
 
@@ -112,11 +110,11 @@ export class SimGripperMechanism extends SimMechanism {
       case SensorMountingFace.LEFT:
       case SensorMountingFace.RIGHT:
         backboardDimensionX = backboard;
-        backboardDimensionZ = width;
+        backboardDimensionZ = spec.maxWidth;
         break;
       case SensorMountingFace.FRONT:
       case SensorMountingFace.REAR:
-        backboardDimensionX = width;
+        backboardDimensionX = spec.maxWidth;
         backboardDimensionZ = backboard;
         break;
     }
@@ -146,8 +144,20 @@ export class SimGripperMechanism extends SimMechanism {
 
     // Create jaws
     this._jaws = [
-      new SimGripperJaw(jawThickness, range, -width / 2, spec, robotSpec),
-      new SimGripperJaw(jawThickness, range, width / 2, spec, robotSpec),
+      new SimGripperJaw(
+        jawThickness,
+        spec.depth,
+        -spec.maxWidth / 2,
+        spec,
+        robotSpec
+      ),
+      new SimGripperJaw(
+        jawThickness,
+        spec.depth,
+        spec.maxWidth / 2,
+        spec,
+        robotSpec
+      ),
     ];
 
     this._jaws.forEach(this.addChild.bind(this));

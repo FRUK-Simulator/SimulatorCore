@@ -234,8 +234,10 @@ export interface IMechanismIOConfig {
 export interface IGripperMechanismSpec extends IMechanismSpec {
   type: "gripper-mechanism";
   depth: number;
+  jawThickness?: number;
+  jawStop?: number;
   maxWidth: number;
-  minWidth: number;
+  closeSpeed?: number;
 }
 
 // Add additional mechanism types to this union
