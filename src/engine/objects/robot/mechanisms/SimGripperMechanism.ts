@@ -217,8 +217,8 @@ export class SimGripperMechanism extends SimMechanism {
 
     const slideSpec = {
       enableLimit: true,
-      lowerTranslation: -this._width,
-      upperTranslation: 0,
+      upperTranslation: this._width,
+      lowerTranslation: 0,
       enableMotor: true,
       maxMotorForce: 1,
       motorSpeed: this._openSpeed,
@@ -229,7 +229,7 @@ export class SimGripperMechanism extends SimMechanism {
       this._body,
       slideJaw.body,
       slideJaw.body.getWorldCenter(),
-      new Vec2(1, 0)
+      new Vec2(-1, 0)
     );
 
     world.createJoint(this._slideJoint);
