@@ -7,10 +7,7 @@ import {
   IBasicSensorValue,
   SensorMountingFace,
 } from "../../../specs/RobotSpecs";
-import {
-  ISensorFixtureUserData,
-  IBaseFixtureUserData,
-} from "../../../specs/UserDataSpecs";
+import { ISensorFixtureUserData } from "../../../specs/UserDataSpecs";
 import { getSensorMountPosition } from "../../../utils/RobotUtils";
 import { Vec2, Box, Fixture } from "planck-js";
 import { EntityCategory, EntityMask } from "../RobotCollisionConstants";
@@ -187,7 +184,16 @@ export class SimDistanceSensor extends SimBasicSensor {
           // Set the result to be the current reading
           result = fraction * detectionRange;
 
-          return fraction;
+          // TODO(jp) add debug mode to sensors.
+          if (false) {
+            console.debug(
+              "Ray cast hit object",
+              fixture.getUserData(),
+              p1,
+              p2,
+              p
+            );
+          }
         }
       );
 

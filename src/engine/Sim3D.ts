@@ -248,6 +248,8 @@ export class Sim3D extends EventEmitter {
    * @param spec Specification for a robot
    */
   addRobot(spec: IRobotSpec): RobotHandle | undefined {
+    console.info("Robot added", spec);
+
     const robot = new SimRobot(spec);
 
     const robotBody = this.world.createBody(robot.getBodySpecs());
@@ -292,6 +294,9 @@ export class Sim3D extends EventEmitter {
     }
 
     const handle = new RobotHandle(robot, robotRoot, this.handleRegistry);
+
+    console.debug("Robot", robot);
+    console.info("Robot handle", handle);
     return handle;
   }
 
@@ -572,7 +577,10 @@ export class Sim3D extends EventEmitter {
     this.simObjects.forEach((simObject) => {
       simObject.object.update(time);
     });
-    this.world.step(time, 10, 8);
+
+    // Timestep is set to constsant to avoid large jumps
+    // wreaking havok in the world.
+    this.world.step(1 / 60, 10, 8);
     this.world.clearForces();
   }
 
