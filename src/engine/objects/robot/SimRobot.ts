@@ -46,7 +46,7 @@ export class SimRobot extends SimObject {
   private _meshLoader: GLTFLoader | undefined;
   private _usingCustomMesh = false;
 
-  private _debug_io: boolean = false;
+  private _debug_io = false;
 
   constructor(spec: IRobotSpec) {
     super("SimRobot");
@@ -315,7 +315,7 @@ export class SimRobot extends SimObject {
   }
 
   getAnalogInput(channel: number): number {
-    let value = this._basicSensors.getAnalogInput(channel);
+    const value = this._basicSensors.getAnalogInput(channel);
 
     if (this._debug_io) {
       console.debug("getAnalogInput", channel, value);

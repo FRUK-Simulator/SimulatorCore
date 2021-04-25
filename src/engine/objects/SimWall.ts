@@ -88,7 +88,7 @@ export class SimWall extends SimObject {
     };
 
     // Add user data to aid debugging.
-    let userData: IBaseFixtureUserData = {
+    const userData: IBaseFixtureUserData = {
       selfGuid: this.guid,
       type: "wall",
     };

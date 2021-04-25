@@ -329,7 +329,9 @@ export class Sim3D extends EventEmitter {
     if (enabled) {
       this.fpsIndicator = document.body.appendChild(this.perfMonitor.dom);
     } else {
-      document.body.removeChild(this.fpsIndicator!);
+      if (this.fpsIndicator) {
+        document.body.removeChild(this.fpsIndicator);
+      }
       this.fpsIndicator = undefined;
     }
   }

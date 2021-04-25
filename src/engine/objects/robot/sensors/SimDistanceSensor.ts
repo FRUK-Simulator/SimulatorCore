@@ -180,6 +180,7 @@ export class SimDistanceSensor extends SimBasicSensor {
           result = fraction * detectionRange;
 
           // TODO(jp) add debug mode to sensors.
+          // eslint-disable-next-line no-constant-condition
           if (false) {
             console.debug(
               "Ray cast hit object",
