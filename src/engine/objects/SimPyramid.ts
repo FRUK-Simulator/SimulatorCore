@@ -27,25 +27,38 @@ export class SimPyramid extends SimObject {
     const color = spec.baseColor ? spec.baseColor : DEFAULT_PYRAMID_COLOR;
     const initialPosition: Vector2d = { x: 0, y: 0 };
 
-    const pyramidGeom = new THREE.Geometry();
     const halfX = spec.baseDimensions.x / 2;
     const halfZ = spec.baseDimensions.y / 2;
-    pyramidGeom.vertices = [
+
+    const pyramidGeom = new THREE.BufferGeometry();
+    pyramidGeom.setFromPoints([
       new THREE.Vector3(-halfX, 0, -halfZ),
       new THREE.Vector3(-halfX, 0, halfZ),
       new THREE.Vector3(halfX, 0, halfZ),
       new THREE.Vector3(halfX, 0, -halfZ),
       new THREE.Vector3(0, spec.height, 0),
-    ];
-    pyramidGeom.faces = [
-      new THREE.Face3(0, 2, 1),
-      new THREE.Face3(0, 3, 2),
-      new THREE.Face3(1, 4, 0),
-      new THREE.Face3(2, 4, 1),
-      new THREE.Face3(3, 4, 2),
-      new THREE.Face3(0, 4, 3),
-    ];
-    pyramidGeom.computeFaceNormals();
+    ]);
+    pyramidGeom.setIndex([
+      0,
+      2,
+      1,
+      0,
+      3,
+      2,
+      1,
+      4,
+      0,
+      2,
+      4,
+      1,
+      3,
+      4,
+      2,
+      0,
+      4,
+      3,
+    ]);
+    pyramidGeom.computeVertexNormals();
 
     const pyramidMaterial = new THREE.MeshStandardMaterial({ color });
     const pyramidMesh = new THREE.Mesh(pyramidGeom, pyramidMaterial);
