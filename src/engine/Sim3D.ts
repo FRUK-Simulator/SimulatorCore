@@ -576,10 +576,10 @@ export class Sim3D extends EventEmitter {
     }
 
     if (this.debugMesh.visible) {
-      let geom = new debug.DebugGeom();
+      const geom = new debug.DebugGeom();
       debug.generateDebugGeometry(geom, this.world);
 
-      let pos = this.debugArray;
+      const pos = this.debugArray;
       let idx = 0;
       for (let i = 0; i < geom.vertices.length; i++) {
         pos[idx++] = geom.vertices[i].x;

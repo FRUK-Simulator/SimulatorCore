@@ -36,7 +36,7 @@ export function makeGrid(
   const stepAxis1 = (2 * axis1HalfLength) / numLinesAxis1;
   const stepAxis2 = (2 * axis2HalfLength) / numLinesAxis2;
 
-  let vertices = [];
+  const vertices = [];
   for (let i = -axis1HalfLength; i <= axis1HalfLength; i += stepAxis1) {
     let xVal = 0;
     let yVal = 0;
