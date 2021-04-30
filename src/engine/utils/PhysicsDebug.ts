@@ -37,7 +37,7 @@ function generateDebugGeometryFixture(
       generateDebugGeometryPolygon(
         geom,
         body,
-        fixture.getShape() as Planck.PolygonShape
+        fixture.getShape() as Planck.Polygon
       );
       break;
     default:
@@ -48,7 +48,7 @@ function generateDebugGeometryFixture(
 function generateDebugGeometryPolygon(
   geom: DebugGeom,
   body: Planck.Body,
-  shape: Planck.PolygonShape
+  shape: Planck.Polygon
 ): void {
   const offset = geom.vertices.length;
   const translation = body.getPosition();
