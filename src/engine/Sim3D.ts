@@ -64,6 +64,12 @@ const DEFAULT_CONFIG: SimulatorConfig = {
   },
 };
 
+// Simulation time step.
+const TIME_STEP: number = 1 / 60; // Seconds
+
+// Limit to number of steps per simulation
+const MAX_TIME_STEPS = 100; // Number of steps
+
 export class Sim3D extends EventEmitter {
   private scene: THREE.Scene;
   private renderer: THREE.Renderer;
@@ -79,6 +85,7 @@ export class Sim3D extends EventEmitter {
 
   private isRendering = false;
   private physicsActive = true;
+  private time_delta = 0;
 
   private config: SimulatorConfig;
 
@@ -594,14 +601,41 @@ export class Sim3D extends EventEmitter {
   }
 
   private updatePhysics(time: number): void {
-    this.simObjects.forEach((simObject) => {
-      simObject.object.update(time);
-    });
+    /* Timestep is set to constsant to avoid large jumps
+       from wreaking havok in the world.
 
-    // Timestep is set to constsant to avoid large jumps
-    // wreaking havok in the world.
-    this.world.step(1 / 60, 10, 8);
-    this.world.clearForces();
+       Time is split into fixed size chunks (TIME_STEP)
+       the remaining time is saved for the next update
+    */
+
+    // Add remaining time from previous frame
+    time += this.time_delta;
+
+    let steps = Math.floor(time / TIME_STEP);
+
+    // Prevent huge jumps in time
+    if (steps > MAX_TIME_STEPS) {
+      console.warn(
+        "Large jump in time. Skipping simulation steps:",
+        steps,
+        ">",
+        MAX_TIME_STEPS
+      );
+      steps = MAX_TIME_STEPS;
+      time = 0; // We don't need the delta when skipping.
+    }
+
+    // Remaining time delta is stored for later...
+    this.time_delta = time % TIME_STEP;
+
+    for (let i = 0; i < steps; i++) {
+      // Update forces on objects for this time step
+      this.simObjects.forEach((simObject) => {
+        simObject.object.update(TIME_STEP);
+      });
+      this.world.step(TIME_STEP, 10, 8);
+      this.world.clearForces();
+    }
   }
 
   // Sim Object methods
