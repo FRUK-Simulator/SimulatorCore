@@ -1,8 +1,15 @@
 import * as Planck from "planck-js";
 import * as THREE from "three";
 
+export class DebugGeom {
+  constructor(
+    public vertices: THREE.Vector3[] = [],
+    public faces: number[] = []
+  ) {}
+}
+
 export function generateDebugGeometry(
-  geom: THREE.Geometry,
+  geom: DebugGeom,
   world: Planck.World
 ): void {
   for (let body = world.getBodyList(); body; body = body.getNext()) {
@@ -10,10 +17,7 @@ export function generateDebugGeometry(
   }
 }
 
-function generateDebugGeometryBody(
-  geom: THREE.Geometry,
-  body: Planck.Body
-): void {
+function generateDebugGeometryBody(geom: DebugGeom, body: Planck.Body): void {
   for (
     let fixture = body.getFixtureList();
     fixture;
@@ -24,7 +28,7 @@ function generateDebugGeometryBody(
 }
 
 function generateDebugGeometryFixture(
-  geom: THREE.Geometry,
+  geom: DebugGeom,
   body: Planck.Body,
   fixture: Planck.Fixture
 ): void {
@@ -33,7 +37,7 @@ function generateDebugGeometryFixture(
       generateDebugGeometryPolygon(
         geom,
         body,
-        fixture.getShape() as Planck.PolygonShape
+        fixture.getShape() as Planck.Polygon
       );
       break;
     default:
@@ -42,9 +46,9 @@ function generateDebugGeometryFixture(
 }
 
 function generateDebugGeometryPolygon(
-  geom: THREE.Geometry,
+  geom: DebugGeom,
   body: Planck.Body,
-  shape: Planck.PolygonShape
+  shape: Planck.Polygon
 ): void {
   const offset = geom.vertices.length;
   const translation = body.getPosition();
@@ -68,16 +72,12 @@ function generateDebugGeometryPolygon(
     geom.vertices.push(new THREE.Vector3(x, base + height, z));
 
     geom.faces.push(
-      new THREE.Face3(
-        offset + ((2 * index) % l),
-        offset + ((2 * index + 1) % l),
-        offset + ((2 * index + 2) % l)
-      ),
-      new THREE.Face3(
-        offset + ((2 * index + 2) % l),
-        offset + ((2 * index + 1) % l),
-        offset + ((2 * index + 3) % l)
-      )
+      offset + ((2 * index) % l),
+      offset + ((2 * index + 1) % l),
+      offset + ((2 * index + 2) % l),
+      offset + ((2 * index + 2) % l),
+      offset + ((2 * index + 1) % l),
+      offset + ((2 * index + 3) % l)
     );
   });
 }
