@@ -33,11 +33,10 @@ export function makeGrid(
     opacity: 0.2,
   });
 
-  const gridObject = new THREE.Object3D();
-  const gridGeom = new THREE.Geometry();
   const stepAxis1 = (2 * axis1HalfLength) / numLinesAxis1;
   const stepAxis2 = (2 * axis2HalfLength) / numLinesAxis2;
 
+  const vertices = [];
   for (let i = -axis1HalfLength; i <= axis1HalfLength; i += stepAxis1) {
     let xVal = 0;
     let yVal = 0;
@@ -56,7 +55,7 @@ export function makeGrid(
         yVal = i;
         zVal = axis2HalfLength;
     }
-    gridGeom.vertices.push(new THREE.Vector3(xVal, yVal, zVal));
+    vertices.push(new THREE.Vector3(xVal, yVal, zVal));
 
     switch (plane) {
       case GridPlane.XY:
@@ -68,7 +67,7 @@ export function makeGrid(
       case GridPlane.YZ:
         zVal = -axis2HalfLength;
     }
-    gridGeom.vertices.push(new THREE.Vector3(xVal, yVal, zVal));
+    vertices.push(new THREE.Vector3(xVal, yVal, zVal));
   }
 
   for (let i = -axis2HalfLength; i <= axis2HalfLength; i += stepAxis2) {
@@ -90,7 +89,7 @@ export function makeGrid(
         zVal = i;
     }
 
-    gridGeom.vertices.push(new THREE.Vector3(xVal, yVal, zVal));
+    vertices.push(new THREE.Vector3(xVal, yVal, zVal));
 
     switch (plane) {
       case GridPlane.XY:
@@ -102,9 +101,12 @@ export function makeGrid(
       case GridPlane.YZ:
         yVal = -axis1HalfLength;
     }
-    gridGeom.vertices.push(new THREE.Vector3(xVal, yVal, zVal));
+    vertices.push(new THREE.Vector3(xVal, yVal, zVal));
   }
 
+  const gridObject = new THREE.Object3D();
+  const gridGeom = new THREE.BufferGeometry();
+  gridGeom.setFromPoints(vertices);
   const line = new THREE.LineSegments(gridGeom, material);
   gridObject.add(line);
 
