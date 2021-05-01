@@ -7,10 +7,7 @@ import {
   IBasicSensorValue,
   SensorMountingFace,
 } from "../../../specs/RobotSpecs";
-import {
-  ISensorFixtureUserData,
-  IBaseFixtureUserData,
-} from "../../../specs/UserDataSpecs";
+import { ISensorFixtureUserData } from "../../../specs/UserDataSpecs";
 import { getSensorMountPosition } from "../../../utils/RobotUtils";
 import { Vec2, Box, Fixture } from "planck-js";
 import { EntityCategory, EntityMask } from "../RobotCollisionConstants";
@@ -173,21 +170,29 @@ export class SimDistanceSensor extends SimBasicSensor {
         p1,
         p2,
         (fixture: Fixture, p: Vec2, normal: Vec2, fraction: number): number => {
-          // Ignore everything that is part of the robot that this sensor is attached to
-          if (fixture.getUserData()) {
-            const userData = fixture.getUserData() as IBaseFixtureUserData;
-            if (
-              userData.rootGuid === this._robotGuid ||
-              userData.selfGuid === this._robotGuid
-            ) {
-              return -1;
-            }
+          //Distance sensor rays collide with things the robot collides with...
+          if (!(fixture.m_filterCategoryBits & EntityMask.SENSORS)) {
+            // by returning -1 we ignore this collision and continue.
+            return -1;
           }
 
           // Set the result to be the current reading
           result = fraction * detectionRange;
 
-          return fraction;
+          // TODO(jp) add debug mode to sensors.
+          // eslint-disable-next-line no-constant-condition
+          if (false) {
+            console.debug(
+              "Ray cast hit object",
+              fixture.getUserData(),
+              p1,
+              p2,
+              p
+            );
+          }
+
+          // by returning 0 we end the raycast.
+          return 0.0;
         }
       );
 

@@ -28,7 +28,7 @@ import { IRobotSpec } from "./specs/RobotSpecs";
 import { SimRobot } from "./objects/robot/SimRobot";
 import { RobotHandle } from "./handles/RobotHandle";
 import { EventRegistry } from "./EventRegistry";
-import { generateDebugGeometry } from "./utils/PhysicsDebug";
+import * as debug from "./utils/PhysicsDebug";
 import { HandleRegistry } from "./HandleRegistry";
 import { DEFAULT_WALL_THICKNESS, DEFAULT_WALL_HEIGHT } from "./objects/SimWall";
 import { ObjectHandle } from "./handles/ObjectHandle";
@@ -69,6 +69,7 @@ export class Sim3D extends EventEmitter {
   private renderer: THREE.Renderer;
 
   private debugMesh: THREE.Mesh;
+  private debugArray: Float32Array;
   private perfMonitor: Stats;
   private fpsIndicator?: Node;
 
@@ -248,6 +249,8 @@ export class Sim3D extends EventEmitter {
    * @param spec Specification for a robot
    */
   addRobot(spec: IRobotSpec): RobotHandle | undefined {
+    console.info("Robot added", spec);
+
     const robot = new SimRobot(spec);
 
     const robotBody = this.world.createBody(robot.getBodySpecs());
@@ -292,6 +295,9 @@ export class Sim3D extends EventEmitter {
     }
 
     const handle = new RobotHandle(robot, robotRoot, this.handleRegistry);
+
+    console.debug("Robot", robot);
+    console.info("Robot handle", handle);
     return handle;
   }
 
@@ -324,7 +330,9 @@ export class Sim3D extends EventEmitter {
     if (enabled) {
       this.fpsIndicator = document.body.appendChild(this.perfMonitor.dom);
     } else {
-      document.body.removeChild(this.fpsIndicator!);
+      if (this.fpsIndicator) {
+        document.body.removeChild(this.fpsIndicator);
+      }
       this.fpsIndicator = undefined;
     }
   }
@@ -445,7 +453,13 @@ export class Sim3D extends EventEmitter {
     this.cameraManager = new CameraManager();
 
     // Debug
-    const emptyGeometry = new THREE.Geometry();
+    const emptyGeometry = new THREE.BufferGeometry();
+    this.debugArray = new Float32Array(500 * 3); // 3 vertices per point
+    emptyGeometry.setAttribute(
+      "position",
+      new THREE.BufferAttribute(this.debugArray, 3)
+    );
+
     const debugMaterial = new THREE.MeshBasicMaterial();
     debugMaterial.color = new THREE.Color("black");
     debugMaterial.wireframe = true;
@@ -562,8 +576,19 @@ export class Sim3D extends EventEmitter {
     }
 
     if (this.debugMesh.visible) {
-      this.debugMesh.geometry = new THREE.Geometry();
-      generateDebugGeometry(this.debugMesh.geometry, this.world);
+      const geom = new debug.DebugGeom();
+      debug.generateDebugGeometry(geom, this.world);
+
+      const pos = this.debugArray;
+      let idx = 0;
+      for (let i = 0; i < geom.vertices.length; i++) {
+        pos[idx++] = geom.vertices[i].x;
+        pos[idx++] = geom.vertices[i].y;
+        pos[idx++] = geom.vertices[i].z;
+      }
+      this.debugMesh.geometry.setIndex(geom.faces);
+      this.debugMesh.geometry.setDrawRange(0, geom.faces.length);
+      this.debugMesh.geometry.attributes.position.needsUpdate = true;
     }
     this.renderer.render(this.scene, this.camera);
   }
@@ -572,7 +597,10 @@ export class Sim3D extends EventEmitter {
     this.simObjects.forEach((simObject) => {
       simObject.object.update(time);
     });
-    this.world.step(time, 10, 8);
+
+    // Timestep is set to constsant to avoid large jumps
+    // wreaking havok in the world.
+    this.world.step(1 / 60, 10, 8);
     this.world.clearForces();
   }
 

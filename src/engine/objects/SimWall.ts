@@ -11,6 +11,7 @@ import { IWallSpec } from "../specs/CoreSpecs";
 import { FixtureDef } from "planck-js";
 import { BodyDef } from "planck-js";
 import { EntityCategory, EntityMask } from "./robot/RobotCollisionConstants";
+import { IBaseFixtureUserData } from "../specs/UserDataSpecs";
 
 export const DEFAULT_WALL_THICKNESS = 0.1;
 export const DEFAULT_WALL_HEIGHT = 1;
@@ -86,12 +87,19 @@ export class SimWall extends SimObject {
       position: new Vec2(wallMidpoint.x, wallMidpoint.y),
     };
 
+    // Add user data to aid debugging.
+    const userData: IBaseFixtureUserData = {
+      selfGuid: this.guid,
+      type: "wall",
+    };
+
     this.fixtureSpecs = {
       shape: new Box(wallLength / 2, wallThickness / 2),
       density: 1,
       isSensor: false,
       filterCategoryBits: EntityCategory.WALL,
       filterMaskBits: EntityMask.WALL,
+      userData,
     };
   }
 
