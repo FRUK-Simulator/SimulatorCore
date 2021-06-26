@@ -131,7 +131,7 @@ export class SimRobot extends SimObject {
 
     this._fixtureSpecs = {
       shape: new Box(spec.dimensions.x / 2, spec.dimensions.z / 2),
-      density: 1,
+      density: 7,
       isSensor: false,
       friction: 0.3,
       restitution: 0.4,
