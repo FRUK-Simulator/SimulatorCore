@@ -385,8 +385,8 @@ function main() {
         console.log("Release Grabber");
         robot.setDigitalOutput(gripperGrabChannel, false);
         // move forward slowly
-        robot.setMotorPower(0, 0.05);
-        robot.setMotorPower(1, 0.05);
+        robot.setMotorPower(0, 0.3);
+        robot.setMotorPower(1, 0.3);
         break;
       case RobotMode.GRABBING:
         // trigger grabbing to start
@@ -398,13 +398,13 @@ function main() {
         break;
       case RobotMode.CELEBRATE:
         // set motors to fast spin
-        robot.setMotorPower(0, -0.5);
-        robot.setMotorPower(1, 0.5);
+        robot.setMotorPower(0, -0.7);
+        robot.setMotorPower(1, 0.7);
         break;
       case RobotMode.SHAME:
         // set motors to slow spin
-        robot.setMotorPower(0, 0.1);
-        robot.setMotorPower(1, -0.1);
+        robot.setMotorPower(0, 0.3);
+        robot.setMotorPower(1, -0.3);
         break;
     }
 
