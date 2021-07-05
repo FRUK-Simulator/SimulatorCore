@@ -170,7 +170,7 @@ function main() {
   const wheel = new RobotBuilder.WheelBuilder(0.1, 0.02)
     .setMountPoint(RobotSpecs.WheelMountingPoint.LEFT_FRONT)
     .setMountOffset({ x: -0.0075, y: -0.05, z: 0.033 });
-  const motor = new RobotBuilder.MotorBuilder().setChannel(0).setMaxForce(0.25);
+  const motor = new RobotBuilder.MotorBuilder().setChannel(0).setMaxForce(1);
 
   const distanceSensor = new RobotBuilder.DistanceSensorBuilder(0)
     .setMountFace(RobotSpecs.SensorMountingFace.FRONT)
