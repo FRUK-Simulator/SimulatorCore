@@ -22,4 +22,8 @@ export class RobotHandle extends ObjectHandle<SimRobot> {
   getComplexSensorValue(channel: number, sensorType: string): any {
     return this._rootObject.getComplexSensorValue(channel, sensorType);
   }
+
+  getAngle(): number {
+    return this._rootObject.getAngle();
+  }
 }
