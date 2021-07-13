@@ -9,12 +9,13 @@ import { EntityCategory, EntityMask } from "./RobotCollisionConstants";
 const DEFAULT_WHEEL_COLOR = 0x000000;
 const DEFAULT_WHEEL_THICKNESS = 0.15;
 
-const DEFAULT_OMNI_SIDESLIP_PCT = 0.1;
-const DEFAULT_NON_OMNI_SIDESLIP_PCT = 0.5;
+// Controls how much skidding happens in the robot's left right plane.
+const DEFAULT_OMNI_SIDESLIP_FACTOR = 0.1;
+const DEFAULT_NON_OMNI_SIDESLIP_FACTOR = 5;
 
 export class SimRobotWheel extends SimObject {
   protected _forceMagnitude = 0;
-  protected _sideSlipPercent = 0;
+  protected _sideSlipFactor = 0;
 
   private _bodySpecs: BodyDef;
   private _fixtureSpecs: FixtureDef;
@@ -27,9 +28,9 @@ export class SimRobotWheel extends SimObject {
   ) {
     super("SimWheel");
 
-    this._sideSlipPercent = spec.isOmni
-      ? DEFAULT_OMNI_SIDESLIP_PCT
-      : DEFAULT_NON_OMNI_SIDESLIP_PCT;
+    this._sideSlipFactor = spec.isOmni
+      ? DEFAULT_OMNI_SIDESLIP_FACTOR
+      : DEFAULT_NON_OMNI_SIDESLIP_FACTOR;
 
     const thickness =
       spec.thickness !== undefined ? spec.thickness : DEFAULT_WHEEL_THICKNESS;
@@ -136,7 +137,7 @@ export class SimRobotWheel extends SimObject {
     // TODO the max lateral impulse should be proportional to mass
     const maxLateralImpulse = 2.0;
     let impulse = this.getLateralVelocity().mul(
-      -this._body.getMass() * this._sideSlipPercent
+      -this._body.getMass() * this._sideSlipFactor
     );
 
     if (impulse.length() > maxLateralImpulse) {
