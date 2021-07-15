@@ -12,7 +12,7 @@ import {
   SensorMountingFace,
   IDistanceSensorSpec,
   IColorSensorSpec,
-  IGyroScopeSpec,
+  IGyroscopeSpec,
 } from "../engine/specs/RobotSpecs";
 import { Vector3d } from "../engine/SimTypes";
 
@@ -385,14 +385,14 @@ export class DistanceSensorBuilder implements IDistanceSensorSpec {
     return this._spec.detectionAngle;
   }
 }
-export class GyroscopeSensorBuilder implements IGyroScopeSpec {
-  private _spec: IGyroScopeSpec = {
+export class GyroscopeSensorBuilder implements IGyroscopeSpec {
+  private _spec: IGyroscopeSpec = {
     type: "gyroscope-sensor",
     channel: 0,
     mountFace: SensorMountingFace.FRONT,
   };
 
-  constructor(channelOrSpec?: number | IGyroScopeSpec) {
+  constructor(channelOrSpec?: number | IGyroscopeSpec) {
     if (typeof channelOrSpec === "number") {
       this._spec.channel = channelOrSpec;
     } else if (channelOrSpec !== undefined) {

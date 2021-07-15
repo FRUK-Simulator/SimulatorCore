@@ -145,7 +145,7 @@ export interface IDistanceSensorSpec extends IBasicSensorSpec {
   detectionAngle?: number;
 }
 
-export interface IGyroScopeSpec extends IBasicSensorSpec {
+export interface IGyroscopeSpec extends IBasicSensorSpec {
   type: "gyroscope-sensor";
 }
 
@@ -165,7 +165,7 @@ export type BasicSensorSpec =
   | IContactSensorSpec
   | IDistanceSensorSpec
   | IMechanismProxySensorSpec
-  | IGyroScopeSpec;
+  | IGyroscopeSpec;
 
 /**
  * Interface representing a BasicSensor value (e.g. simple digital/analog)

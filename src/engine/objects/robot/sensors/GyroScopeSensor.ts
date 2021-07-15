@@ -5,17 +5,18 @@ import {
   BasicSensorOutputChannelType,
   IBasicSensorValue,
   SensorMountingFace,
-  IGyroScopeSpec,
+  IGyroscopeSpec,
 } from "../../../specs/RobotSpecs";
 import { ISensorFixtureUserData } from "../../../specs/UserDataSpecs";
 import { getSensorMountPosition } from "../../../utils/RobotUtils";
 import { Vec2, Box } from "planck-js";
 import { EntityCategory, EntityMask } from "../RobotCollisionConstants";
 
-export class GyroScopeSensor extends SimBasicSensor {
-  constructor(spec: IGyroScopeSpec, robotGuid: string, robotSpec: IRobotSpec) {
+// A Gyroscope sensor to obtain the robot's angle (in world coordinates)
+export class GyroscopeSensor extends SimBasicSensor {
+  constructor(spec: IGyroscopeSpec, robotGuid: string, robotSpec: IRobotSpec) {
     super(
-      "GyroScopeSensor",
+      "GyroscopeSensor",
       BasicSensorOutputChannelType.ANALOG,
       robotGuid,
       spec
