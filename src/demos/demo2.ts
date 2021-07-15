@@ -59,6 +59,9 @@ function main() {
     .setMountPoint(RobotSpecs.WheelMountingPoint.LEFT_FRONT)
     .setMountOffset({ x: -0.0075, y: -0.05, z: 0.033 });
   const motor = new RobotBuilder.MotorBuilder().setChannel(0).setMaxForce(1);
+  const gyroscopeSensor = new RobotBuilder.GyroscopeSensorBuilder(
+    0
+  ).setMountFace(RobotSpecs.SensorMountingFace.TOP);
 
   robotBuilder
     .setDimensions({ x: 0.225, y: 0.125, z: 0.255 })
@@ -86,7 +89,8 @@ function main() {
         .setMountOffset({ x: 0.0075, y: -0.05, z: -0.033 })
     )
     .addMotor("left-drive", motor)
-    .addMotor("right-drive", motor.copy().setChannel(1));
+    .addMotor("right-drive", motor.copy().setChannel(1))
+    .addBasicSensor(gyroscopeSensor);
 
   const spec = robotBuilder.generateSpec();
 
@@ -144,6 +148,7 @@ function main() {
   AntiClockwiseButtonEl.addEventListener("mousedown", () => {
     robot.setMotorPower(0, settings.MotorSpinZeroPower);
     robot.setMotorPower(1, settings.MotorSpinOnePower);
+    console.debug(`Robot rotation: ${robot.getAnalogInput(0)}`);
   });
   AntiClockwiseButtonEl.addEventListener("mouseup", () => {
     robot.setMotorPower(0, 0);

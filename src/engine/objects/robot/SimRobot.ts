@@ -334,10 +334,6 @@ export class SimRobot extends SimObject {
     return this._complexSensors.getSensorInput(channel, sensorType);
   }
 
-  getAngle(): number {
-    return this._body.getAngle();
-  }
-
   getBodySpecs(): BodyDef {
     return this._bodySpecs;
   }

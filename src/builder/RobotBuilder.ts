@@ -12,6 +12,7 @@ import {
   SensorMountingFace,
   IDistanceSensorSpec,
   IColorSensorSpec,
+  IGyroScopeSpec,
 } from "../engine/specs/RobotSpecs";
 import { Vector3d } from "../engine/SimTypes";
 
@@ -382,6 +383,61 @@ export class DistanceSensorBuilder implements IDistanceSensorSpec {
 
   get detectionAngle(): number | undefined {
     return this._spec.detectionAngle;
+  }
+}
+export class GyroscopeSensorBuilder implements IGyroScopeSpec {
+  private _spec: IGyroScopeSpec = {
+    type: "gyroscope-sensor",
+    channel: 0,
+    mountFace: SensorMountingFace.FRONT,
+  };
+
+  constructor(channelOrSpec?: number | IGyroScopeSpec) {
+    if (typeof channelOrSpec === "number") {
+      this._spec.channel = channelOrSpec;
+    } else if (channelOrSpec !== undefined) {
+      this._spec = channelOrSpec;
+    }
+  }
+
+  setChannel(ch: number): GyroscopeSensorBuilder {
+    this._spec.channel = ch;
+    return this;
+  }
+
+  setMountFace(face: SensorMountingFace): GyroscopeSensorBuilder {
+    this._spec.mountFace = face;
+    return this;
+  }
+
+  setMountOffset(offset: Vector3d): GyroscopeSensorBuilder {
+    this._spec.mountOffset = offset;
+    return this;
+  }
+
+  setRender(render: boolean): GyroscopeSensorBuilder {
+    this._spec.render = render;
+    return this;
+  }
+
+  get type(): "gyroscope-sensor" {
+    return this._spec.type;
+  }
+
+  get channel(): number {
+    return this._spec.channel;
+  }
+
+  get mountFace(): SensorMountingFace {
+    return this._spec.mountFace;
+  }
+
+  get mountOffset(): Vector3d | undefined {
+    return this._spec.mountOffset;
+  }
+
+  get render(): boolean | undefined {
+    return this._spec.render;
   }
 }
 
