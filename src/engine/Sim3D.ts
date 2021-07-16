@@ -541,13 +541,13 @@ export class Sim3D extends EventEmitter {
 
     const blockGeometry = new THREE.BoxGeometry(1, 1, 1);
     const redBlockMaterial = new THREE.MeshStandardMaterial({
-      color: 0xff0000,
+      color: 0xffed00,
     });
     const greenBlockMaterial = new THREE.MeshStandardMaterial({
-      color: 0x00ff00,
+      color: 0xe120fb,
     });
     const blueBlockMaterial = new THREE.MeshStandardMaterial({
-      color: 0x0000ff,
+      color: 0x2e1bcc,
     });
     const blockParent = new THREE.Object3D();
     {
@@ -570,7 +570,7 @@ export class Sim3D extends EventEmitter {
       blockParent.add(block);
     }
     blockParent.position.x = worldConfig.xLength / 2 + 3;
-    blockParent.position.z = worldConfig.zLength / 2 + 3;
+    blockParent.position.z = -worldConfig.zLength / 2 - 3;
     this.scene.add(blockParent);
   }
 
