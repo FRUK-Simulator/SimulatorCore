@@ -136,14 +136,16 @@ export class SimRobotWheel extends SimObject {
     // Lateral
     // TODO the max lateral impulse should be proportional to mass
     const maxLateralImpulse = 2.0;
-    let impulse = this.getLateralVelocity().mul(
+    let impulseLateral = this.getLateralVelocity().mul(
       -this._body.getMass() * this._sideSlipFactor
     );
 
-    if (impulse.length() > maxLateralImpulse) {
-      impulse = impulse.mul(maxLateralImpulse / impulse.length());
+    if (impulseLateral.length() > maxLateralImpulse) {
+      impulseLateral = impulseLateral.mul(
+        maxLateralImpulse / impulseLateral.length()
+      );
     }
-    this._body.applyLinearImpulse(impulse, this._body.getWorldCenter());
+    this._body.applyLinearImpulse(impulseLateral, this._body.getWorldCenter());
 
     // Angular
     this._body.applyAngularImpulse(
@@ -151,7 +153,16 @@ export class SimRobotWheel extends SimObject {
     );
 
     // Forward linear velocity
-    // TODO Implement Brake/Coast logic here
+    if (this._forceMagnitude < 0.000005) {
+      let impulseForward = this.getForwardVelocity()
+        .mul(-1)
+        .mul(1.5)
+        .mul(this._body.getMass());
+      this._body.applyLinearImpulse(
+        impulseForward,
+        this._body.getWorldCenter()
+      );
+    }
   }
 
   private updateDrive(): void {
