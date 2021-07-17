@@ -41,7 +41,7 @@ export function perimeterWallSpecs(
     type: "wall",
     start: { x: -hx, y: -hz - ht },
     end: { x: hx + thickness, y: -hz - ht },
-    baseColor: 0x00ff00,
+    baseColor: 0x007c9b,
     height: height,
     thickness: thickness,
   });
@@ -50,7 +50,7 @@ export function perimeterWallSpecs(
     type: "wall",
     start: { x: -hx - thickness, y: hz + ht },
     end: { x: hx, y: hz + ht },
-    baseColor: 0xff0000,
+    baseColor: 0x007c9b,
     height: height,
     thickness: thickness,
   });
@@ -59,6 +59,7 @@ export function perimeterWallSpecs(
     type: "wall",
     start: { x: -hx - ht, y: -hz - thickness },
     end: { x: -hx - ht, y: hz },
+    baseColor: 0x157efb,
     height: height,
     thickness: thickness,
   });
@@ -67,6 +68,7 @@ export function perimeterWallSpecs(
     type: "wall",
     start: { x: hx + ht, y: -hz },
     end: { x: hx + ht, y: hz + thickness },
+    baseColor: 0x157efb,
     height: height,
     thickness: thickness,
   });

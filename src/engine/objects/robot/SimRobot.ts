@@ -23,7 +23,7 @@ import { MechanismManager } from "./mechanisms/MechanismManager";
 import { EventRegistry } from "../../EventRegistry";
 import { EntityCategory, EntityMask } from "./RobotCollisionConstants";
 
-const ROBOT_DEFAULT_COLOR = 0x00ff00;
+const ROBOT_DEFAULT_COLOR = 0x33c500;
 
 /**
  * Class representing a controllable simulated robot
