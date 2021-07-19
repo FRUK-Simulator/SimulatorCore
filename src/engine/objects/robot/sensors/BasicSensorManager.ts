@@ -8,6 +8,7 @@ import { SimContactSensor } from "./SimContactSensor";
 import { EventRegistry } from "../../../EventRegistry";
 import { SimDistanceSensor } from "./SimDistanceSensor";
 import { MechanismProxySensor } from "./MechanismProxySensor";
+import { GyroscopeSensor } from "./GyroScopeSensor";
 
 /**
  * Class representing a collection of robot sensors
@@ -60,6 +61,8 @@ export class BasicSensorManager {
       sensor = new SimDistanceSensor(sensorSpec, robotGuid, robotSpec);
     } else if (sensorSpec.type === "mechanism-sensor") {
       sensor = new MechanismProxySensor(sensorSpec, robotGuid);
+    } else if (sensorSpec.type === "gyroscope-sensor") {
+      sensor = new GyroscopeSensor(sensorSpec, robotGuid, robotSpec);
     }
 
     if (this._sensors.has(sensor.identifier)) {
