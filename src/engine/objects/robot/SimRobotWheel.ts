@@ -154,7 +154,7 @@ export class SimRobotWheel extends SimObject {
 
     // Forward linear velocity
     if (this._forceMagnitude < 0.000005) {
-      let impulseForward = this.getForwardVelocity()
+      const impulseForward = this.getForwardVelocity()
         .mul(-1)
         .mul(1.5)
         .mul(this._body.getMass());
