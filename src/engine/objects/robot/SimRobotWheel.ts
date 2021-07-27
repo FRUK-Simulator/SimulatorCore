@@ -152,16 +152,15 @@ export class SimRobotWheel extends SimObject {
       0.1 * this._body.getInertia() * -this._body.getAngularVelocity()
     );
 
-    // Forward linear velocity
+    // Forward linear velocity (aka breaking force)
+    // apply a force in the opposite direction to "slide direction"
+    // the slide direction is the `getForwardVelocity` function return
     if (this._forceMagnitude < 0.000005) {
-      const impulseForward = this.getForwardVelocity()
+      const breakImpulse = this.getForwardVelocity()
         .mul(-1)
         .mul(1.5)
         .mul(this._body.getMass());
-      this._body.applyLinearImpulse(
-        impulseForward,
-        this._body.getWorldCenter()
-      );
+      this._body.applyLinearImpulse(breakImpulse, this._body.getWorldCenter());
     }
   }
 
