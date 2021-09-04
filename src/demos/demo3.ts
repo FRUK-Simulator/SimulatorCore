@@ -145,6 +145,20 @@ function main() {
     },
   });
 
+  simulator.addZone({
+    type: "zone",
+    zoneId: "A",
+    zoneShape: {
+      type: "rectangle",
+      xLength: 2,
+      zLength: 1,
+    },
+    initialPosition: {
+      x: 1,
+      y: -2,
+    },
+  });
+
   let el = window.document;
 
   el.addEventListener("keydown", keyListener);
