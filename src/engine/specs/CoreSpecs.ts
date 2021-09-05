@@ -12,8 +12,7 @@ export type SimObjectSpec =
   | IPyramidSpec
   | IConeSpec
   | ICylinderSpec
-  | IZoneSpec
-  | IRectangleZoneSpec;
+  | IZoneSpec;
 
 export interface IPhysicsProperties {
   linearDamping?: number;
