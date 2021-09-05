@@ -7,6 +7,7 @@ export interface IBaseFixtureUserData {
   selfGuid: string; // The GUID of the SimObject this fixture belongs to
   rootGuid?: string; // (optional) GUID of the top-level SimObject
   type: string;
+  id?: string; // (optional) user defined identifier for object
 }
 
 export interface ISensorFixtureUserData extends IBaseFixtureUserData {
@@ -17,7 +18,6 @@ export interface ISensorFixtureUserData extends IBaseFixtureUserData {
 export interface IZoneFixtureUserData extends IBaseFixtureUserData {
   type: "zone";
   zone: {
-    id: string;
     color?: number;
   };
 }

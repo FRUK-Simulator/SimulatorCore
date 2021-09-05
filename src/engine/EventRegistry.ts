@@ -218,7 +218,7 @@ export class EventRegistry extends EventEmitter {
         return;
       }
       // A is the zone
-      zoneId = userDataA.zone.id;
+      zoneId = userDataA.id;
 
       if (userDataB.rootGuid !== undefined) {
         objectGuid = userDataB.rootGuid;
@@ -230,7 +230,7 @@ export class EventRegistry extends EventEmitter {
         return;
       }
       // B is the zone
-      zoneId = userDataB.zone.id;
+      zoneId = userDataB.id;
 
       if (userDataA.rootGuid !== undefined) {
         objectGuid = userDataA.rootGuid;

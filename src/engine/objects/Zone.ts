@@ -128,8 +128,8 @@ export class Zone extends SimObject {
     const userData: IZoneFixtureUserData = {
       selfGuid: this.guid,
       type: "zone",
+      id: this._zoneId,
       zone: {
-        id: this._zoneId,
         color: spec.baseColor,
       },
     };
