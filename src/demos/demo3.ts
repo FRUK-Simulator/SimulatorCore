@@ -1,7 +1,6 @@
 import { Sim3D, SimulatorConfig, RobotSpecs, RobotBuilder } from "../index";
 import { GUI } from "dat.gui";
 import { RobotHandle } from "../engine/handles";
-import { ZeroSlopeEnding } from "three";
 import { ISimulatorEvent } from "../engine/specs/CoreSpecs";
 
 let gui: GUI;
@@ -56,7 +55,7 @@ function main() {
   simulator.setDebugMode(debug_mode_default);
 
   gui = new GUI();
-  (window as any).gui = gui;
+  (window as any).gui = gui; // eslint-disable-line @typescript-eslint/no-explicit-any
   const debugFolder = gui.addFolder("Debug Options");
   const debugModeController = debugFolder
     .add(demoOptions, "debugMode")
@@ -161,13 +160,13 @@ function main() {
     },
   });
 
-  let el = window.document.body;
+  const el = window.document.body;
 
   el.addEventListener("keydown", keyListener);
   el.addEventListener("keyup", keyListener);
 
-  let eventListEl = window.document.createElement("ol");
-  let clearEl = window.document.createElement("button");
+  const eventListEl = window.document.createElement("ol");
+  const clearEl = window.document.createElement("button");
 
   el.appendChild(eventListEl);
   el.appendChild(clearEl);
@@ -182,10 +181,10 @@ function main() {
   });
 
   simulator.addListener("simulation-event", (e) => {
-    let event = e as ISimulatorEvent;
-    let eventEl = window.document.createElement("li");
+    const event = e as ISimulatorEvent;
+    const eventEl = window.document.createElement("li");
     eventEl.innerText = JSON.stringify(event.data);
-    let eventTypeEl = window.document.createElement("i");
+    const eventTypeEl = window.document.createElement("i");
     eventTypeEl.innerText = event.type;
     eventEl.prepend(eventTypeEl);
     eventListEl.appendChild(eventEl);
@@ -205,7 +204,7 @@ enum Direction {
 
 function keyListener(this: HTMLElement, e: KeyboardEvent) {
   console.assert(e.type === "keydown" || e.type == "keyup");
-  let isDown = e.type == "keydown";
+  const isDown = e.type == "keydown";
 
   let drive: Drive = null;
   let direction: Direction = null;
