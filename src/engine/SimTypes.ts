@@ -20,4 +20,5 @@ export type Vector2d = {
 export interface ISimObjectRef {
   guid: string;
   type: string;
+  id?: string;
 }

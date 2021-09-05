@@ -44,7 +44,7 @@ function main() {
   simulator.setDebugMode(debug_mode_default);
 
   gui = new GUI();
-  (window as any).gui = gui;
+  (window as any).gui = gui; // eslint-disable-line @typescript-eslint/no-explicit-any
   const debugFolder = gui.addFolder("Debug Options");
   const debugModeController = debugFolder
     .add(demoOptions, "debugMode")

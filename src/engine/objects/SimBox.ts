@@ -61,6 +61,7 @@ export class SimBox extends SimObject {
     const userData: IBaseFixtureUserData = {
       selfGuid: this.guid,
       type: "simobject-box",
+      id: spec.id,
     };
 
     this.fixtureSpecs = {

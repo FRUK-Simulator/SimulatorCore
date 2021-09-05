@@ -59,6 +59,7 @@ export class SimBall extends SimObject {
     const userData: IBaseFixtureUserData = {
       selfGuid: this.guid,
       type: "simobject-ball",
+      id: spec.id,
     };
 
     this.fixtureSpecs = {
