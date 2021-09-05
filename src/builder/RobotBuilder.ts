@@ -109,6 +109,11 @@ export class Builder {
     return this;
   }
 
+  setId(id: string): Builder {
+    this._spec.id = id;
+    return this;
+  }
+
   generateSpec(): IRobotSpec {
     return this._spec;
   }
