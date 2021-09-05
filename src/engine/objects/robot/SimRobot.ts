@@ -127,6 +127,7 @@ export class SimRobot extends SimObject {
     const userData: IBaseFixtureUserData = {
       selfGuid: this.guid,
       type: "robot",
+      id: spec.id,
     };
 
     this._fixtureSpecs = {

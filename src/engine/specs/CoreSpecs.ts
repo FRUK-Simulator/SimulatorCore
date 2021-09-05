@@ -35,6 +35,8 @@ export interface IBaseSimObjectSpec {
   initialPosition?: Vector2d;
   physicsProperties?: IPhysicsProperties;
   baseColor?: number;
+  /** User provided string used to correlate events */
+  id?: string;
 }
 
 /**
@@ -142,6 +144,7 @@ export interface IZoneSpec extends IBaseSimObjectSpec {
 export interface IRawZoneEvent {
   zoneId: string;
   objectGuid: string;
+  objectId: string;
 }
 
 /**

@@ -43,6 +43,7 @@ import Stats from "stats.js";
 interface ISimObjectContainer {
   type: string;
   object: SimObject;
+  id?: string;
 }
 
 const DEFAULT_CONFIG: SimulatorConfig = {
@@ -286,6 +287,7 @@ export class Sim3D extends EventEmitter {
     this.addToScene(robot);
     this.simObjects.set(robot.guid, {
       type: robot.type,
+      id: spec.id,
       object: robot,
     });
 
@@ -451,6 +453,7 @@ export class Sim3D extends EventEmitter {
         {
           zoneId: data.zoneId,
           objectRef: objRef,
+          objectId: data.objectId,
         },
         objRef
       );
@@ -674,6 +677,7 @@ export class Sim3D extends EventEmitter {
     this.simObjects.set(obj.guid, {
       type: obj.type,
       object: obj,
+      id: spec.id,
     });
 
     const simObjectRef = {
@@ -730,6 +734,7 @@ export class Sim3D extends EventEmitter {
     const obj = this.simObjects.get(objectGuid);
     return {
       guid: objectGuid,
+      id: obj.id,
       type: obj.type,
     };
   }

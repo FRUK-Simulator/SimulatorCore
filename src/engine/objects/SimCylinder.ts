@@ -63,6 +63,7 @@ export class SimCylinder extends SimObject {
     const userData: IBaseFixtureUserData = {
       selfGuid: this.guid,
       type: "simobject-cylinder",
+      id: spec.id,
     };
 
     this.fixtureSpecs = {

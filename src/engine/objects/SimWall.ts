@@ -91,6 +91,7 @@ export class SimWall extends SimObject {
     const userData: IBaseFixtureUserData = {
       selfGuid: this.guid,
       type: "wall",
+      id: spec.id,
     };
 
     this.fixtureSpecs = {

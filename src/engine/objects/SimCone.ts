@@ -59,6 +59,7 @@ export class SimCone extends SimObject {
     const userData: IBaseFixtureUserData = {
       selfGuid: this.guid,
       type: "simobject-cone",
+      id: spec.id,
     };
 
     this.fixtureSpecs = {

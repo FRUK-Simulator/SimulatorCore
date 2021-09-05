@@ -80,6 +80,7 @@ export class SimRobotWheel extends SimObject {
       selfGuid: this.guid,
       rootGuid: robotGuid,
       type: "wheel",
+      id: spec.id,
     };
 
     this._fixtureSpecs = {
