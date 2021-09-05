@@ -79,6 +79,7 @@ function main() {
     .setMaxForce(1);
 
   robotBuilder
+    .setId("robo")
     .setDimensions({ x: 0.225, y: 0.125, z: 0.255 })
     .addWheel("left-drive", wheel)
     .addWheel(
@@ -183,7 +184,10 @@ function main() {
   simulator.addListener("simulation-event", (e) => {
     let event = e as ISimulatorEvent;
     let eventEl = window.document.createElement("li");
-    eventEl.innerText = JSON.stringify(e);
+    eventEl.innerText = JSON.stringify(event.data);
+    let eventTypeEl = window.document.createElement("i");
+    eventTypeEl.innerText = event.type;
+    eventEl.prepend(eventTypeEl);
     eventListEl.appendChild(eventEl);
   });
 }
