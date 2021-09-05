@@ -2,6 +2,7 @@ import { Sim3D, SimulatorConfig, RobotSpecs, RobotBuilder } from "../index";
 import { GUI } from "dat.gui";
 import { RobotHandle } from "../engine/handles";
 import { ZeroSlopeEnding } from "three";
+import { ISimulatorEvent } from "../engine/specs/CoreSpecs";
 
 let gui: GUI;
 let simulator: Sim3D;
@@ -159,10 +160,32 @@ function main() {
     },
   });
 
-  let el = window.document;
+  let el = window.document.body;
 
   el.addEventListener("keydown", keyListener);
   el.addEventListener("keyup", keyListener);
+
+  let eventListEl = window.document.createElement("ol");
+  let clearEl = window.document.createElement("button");
+
+  el.appendChild(eventListEl);
+  el.appendChild(clearEl);
+
+  eventListEl.style.fontFamily = "monospace";
+
+  clearEl.textContent = "Clear";
+  clearEl.addEventListener("click", (e) => {
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    eventListEl.innerHTML = "";
+  });
+
+  simulator.addListener("simulation-event", (e) => {
+    let event = e as ISimulatorEvent;
+    let eventEl = window.document.createElement("li");
+    eventEl.innerText = JSON.stringify(e);
+    eventListEl.appendChild(eventEl);
+  });
 }
 
 enum Drive {
