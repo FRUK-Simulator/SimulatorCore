@@ -134,6 +134,7 @@ function main() {
 
   simulator.addBox({
     type: "box",
+    id: "boxo",
     dimensions: {
       x: 0.15,
       y: 0.15,
