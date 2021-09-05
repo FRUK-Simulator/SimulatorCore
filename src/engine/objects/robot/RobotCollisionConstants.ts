@@ -31,5 +31,5 @@ export const EntityMask = {
   WALL: ALL_ENTITIES,
   OBJECTS: ALL_ENTITIES,
   SENSORS: EntityCategory.WALL | EntityCategory.OBJECTS,
-  ZONES: EntityCategory.ROBOT_PART,
+  ZONES: EntityCategory.ROBOT_PART | EntityCategory.OBJECTS,
 };
