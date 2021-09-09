@@ -2,9 +2,10 @@ import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
 import { SimulatorConfig, WorldConfig } from "./SimulatorConfig";
 import { makeGrid, GridPlane } from "./utils/GridUtil";
-import { World, Vec2 } from "planck-js";
+import { World, Vec2, Body, Circle, FrictionJoint } from "planck-js";
 import { ISimObjectRef } from "./SimTypes";
 import { SimObject } from "./objects/SimObject";
+import { v4 as uuid } from "uuid";
 import {
   SimObjectSpec,
   IBallSpec,
@@ -39,6 +40,7 @@ import { ZoneHandle } from "./handles/ZoneHandle";
 import { EventEmitter } from "events";
 import { wallSpecs } from "./utils/WallUtil";
 import Stats from "stats.js";
+import { SimUserData } from "./specs/UserDataSpecs";
 
 interface ISimObjectContainer {
   type: string;
@@ -103,6 +105,10 @@ export class Sim3D extends EventEmitter {
 
   // Events
   private eventRegistry: EventRegistry;
+
+  // Body used to repsent the floor, it is fixed in place and can be used to
+  // attach friction joints in order to simulate friction while moving.
+  private floorFriction: Body;
 
   constructor(private canvas: HTMLCanvasElement, config?: SimulatorConfig) {
     super();
@@ -411,6 +417,24 @@ export class Sim3D extends EventEmitter {
     // Recreate the world
     this.world = new World(new Vec2(0, 0));
 
+    // Create single floorFriction body
+    // This body and its sole fixture will be used to provide an anchor in the world
+    // This immovable anhor will be used to attach FrictionJoints and apply a friction on all moving objects
+    const floorFrictionUserData: SimUserData = {
+      type: "floorFriction",
+      selfGuid: uuid(),
+    };
+
+    this.floorFriction = this.world.createBody({
+      type: "static",
+      userData: floorFrictionUserData,
+    });
+
+    this.floorFriction.createFixture({
+      shape: new Circle(0.1),
+      userData: floorFrictionUserData,
+    });
+
     // Recreate object factories
     this.objectFactories = new ObjectFactories(this.scene, this.world);
 
@@ -672,6 +696,17 @@ export class Sim3D extends EventEmitter {
     const body = this.world.createBody(obj.getBodySpecs());
     obj.setBody(body);
     body.createFixture(obj.getFixtureDef());
+    if (obj.getFriction() !== null) {
+      const frictionJoint = new FrictionJoint({
+        localAnchorA: new Vec2(),
+        localAnchorB: new Vec2(),
+        bodyA: this.floorFriction,
+        bodyB: body,
+      });
+      frictionJoint.setMaxForce(obj.getFriction().maxForce);
+      frictionJoint.setMaxTorque(obj.getFriction().maxTorque);
+      this.world.createJoint(frictionJoint);
+    }
 
     this.addToScene(obj);
     this.simObjects.set(obj.guid, {
