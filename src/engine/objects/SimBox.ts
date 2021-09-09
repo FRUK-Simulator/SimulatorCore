@@ -1,6 +1,6 @@
 import * as THREE from "three";
-import { SimObject } from "./SimObject";
-import { Box, Vec2 } from "planck-js";
+import { FrictionSpec, SimObject } from "./SimObject";
+import { Box, FrictionJoint, Vec2 } from "planck-js";
 import { IBoxSpec } from "../specs/CoreSpecs";
 import { Vector2d } from "../SimTypes";
 import { FixtureDef } from "planck-js";
@@ -68,8 +68,8 @@ export class SimBox extends SimObject {
       shape: new Box(spec.dimensions.x / 2, spec.dimensions.z / 2),
       density: 1,
       isSensor: false,
-      friction: 0.3,
-      restitution: 0.4,
+      friction: 1,
+      restitution: 0,
       userData,
       filterCategoryBits: EntityCategory.OBJECTS,
       filterMaskBits: EntityMask.OBJECTS,
@@ -95,5 +95,12 @@ export class SimBox extends SimObject {
 
   getFixtureDef(): FixtureDef {
     return this.fixtureSpecs;
+  }
+
+  getFriction(): FrictionSpec | null {
+    return {
+      maxForce: 0.1,
+      maxTorque: 0.001,
+    };
   }
 }

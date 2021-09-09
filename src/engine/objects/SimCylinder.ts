@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { SimObject } from "./SimObject";
+import { FrictionSpec, SimObject } from "./SimObject";
 import { Vec2, Box } from "planck-js";
 import { ICylinderSpec } from "../specs/CoreSpecs";
 import { Vector2d } from "../SimTypes";
@@ -70,8 +70,8 @@ export class SimCylinder extends SimObject {
       shape: new Box(spec.height / 2, spec.radius),
       density: 1,
       isSensor: false,
-      friction: 0.3,
-      restitution: 0.4,
+      friction: 1,
+      restitution: 0,
       userData,
       filterCategoryBits: EntityCategory.OBJECTS,
       filterMaskBits: EntityMask.OBJECTS,
@@ -97,5 +97,12 @@ export class SimCylinder extends SimObject {
 
   getFixtureDef(): FixtureDef {
     return this.fixtureSpecs;
+  }
+
+  getFriction(): FrictionSpec | null {
+    return {
+      maxForce: 0.1,
+      maxTorque: 0.001,
+    };
   }
 }

@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { SimObject } from "./SimObject";
+import { FrictionSpec, SimObject } from "./SimObject";
 import { Vec2, Box } from "planck-js";
 import { IPyramidSpec } from "../specs/CoreSpecs";
 import { Vector2d } from "../SimTypes";
@@ -91,8 +91,8 @@ export class SimPyramid extends SimObject {
       shape: new Box(spec.baseDimensions.x / 2, spec.baseDimensions.y / 2),
       density: 1,
       isSensor: false,
-      friction: 0.3,
-      restitution: 0.4,
+      friction: 1,
+      restitution: 0,
       filterCategoryBits: EntityCategory.OBJECTS,
       filterMaskBits: EntityMask.OBJECTS,
     };
@@ -117,5 +117,12 @@ export class SimPyramid extends SimObject {
 
   getFixtureDef(): FixtureDef {
     return this.fixtureSpecs;
+  }
+
+  getFriction(): FrictionSpec | null {
+    return {
+      maxForce: 0.1,
+      maxTorque: 0.001,
+    };
   }
 }

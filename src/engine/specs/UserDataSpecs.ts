@@ -22,7 +22,11 @@ export interface IZoneFixtureUserData extends IBaseFixtureUserData {
   };
 }
 
+export interface IFloorFrictionUserData extends IBaseFixtureUserData {
+  type: "floorFriction";
+}
+
 export type SimUserData =
-  | IBaseFixtureUserData
+  | IFloorFrictionUserData
   | ISensorFixtureUserData
   | IZoneFixtureUserData;

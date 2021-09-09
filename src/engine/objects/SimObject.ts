@@ -2,6 +2,10 @@ import { Body, FixtureDef, BodyDef } from "planck-js";
 import { v4 as uuid } from "uuid";
 import * as THREE from "three";
 
+export interface FrictionSpec {
+  maxTorque: number;
+  maxForce: number;
+}
 /**
  * Base class representing an object that can be rendered in a scene
  * and take part in physics simulation.
@@ -73,4 +77,8 @@ export abstract class SimObject {
    */
   public abstract getBodySpecs(): BodyDef;
   public abstract getFixtureDef(): FixtureDef;
+
+  public getFriction(): FrictionSpec | null {
+    return null;
+  }
 }
