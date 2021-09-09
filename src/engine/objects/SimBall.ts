@@ -67,7 +67,7 @@ export class SimBall extends SimObject {
       density: 1,
       isSensor: false,
       friction: 0.3,
-      restitution: 0.4,
+      restitution: 0.5,
       userData,
       filterCategoryBits: EntityCategory.OBJECTS,
       filterMaskBits: EntityMask.OBJECTS,

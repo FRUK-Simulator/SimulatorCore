@@ -91,8 +91,8 @@ export class SimPyramid extends SimObject {
       shape: new Box(spec.baseDimensions.x / 2, spec.baseDimensions.y / 2),
       density: 1,
       isSensor: false,
-      friction: 0.3,
-      restitution: 0.4,
+      friction: 1,
+      restitution: 0,
       filterCategoryBits: EntityCategory.OBJECTS,
       filterMaskBits: EntityMask.OBJECTS,
     };
