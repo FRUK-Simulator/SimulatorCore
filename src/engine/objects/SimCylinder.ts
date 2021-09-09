@@ -1,5 +1,5 @@
 import * as THREE from "three";
-import { SimObject } from "./SimObject";
+import { FrictionSpec, SimObject } from "./SimObject";
 import { Vec2, Box } from "planck-js";
 import { ICylinderSpec } from "../specs/CoreSpecs";
 import { Vector2d } from "../SimTypes";
@@ -97,5 +97,12 @@ export class SimCylinder extends SimObject {
 
   getFixtureDef(): FixtureDef {
     return this.fixtureSpecs;
+  }
+
+  getFriction(): FrictionSpec | null {
+    return {
+      maxForce: 0.1,
+      maxTorque: 0.001,
+    };
   }
 }

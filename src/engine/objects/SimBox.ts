@@ -96,4 +96,11 @@ export class SimBox extends SimObject {
   getFixtureDef(): FixtureDef {
     return this.fixtureSpecs;
   }
+
+  getFriction(): FrictionSpec | null {
+    return {
+      maxForce: 0.1,
+      maxTorque: 0.001,
+    };
+  }
 }
