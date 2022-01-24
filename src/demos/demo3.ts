@@ -129,6 +129,19 @@ function main() {
       closeSpeed: 0.1,
     },
   ];
+  simulator.addZone({
+    type: "zone",
+    zoneId: "A",
+    zoneShape: {
+      type: "rectangle",
+      xLength: 2,
+      zLength: 1,
+    },
+    initialPosition: {
+      x: 1,
+      y: -2,
+    },
+  });
 
   robot = simulator.addRobot(spec);
 
@@ -149,16 +162,17 @@ function main() {
 
   simulator.addZone({
     type: "zone",
-    zoneId: "A",
+    zoneId: "B",
     zoneShape: {
       type: "rectangle",
-      xLength: 2,
-      zLength: 1,
+      xLength: 3,
+      zLength: 0.1,
     },
     initialPosition: {
       x: 1,
-      y: -2,
+      y: -2.4,
     },
+    baseColor: 0x443355ff,
   });
 
   const el = window.document.body;
