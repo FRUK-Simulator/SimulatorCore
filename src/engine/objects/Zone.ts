@@ -10,6 +10,7 @@ import { SimObject } from "./SimObject";
 import { Vector2d } from "../SimTypes";
 import { IZoneFixtureUserData } from "../specs/UserDataSpecs";
 import { EntityCategory, EntityMask } from "./robot/RobotCollisionConstants";
+import { get_next_zone_render_order } from "../utils/RenderOrderConstants";
 
 /**
  * Factory method for creating a Zone
@@ -34,7 +35,8 @@ export class Zone extends SimObject {
 
     const materialSpecs: THREE.MeshBasicMaterialParameters = {
       side: THREE.DoubleSide,
-      transparent: true,
+      transparent: false,
+      depthTest: false, // This allows us to draw zones on the same vertical plane without z fighting
     };
 
     if (spec.baseColor !== undefined) {
@@ -62,7 +64,6 @@ export class Zone extends SimObject {
         zoneShape.zLength
       );
       zoneMesh = new THREE.Mesh(zoneGeom, zoneMaterial);
-
       fixtureShape = new Box(zoneShape.xLength / 2, zoneShape.zLength / 2);
     } else if (spec.zoneShape.type == "ellipse") {
       const zoneShape = spec.zoneShape as IEllipseZoneSpec;
@@ -108,6 +109,9 @@ export class Zone extends SimObject {
     } else {
       console.warn("Some type of zone must be specified");
     }
+
+    // draw this zone ontop of previous zones
+    zoneMesh.renderOrder = get_next_zone_render_order();
 
     zoneMesh.position.y = 0;
     zoneMesh.position.x = initialPosition.x;
