@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { grid_render_order } from "./RenderOrderConstants";
 
 export enum GridPlane {
   XY,
@@ -31,6 +32,7 @@ export function makeGrid(
   const material = new THREE.LineBasicMaterial({
     color,
     opacity: 0.2,
+    depthTest: false,
   });
 
   const stepAxis1 = (2 * axis1HalfLength) / numLinesAxis1;
@@ -108,6 +110,7 @@ export function makeGrid(
   const gridGeom = new THREE.BufferGeometry();
   gridGeom.setFromPoints(vertices);
   const line = new THREE.LineSegments(gridGeom, material);
+  line.renderOrder = grid_render_order;
   gridObject.add(line);
 
   return gridObject;

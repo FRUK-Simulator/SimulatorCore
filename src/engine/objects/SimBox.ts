@@ -1,6 +1,6 @@
 import * as THREE from "three";
 import { FrictionSpec, SimObject } from "./SimObject";
-import { Box, FrictionJoint, Vec2 } from "planck-js";
+import { Box, Vec2 } from "planck-js";
 import { IBoxSpec } from "../specs/CoreSpecs";
 import { Vector2d } from "../SimTypes";
 import { FixtureDef } from "planck-js";

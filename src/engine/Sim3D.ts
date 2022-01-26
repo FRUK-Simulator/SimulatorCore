@@ -41,6 +41,10 @@ import { EventEmitter } from "events";
 import { wallSpecs } from "./utils/WallUtil";
 import Stats from "stats.js";
 import { SimUserData } from "./specs/UserDataSpecs";
+import {
+  axies_render_order,
+  floor_render_order,
+} from "./utils/RenderOrderConstants";
 
 interface ISimObjectContainer {
   type: string;
@@ -552,6 +556,12 @@ export class Sim3D extends EventEmitter {
     const axesHelper = new THREE.AxesHelper(1);
     axesHelper.position.x = -worldConfig.xLength / 2 - 1;
     axesHelper.position.z = -worldConfig.zLength / 2 - 1;
+    if (Array.isArray(axesHelper.material)) {
+      axesHelper.material.forEach((material) => (material.depthTest = false));
+    } else {
+      axesHelper.material.depthTest = false;
+    }
+    axesHelper.renderOrder = axies_render_order;
     this.scene.add(axesHelper);
 
     // Cosmetics
@@ -561,9 +571,10 @@ export class Sim3D extends EventEmitter {
     floorTexture.wrapS = THREE.RepeatWrapping;
     floorTexture.wrapT = THREE.RepeatWrapping;
     const floorMaterial = new THREE.MeshStandardMaterial({ map: floorTexture });
+    floorMaterial.depthTest = false;
     const floor = new THREE.Mesh(floorGeometry, floorMaterial);
+    floor.renderOrder = floor_render_order;
     floor.rotateX(-Math.PI / 2);
-    floor.position.y = -0.01;
     this.scene.add(floor);
 
     const blockGeometry = new THREE.BoxGeometry(1, 1, 1);
