@@ -7,7 +7,7 @@
 let next_render_order = -100;
 
 function allocate_render_order() {
-  let render_order = next_render_order;
+  const render_order = next_render_order;
   next_render_order += 1;
   return render_order;
 }
