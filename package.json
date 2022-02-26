@@ -29,7 +29,7 @@
     "@types/three": "^0.127.1",
     "planck-js": "^0.3.29",
     "stats.js": "^0.17.0",
-    "three": "^0.128.0",
+    "three": "^0.137.0",
     "uuid": "^8.3.0"
   },
   "devDependencies": {
