@@ -546,10 +546,18 @@ export class Sim3D extends EventEmitter {
     );
     this.scene.add(grid);
 
-    const walls = wallSpecs(worldConfig);
+    const perimeterWalls = wallSpecs(worldConfig);
 
-    for (const spec of walls) {
+    // Add perimeter walls
+    for (const spec of perimeterWalls) {
       this.addWall(spec);
+    }
+
+    // Add obstacle walls in the map
+    if (worldConfig.walls) {
+      for (const wall of worldConfig.walls) {
+        this.addWall(wall);
+      }
     }
 
     // Axes
