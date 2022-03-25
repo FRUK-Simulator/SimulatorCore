@@ -34,6 +34,7 @@ export class SimColorSensor extends SimComplexSensor {
     robotSpec: IRobotSpec
   ) {
     super("ColorSensor", robotGuid, spec);
+    console.log("Creating the color sensor");
 
     const sensorPosition = getSensorMountPosition(
       robotSpec,
@@ -80,7 +81,7 @@ export class SimColorSensor extends SimComplexSensor {
       isSensor: true,
       userData,
       filterCategoryBits: EntityCategory.ROBOT_PART,
-      filterMaskBits: EntityMask.ROBOT_PART,
+      filterMaskBits: EntityMask.SENSORS,
     };
   }
 
@@ -94,6 +95,7 @@ export class SimColorSensor extends SimComplexSensor {
   }
 
   onSensorEvent(val: IComplexSensorValue): void {
+    console.log(`Setting color sensor value ${JSON.stringify(val)}`);
     this.setValue(val);
   }
 }
