@@ -30,6 +30,7 @@ export const EntityMask = {
   ROBOT_PART: ALL_ENTITIES - EntityCategory.ROBOT_PART, // parts of the robot collide with only objects and walls
   WALL: ALL_ENTITIES,
   OBJECTS: ALL_ENTITIES,
-  SENSORS: EntityCategory.WALL | EntityCategory.OBJECTS,
+  OBSTACLES: EntityCategory.WALL | EntityCategory.OBJECTS,
   ZONES: EntityCategory.ROBOT_PART | EntityCategory.OBJECTS,
+  SENSORS: EntityCategory.WALL | EntityCategory.OBJECTS | EntityCategory.ZONES,
 };
