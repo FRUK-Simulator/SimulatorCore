@@ -81,7 +81,7 @@ export class SimColorSensor extends SimComplexSensor {
       isSensor: true,
       userData,
       filterCategoryBits: EntityCategory.ROBOT_PART,
-      filterMaskBits: EntityMask.SENSORS,
+      filterMaskBits: EntityCategory.ZONES,
     };
   }
 
