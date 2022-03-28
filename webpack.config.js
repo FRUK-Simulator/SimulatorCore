@@ -2,7 +2,7 @@ const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 const webConfig = {
-  entry: { demo3: "./src/demos/demo4.ts" },
+  entry: { demo4: "./src/demos/demo4.ts" },
   mode: "development",
   devtool: "inline-source-map",
   module: {

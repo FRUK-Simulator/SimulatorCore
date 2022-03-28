@@ -2,7 +2,6 @@ import { Sim3D, SimulatorConfig, RobotSpecs, RobotBuilder } from "../index";
 import { GUI } from "dat.gui";
 import { RobotHandle } from "../engine/handles";
 import { ISimulatorEvent } from "../engine/specs/CoreSpecs";
-import { Color } from "three";
 
 let gui: GUI;
 let simulator: Sim3D;
@@ -45,8 +44,8 @@ const demoOptions = {
   cameraMode: "position",
 };
 
-function getHexColor(color: any): string {
-  return parseInt(color, 10).toString(16).padStart(6, "0");
+function getHexColor(color: number): string {
+  return color.toString(16).padStart(6, "0");
 }
 
 function main() {
