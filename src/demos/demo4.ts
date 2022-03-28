@@ -2,6 +2,7 @@ import { Sim3D, SimulatorConfig, RobotSpecs, RobotBuilder } from "../index";
 import { GUI } from "dat.gui";
 import { RobotHandle } from "../engine/handles";
 import { ISimulatorEvent } from "../engine/specs/CoreSpecs";
+import { Color } from "three";
 
 let gui: GUI;
 let simulator: Sim3D;
@@ -43,6 +44,10 @@ const demoOptions = {
   debugMode: false,
   cameraMode: "position",
 };
+
+function getHexColor(color: any): string {
+  return parseInt(color, 10).toString(16).padStart(6, "0");
+}
 
 function main() {
   const canvas = <HTMLCanvasElement>document.getElementById("demo1");
@@ -210,9 +215,20 @@ function main() {
   const colorSensorDiv = window.document.createElement("div");
   el.appendChild(colorSensorDiv);
   window.setInterval(() => {
-    colorSensorDiv.innerText = JSON.stringify(
-      robot.getComplexSensorValue(COLOR_SENSOR_CHANNEL, "ColorSensor")
+    // TODO: Make it display the actual color, or at least rgb value
+    const colorSensorValue = robot.getComplexSensorValue(
+      COLOR_SENSOR_CHANNEL,
+      "ColorSensor"
     );
+    const color =
+      "color" in colorSensorValue
+        ? getHexColor(colorSensorValue.color)
+        : "0xf0f000";
+    colorSensorDiv.style.backgroundColor = `#${color}`;
+    colorSensorDiv.style.width = "30px";
+    colorSensorDiv.style.height = "30px";
+    colorSensorDiv.style.borderStyle = "solid";
+    colorSensorDiv.style.borderColor = "#000000";
   }, 500);
 
   simulator.addListener("simulation-event", (e) => {
