@@ -10,7 +10,7 @@ import {
 import { ISensorFixtureUserData } from "../../../specs/UserDataSpecs";
 import { Vec2, Box } from "planck-js";
 import { getSensorMountPosition } from "../../../utils/RobotUtils";
-import { EntityCategory, EntityMask } from "../RobotCollisionConstants";
+import { EntityCategory } from "../RobotCollisionConstants";
 
 /**
  * Simulated Color Sensor
@@ -34,6 +34,7 @@ export class SimColorSensor extends SimComplexSensor {
     robotSpec: IRobotSpec
   ) {
     super("ColorSensor", robotGuid, spec);
+    console.log("Creating the color sensor");
 
     const sensorPosition = getSensorMountPosition(
       robotSpec,
@@ -79,8 +80,8 @@ export class SimColorSensor extends SimComplexSensor {
       density: 1,
       isSensor: true,
       userData,
-      filterCategoryBits: EntityCategory.SENSORS,
-      filterMaskBits: EntityMask.SENSORS,
+      filterCategoryBits: EntityCategory.ROBOT_PART,
+      filterMaskBits: EntityCategory.ZONES,
     };
   }
 
@@ -94,6 +95,7 @@ export class SimColorSensor extends SimComplexSensor {
   }
 
   onSensorEvent(val: IComplexSensorValue): void {
+    console.log(`Setting color sensor value ${JSON.stringify(val)}`);
     this.setValue(val);
   }
 }

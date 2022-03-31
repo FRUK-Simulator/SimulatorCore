@@ -171,7 +171,7 @@ export class SimDistanceSensor extends SimBasicSensor {
         p2,
         (fixture: Fixture, p: Vec2, normal: Vec2, fraction: number): number => {
           //Distance sensor rays collide with things the robot collides with...
-          if (!(fixture.m_filterCategoryBits & EntityMask.SENSORS)) {
+          if (!(fixture.m_filterCategoryBits & EntityMask.OBSTACLES)) {
             // by returning -1 we ignore this collision and continue.
             return -1;
           }

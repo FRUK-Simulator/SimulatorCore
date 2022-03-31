@@ -1,6 +1,6 @@
 {
   "name": "@fruk/simulator-core",
-  "version": "1.8.3",
+  "version": "1.8.4",
   "description": "FIRST Robotics Simulator Core",
   "main": "dist/index.js",
   "scripts": {
