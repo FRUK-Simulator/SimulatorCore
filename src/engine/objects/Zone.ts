@@ -135,6 +135,7 @@ export class Zone extends SimObject {
       id: this._zoneId,
       zone: {
         color: spec.baseColor,
+        order: zoneMesh.renderOrder,
       },
     };
 

@@ -22,13 +22,16 @@ function isSensorUserData(
   return userData.type === "sensor";
 }
 
-function isZoneUserData(
+export function isZoneUserData(
   userData: SimUserData
 ): userData is IZoneFixtureUserData {
   return userData.type === "zone";
 }
 
-function getSensorDescriptors(a: Fixture, b: Fixture): ISimSensorDescriptor[] {
+export function getSensorDescriptors(
+  a: Fixture,
+  b: Fixture
+): ISimSensorDescriptor[] {
   const aUserData: SimUserData | null = a.getUserData() as SimUserData;
   const bUserData: SimUserData | null = b.getUserData() as SimUserData;
 
@@ -45,7 +48,7 @@ function getSensorDescriptors(a: Fixture, b: Fixture): ISimSensorDescriptor[] {
   return result;
 }
 
-function isSameObject(a: Fixture, b: Fixture): boolean {
+export function isSameObject(a: Fixture, b: Fixture): boolean {
   const userDataA: SimUserData | null = a.getUserData() as SimUserData;
   const userDataB: SimUserData | null = b.getUserData() as SimUserData;
 
@@ -81,7 +84,7 @@ function isSameObject(a: Fixture, b: Fixture): boolean {
   return false;
 }
 
-function isZoneContact(a: Fixture, b: Fixture): boolean {
+export function isZoneContact(a: Fixture, b: Fixture): boolean {
   if (a.getUserData() !== null) {
     if ((a.getUserData() as IBaseFixtureUserData).type === "zone") {
       return true;
@@ -174,7 +177,6 @@ export class EventRegistry extends EventEmitter {
    */
   private onBeginContact(contact: Contact): void {
     this.updateContactSensors(contact, true);
-    this.updateColorSensors(contact, true);
     this.updateZones(contact, true);
   }
 
@@ -185,7 +187,6 @@ export class EventRegistry extends EventEmitter {
    */
   private onEndContact(contact: Contact): void {
     this.updateContactSensors(contact, false);
-    this.updateColorSensors(contact, false);
     this.updateZones(contact, false);
   }
 
@@ -289,80 +290,6 @@ export class EventRegistry extends EventEmitter {
 
       zoneCollisions.set(objectGuid, count);
     }
-  }
-
-  private updateColorSensors(contact: Contact, hasContact: boolean): void {
-    if (
-      contact.getFixtureA().getUserData() === null &&
-      contact.getFixtureB().getUserData() === null
-    ) {
-      return;
-    }
-
-    const fixtureA: Fixture = contact.getFixtureA();
-    const fixtureB: Fixture = contact.getFixtureB();
-    const userDataA: SimUserData | null = fixtureA.getUserData() as SimUserData;
-    const userDataB: SimUserData | null = fixtureB.getUserData() as SimUserData;
-
-    if (isSameObject(fixtureA, fixtureB)) {
-      return;
-    }
-
-    // Make sure one of these is a zone
-    if (!isZoneContact(fixtureA, fixtureB)) {
-      return;
-    }
-
-    const sensorDescriptors = getSensorDescriptors(fixtureA, fixtureB);
-
-    // Bail out if none of these are sensors
-    if (sensorDescriptors.length === 0) {
-      return;
-    }
-
-    const colorSensorDescriptor: ISimSensorDescriptor = sensorDescriptors[0];
-    if (colorSensorDescriptor.sensorType !== "ColorSensor") {
-      return;
-    }
-
-    let zoneUserData: IZoneFixtureUserData;
-    if (isZoneUserData(userDataA)) {
-      zoneUserData = userDataA;
-    } else if (isZoneUserData(userDataB)) {
-      zoneUserData = userDataB;
-    }
-
-    // Zone color
-    let zoneColor: number;
-    if (hasContact) {
-      zoneColor =
-        zoneUserData.zone.color !== undefined
-          ? zoneUserData.zone.color
-          : 0xffffff;
-    } else {
-      zoneColor = 0xffffff; // Default to white
-    }
-    this.broadcastColor(colorSensorDescriptor, zoneColor);
-  }
-
-  /**
-   * Inform {@link SimColorSensor}s of an update in their state
-   * @private
-   * @param sensor
-   * @param color
-   */
-  private broadcastColor(sensor: ISimSensorDescriptor, color: number): void {
-    const robotSensors = this._complexSensors.get(sensor.robotGuid);
-
-    if (robotSensors === undefined) {
-      return;
-    }
-
-    if (!robotSensors.has(sensor.sensorIdent)) {
-      return;
-    }
-
-    robotSensors.get(sensor.sensorIdent).onSensorEvent({ value: { color } });
   }
 
   /**

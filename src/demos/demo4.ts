@@ -222,7 +222,8 @@ function main() {
     const color =
       "color" in colorSensorValue
         ? getHexColor(colorSensorValue.color)
-        : "0xf0f000";
+        : "ffffff";
+    console.log(`color is ${color}`);
     colorSensorDiv.style.backgroundColor = `#${color}`;
     colorSensorDiv.style.width = "30px";
     colorSensorDiv.style.height = "30px";
@@ -237,7 +238,7 @@ function main() {
     const eventTypeEl = window.document.createElement("i");
     eventTypeEl.innerText = event.type;
     eventEl.prepend(eventTypeEl);
-    eventListEl.appendChild(eventEl);
+    // eventListEl.appendChild(eventEl);
   });
 }
 

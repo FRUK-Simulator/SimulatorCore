@@ -19,6 +19,7 @@ export interface IZoneFixtureUserData extends IBaseFixtureUserData {
   type: "zone";
   zone: {
     color?: number;
+    order?: number; // zero is the bottom one
   };
 }
 

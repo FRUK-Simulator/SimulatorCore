@@ -15,9 +15,6 @@ import { EventRegistry } from "../../../EventRegistry";
 export abstract class SimComplexSensor extends SimObject {
   protected _channel: number;
   protected _sensorType: string;
-
-  protected _value: IComplexSensorValue;
-
   protected _bodySpecs: BodyDef;
   protected _fixtureSpecs: FixtureDef;
 
@@ -30,7 +27,6 @@ export abstract class SimComplexSensor extends SimObject {
     super("ComplexSensor-" + type);
     this._channel = spec.channel;
     this._sensorType = type;
-    this._value = { value: {} };
     this._robotGuid = robotGuid;
   }
 
@@ -66,20 +62,7 @@ export abstract class SimComplexSensor extends SimObject {
    * In the base case, we just return an empty object
    */
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  get value(): any {
-    return this._value.value;
-  }
-
-  /**
-   * Update the value of this sensor
-   *
-   * Usually called via the {@link onSensorEvent} callback
-   * @protected
-   * @param val
-   */
-  protected setValue(val: IComplexSensorValue): void {
-    this._value = val;
-  }
+  abstract getValue(): IComplexSensorValue;
 
   getBodySpecs(): BodyDef {
     return this._bodySpecs;
@@ -88,12 +71,6 @@ export abstract class SimComplexSensor extends SimObject {
   getFixtureDef(): FixtureDef {
     return this._fixtureSpecs;
   }
-
-  /**
-   * Callback triggered whenever a sensor event happens
-   * @param val
-   */
-  abstract onSensorEvent(val: IComplexSensorValue): void;
 
   /**
    * Register this sensor with the simulator wide {@link EventRegistry}
