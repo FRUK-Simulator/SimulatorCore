@@ -10,7 +10,10 @@ import { SimObject } from "./SimObject";
 import { Vector2d } from "../SimTypes";
 import { IZoneFixtureUserData } from "../specs/UserDataSpecs";
 import { EntityCategory, EntityMask } from "./robot/RobotCollisionConstants";
-import { get_next_zone_render_order } from "../utils/RenderOrderConstants";
+import {
+  get_next_zone_render_order,
+  zone_render_order,
+} from "../utils/RenderOrderConstants";
 
 /**
  * Factory method for creating a Zone
@@ -110,8 +113,13 @@ export class Zone extends SimObject {
       console.warn("Some type of zone must be specified");
     }
 
-    // draw this zone ontop of previous zones
-    zoneMesh.renderOrder = get_next_zone_render_order();
+    if (!spec.overlapsAnotherZone) {
+      // Draw this zone in zone plane.
+      zoneMesh.renderOrder = zone_render_order;
+    } else {
+      // Draw this zone on top of previous zones.
+      zoneMesh.renderOrder = get_next_zone_render_order();
+    }
 
     zoneMesh.position.y = 0;
     zoneMesh.position.x = initialPosition.x;

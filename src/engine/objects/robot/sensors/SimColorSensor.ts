@@ -11,6 +11,7 @@ import {
   ISensorFixtureUserData,
   IZoneFixtureUserData,
   SimUserData,
+  ZoneProperties,
 } from "../../../specs/UserDataSpecs";
 import { Vec2, Box, Contact, Fixture } from "planck-js";
 import { getSensorMountPosition } from "../../../utils/RobotUtils";
@@ -20,6 +21,7 @@ import {
   isZoneContact,
   isZoneUserData,
 } from "../../../EventRegistry";
+import { starting_render_order } from "../../../utils/RenderOrderConstants";
 
 /**
  * Simulated Color Sensor
@@ -142,6 +144,7 @@ export class SimColorSensor extends SimComplexSensor {
       color: 0xffffff,
       order: starting_render_order,
     } as ZoneProperties;
+    let firstZoneInContactList: ZoneProperties | null = null;
 
     while (currColorSensorContactEdge) {
       const zone = this.getZoneInfo(currColorSensorContactEdge.contact);
@@ -150,11 +153,22 @@ export class SimColorSensor extends SimComplexSensor {
         console.debug(zone);
       }
 
+      if (zone && !firstZoneInContactList) {
+        firstZoneInContactList = zone;
+      }
+
       if (zone && zone.order > currTopZone.order && zone.color) {
         currTopZone = zone;
       }
 
       currColorSensorContactEdge = currColorSensorContactEdge.next;
+    }
+
+    if (
+      firstZoneInContactList &&
+      firstZoneInContactList.order === currTopZone.order
+    ) {
+      currTopZone = firstZoneInContactList;
     }
 
     return { value: { color: currTopZone.color } };
