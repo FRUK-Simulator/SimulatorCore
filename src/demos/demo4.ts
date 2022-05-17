@@ -183,6 +183,51 @@ function main() {
     baseColor: 0x0000ff,
   });
 
+  simulator.addZone({
+    type: "zone",
+    zoneId: "E",
+    zoneShape: {
+      type: "rectangle",
+      xLength: 1,
+      zLength: 1,
+    },
+    initialPosition: {
+      x: 0,
+      y: 1,
+    },
+    baseColor: 0x00ff00,
+  });
+
+  simulator.addZone({
+    type: "zone",
+    zoneId: "F",
+    zoneShape: {
+      type: "rectangle",
+      xLength: 1,
+      zLength: 1,
+    },
+    initialPosition: {
+      x: 1,
+      y: 1,
+    },
+    baseColor: 0xff0000,
+  });
+
+  simulator.addZone({
+    type: "zone",
+    zoneId: "G",
+    zoneShape: {
+      type: "rectangle",
+      xLength: 1,
+      zLength: 1,
+    },
+    initialPosition: {
+      x: 1,
+      y: 2,
+    },
+    baseColor: 0xff00ff,
+  });
+
   const el = window.document.body;
 
   el.addEventListener("keydown", keyListener);
