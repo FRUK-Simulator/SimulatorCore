@@ -12,9 +12,11 @@ function allocate_render_order(): number {
   return render_order;
 }
 
+export const starting_render_order = next_render_order;
 export const floor_render_order = allocate_render_order();
 export const grid_render_order = allocate_render_order();
 export const axies_render_order = allocate_render_order();
+export const zone_render_order = allocate_render_order();
 
 /**
  * This variable tracks the next, yet to be created zone's render order.

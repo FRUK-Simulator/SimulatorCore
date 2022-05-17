@@ -136,6 +136,7 @@ export interface IZoneSpec extends IBaseSimObjectSpec {
   zoneId: string;
   zoneShape: IPolygonZoneSpec | IEllipseZoneSpec | IRectangleZoneSpec;
   opacity?: number;
+  overlapsAnotherZone?: boolean;
 }
 
 /**

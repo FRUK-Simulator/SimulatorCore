@@ -452,7 +452,7 @@ export class ColorSensorBuilder implements IColorSensorSpec {
     channel: 0,
     width: 0,
     range: 0,
-    mountFace: SensorMountingFace.FRONT,
+    mountFace: SensorMountingFace.BOTTOM,
   };
 
   constructor(channelOrSpec?: number | IColorSensorSpec) {

@@ -7,10 +7,21 @@ import {
   IComplexSensorValue,
   SensorMountingFace,
 } from "../../../specs/RobotSpecs";
-import { ISensorFixtureUserData } from "../../../specs/UserDataSpecs";
-import { Vec2, Box } from "planck-js";
+import {
+  ISensorFixtureUserData,
+  IZoneFixtureUserData,
+  SimUserData,
+  ZoneProperties,
+} from "../../../specs/UserDataSpecs";
+import { Vec2, Box, Contact, Fixture } from "planck-js";
 import { getSensorMountPosition } from "../../../utils/RobotUtils";
 import { EntityCategory } from "../RobotCollisionConstants";
+import {
+  isSameObject,
+  isZoneContact,
+  isZoneUserData,
+} from "../../../EventRegistry";
+import { starting_render_order } from "../../../utils/RenderOrderConstants";
 
 /**
  * Simulated Color Sensor
@@ -94,8 +105,72 @@ export class SimColorSensor extends SimComplexSensor {
     this._mesh.rotation.y = -this._body.getAngle();
   }
 
-  onSensorEvent(val: IComplexSensorValue): void {
-    console.log(`Setting color sensor value ${JSON.stringify(val)}`);
-    this.setValue(val);
+  private getZoneInfo(contact: Contact): ZoneProperties | null {
+    if (
+      contact.getFixtureA().getUserData() === null &&
+      contact.getFixtureB().getUserData() === null
+    ) {
+      console.debug(`Both fixtures are null.`);
+      return null;
+    }
+
+    const fixtureA: Fixture = contact.getFixtureA();
+    const fixtureB: Fixture = contact.getFixtureB();
+    const userDataA: SimUserData | null = fixtureA.getUserData() as SimUserData;
+    const userDataB: SimUserData | null = fixtureB.getUserData() as SimUserData;
+
+    if (isSameObject(fixtureA, fixtureB)) {
+      console.debug(`Fixtures are the same object.`);
+      return null;
+    }
+
+    if (!isZoneContact(fixtureA, fixtureB)) {
+      console.debug(`Neither of the fixtures is a zone.`);
+      return null;
+    }
+
+    let zoneUserData: IZoneFixtureUserData;
+    if (isZoneUserData(userDataA)) {
+      zoneUserData = userDataA as IZoneFixtureUserData;
+    } else if (isZoneUserData(userDataB)) {
+      zoneUserData = userDataB as IZoneFixtureUserData;
+    }
+    return zoneUserData.zone;
+  }
+
+  getValue(): IComplexSensorValue {
+    let currColorSensorContactEdge = this._body.getContactList();
+    let currTopZone = {
+      color: 0xffffff,
+      order: starting_render_order,
+    } as ZoneProperties;
+    let firstZoneInContactList: ZoneProperties | null = null;
+
+    while (currColorSensorContactEdge) {
+      const zone = this.getZoneInfo(currColorSensorContactEdge.contact);
+
+      if (zone) {
+        console.debug(zone);
+      }
+
+      if (zone && !firstZoneInContactList) {
+        firstZoneInContactList = zone;
+      }
+
+      if (zone && zone.order > currTopZone.order && zone.color) {
+        currTopZone = zone;
+      }
+
+      currColorSensorContactEdge = currColorSensorContactEdge.next;
+    }
+
+    if (
+      firstZoneInContactList &&
+      firstZoneInContactList.order === currTopZone.order
+    ) {
+      currTopZone = firstZoneInContactList;
+    }
+
+    return { value: { color: currTopZone.color } };
   }
 }

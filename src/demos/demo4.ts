@@ -166,6 +166,7 @@ function main() {
       y: -2.4,
     },
     baseColor: 0x443355ff,
+    overlapsAnotherZone: true,
   });
 
   simulator.addZone({
@@ -181,6 +182,51 @@ function main() {
       y: 2,
     },
     baseColor: 0x0000ff,
+  });
+
+  simulator.addZone({
+    type: "zone",
+    zoneId: "E",
+    zoneShape: {
+      type: "rectangle",
+      xLength: 1,
+      zLength: 1,
+    },
+    initialPosition: {
+      x: 0,
+      y: 1,
+    },
+    baseColor: 0x00ff00,
+  });
+
+  simulator.addZone({
+    type: "zone",
+    zoneId: "F",
+    zoneShape: {
+      type: "rectangle",
+      xLength: 1,
+      zLength: 1,
+    },
+    initialPosition: {
+      x: 1,
+      y: 1,
+    },
+    baseColor: 0xff0000,
+  });
+
+  simulator.addZone({
+    type: "zone",
+    zoneId: "G",
+    zoneShape: {
+      type: "rectangle",
+      xLength: 1,
+      zLength: 1,
+    },
+    initialPosition: {
+      x: 1,
+      y: 2,
+    },
+    baseColor: 0xff00ff,
   });
 
   const el = window.document.body;
@@ -222,7 +268,8 @@ function main() {
     const color =
       "color" in colorSensorValue
         ? getHexColor(colorSensorValue.color)
-        : "0xf0f000";
+        : "ffffff";
+    console.log(`color is ${color}`);
     colorSensorDiv.style.backgroundColor = `#${color}`;
     colorSensorDiv.style.width = "30px";
     colorSensorDiv.style.height = "30px";
@@ -237,7 +284,7 @@ function main() {
     const eventTypeEl = window.document.createElement("i");
     eventTypeEl.innerText = event.type;
     eventEl.prepend(eventTypeEl);
-    eventListEl.appendChild(eventEl);
+    // eventListEl.appendChild(eventEl);
   });
 }
 

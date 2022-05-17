@@ -15,11 +15,14 @@ export interface ISensorFixtureUserData extends IBaseFixtureUserData {
   sensor: ISimSensorDescriptor;
 }
 
+export interface ZoneProperties {
+  color?: number;
+  order?: number; // counting from starting_render_order to 0, higher values are on top
+}
+
 export interface IZoneFixtureUserData extends IBaseFixtureUserData {
   type: "zone";
-  zone: {
-    color?: number;
-  };
+  zone: ZoneProperties;
 }
 
 export interface IFloorFrictionUserData extends IBaseFixtureUserData {

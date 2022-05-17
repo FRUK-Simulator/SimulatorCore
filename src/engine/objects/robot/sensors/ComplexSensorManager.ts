@@ -72,7 +72,7 @@ export class ComplexSensorManager {
       return {};
     }
 
-    return this._sensors.get(ident).value;
+    return this._sensors.get(ident).getValue().value;
   }
 
   registerWithEventSystem(
