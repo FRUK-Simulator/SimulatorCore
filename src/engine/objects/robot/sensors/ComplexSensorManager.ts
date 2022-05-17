@@ -71,8 +71,7 @@ export class ComplexSensorManager {
     if (!this._sensors.has(ident)) {
       return {};
     }
-    // debugger;
-    console.log(this._sensors.get(ident).getValue().value);
+
     return this._sensors.get(ident).getValue().value;
   }
 
