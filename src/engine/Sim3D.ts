@@ -43,6 +43,7 @@ import Stats from "stats.js";
 import { SimUserData } from "./specs/UserDataSpecs";
 import {
   axies_render_order,
+  clear_next_zone_render_order,
   floor_render_order,
 } from "./utils/RenderOrderConstants";
 
@@ -390,6 +391,8 @@ export class Sim3D extends EventEmitter {
       this.scene = new THREE.Scene();
       this.scene.background = new THREE.Color(0xeeeeee);
     }
+
+    clear_next_zone_render_order();
 
     if (!this.renderer) {
       this.renderer = new THREE.WebGLRenderer({

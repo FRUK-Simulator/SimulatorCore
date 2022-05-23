@@ -166,7 +166,6 @@ function main() {
       y: -2.4,
     },
     baseColor: 0x443355ff,
-    overlapsAnotherZone: true,
   });
 
   simulator.addZone({
