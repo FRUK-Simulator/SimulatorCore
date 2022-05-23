@@ -392,6 +392,11 @@ export class Sim3D extends EventEmitter {
       this.scene.background = new THREE.Color(0xeeeeee);
     }
 
+    // We need to reset the next_render_order variable
+    // (from RenderOrderConstants.ts) in order not to
+    // draw zones that have a render oder of 0 or above.
+    // Zones that have render order of 0 or above would
+    // be drawn on top of the robot itself.
     clear_next_zone_render_order();
 
     if (!this.renderer) {
