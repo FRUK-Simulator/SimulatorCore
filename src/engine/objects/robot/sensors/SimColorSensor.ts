@@ -21,7 +21,6 @@ import {
   isZoneContact,
   isZoneUserData,
 } from "../../../EventRegistry";
-import { starting_render_order } from "../../../utils/RenderOrderConstants";
 
 /**
  * Simulated Color Sensor
@@ -139,36 +138,34 @@ export class SimColorSensor extends SimComplexSensor {
   }
 
   getValue(): IComplexSensorValue {
-    let currColorSensorContactEdge = this._body.getContactList();
     let currTopZone = {
       color: 0xffffff,
-      order: starting_render_order,
+      order: null,
     } as ZoneProperties;
-    let firstZoneInContactList: ZoneProperties | null = null;
 
-    while (currColorSensorContactEdge) {
+    for (
+      let currColorSensorContactEdge = this._body.getContactList();
+      currColorSensorContactEdge;
+      currColorSensorContactEdge = currColorSensorContactEdge.next
+    ) {
+      if (!currColorSensorContactEdge.contact.isTouching()) {
+        continue;
+      }
+
       const zone = this.getZoneInfo(currColorSensorContactEdge.contact);
 
       if (zone) {
         console.debug(zone);
       }
 
-      if (zone && !firstZoneInContactList) {
-        firstZoneInContactList = zone;
-      }
-
-      if (zone && zone.order > currTopZone.order && zone.color) {
+      if (
+        zone &&
+        zone.color &&
+        zone.order &&
+        (!currTopZone.order || zone.order > currTopZone.order)
+      ) {
         currTopZone = zone;
       }
-
-      currColorSensorContactEdge = currColorSensorContactEdge.next;
-    }
-
-    if (
-      firstZoneInContactList &&
-      firstZoneInContactList.order === currTopZone.order
-    ) {
-      currTopZone = firstZoneInContactList;
     }
 
     return { value: { color: currTopZone.color } };
