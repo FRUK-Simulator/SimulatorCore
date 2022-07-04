@@ -11,6 +11,7 @@ import { Vector2d } from "../SimTypes";
 import { IZoneFixtureUserData } from "../specs/UserDataSpecs";
 import { EntityCategory, EntityMask } from "./robot/RobotCollisionConstants";
 import { get_next_zone_render_order } from "../utils/RenderOrderConstants";
+import { ShapeUtils } from "three";
 
 /**
  * Factory method for creating a Zone
@@ -22,7 +23,7 @@ export function makeZone(spec: IZoneSpec): Zone {
 
 export class Zone extends SimObject {
   private _bodySpecs: BodyDef;
-  private _fixtureSpecs: FixtureDef;
+  private _fixtureSpecs: FixtureDef[];
 
   private _zoneId: string;
 
@@ -30,6 +31,7 @@ export class Zone extends SimObject {
     super("Zone");
 
     this._zoneId = spec.zoneId;
+    this._fixtureSpecs = [];
 
     const initialPosition: Vector2d = { x: 0, y: 0 };
 
@@ -54,7 +56,8 @@ export class Zone extends SimObject {
 
     const zoneMaterial = new THREE.MeshBasicMaterial(materialSpecs);
 
-    let fixtureShape;
+    // eslint-disable-next-line prefer-const
+    let fixtureShapes = [];
     let zoneMesh;
 
     if (spec.zoneShape.type == "rectangle") {
@@ -64,7 +67,7 @@ export class Zone extends SimObject {
         zoneShape.zLength
       );
       zoneMesh = new THREE.Mesh(zoneGeom, zoneMaterial);
-      fixtureShape = new Box(zoneShape.xLength / 2, zoneShape.zLength / 2);
+      fixtureShapes.push(new Box(zoneShape.xLength / 2, zoneShape.zLength / 2));
     } else if (spec.zoneShape.type == "ellipse") {
       const zoneShape = spec.zoneShape as IEllipseZoneSpec;
       const xRadius = zoneShape.xRadius;
@@ -84,28 +87,38 @@ export class Zone extends SimObject {
       const zoneGeom = new THREE.ShapeBufferGeometry(shape);
       zoneMesh = new THREE.Mesh(zoneGeom, zoneMaterial);
 
-      fixtureShape = new Box(zoneShape.xRadius, zoneShape.zRadius);
+      fixtureShapes.push(new Box(zoneShape.xRadius, zoneShape.zRadius));
     } else if (spec.zoneShape.type == "polygon") {
       const zoneShape = spec.zoneShape as IPolygonZoneSpec;
-      const shapePoints = [];
-      const fixturePoints = [];
+      const shapePoints: THREE.Vector2[] = [];
 
-      for (let i = 0; i < zoneShape.points.length; i++) {
+      // We need to transform the zone's Vector2d points into THREE.Vector2 points.
+      zoneShape.points.forEach((vector2dPoint) => {
         const point = new THREE.Vector2(
-          zoneShape.points[i].x,
-          zoneShape.points[i].y
+          vector2dPoint.x + initialPosition.x,
+          vector2dPoint.y + initialPosition.y
         );
         shapePoints.push(point);
+      });
 
-        const fixPoint = new Vec2(zoneShape.points[i].x, zoneShape.points[i].y);
-        fixturePoints.push(fixPoint);
-      }
+      const triangles = ShapeUtils.triangulateShape(shapePoints, []);
+
+      triangles.forEach((triangle) => {
+        const point1 = shapePoints[triangle[0]];
+        const point2 = shapePoints[triangle[1]];
+        const point3 = shapePoints[triangle[2]];
+
+        // We now need to use planck's Vec2.
+        const fixPoint1 = new Vec2(point1.x, point1.y);
+        const fixPoint2 = new Vec2(point2.x, point2.y);
+        const fixPoint3 = new Vec2(point3.x, point3.y);
+
+        fixtureShapes.push(new Polygon([fixPoint1, fixPoint2, fixPoint3]));
+      });
 
       const shape = new THREE.Shape(shapePoints);
       const zoneGeom = new THREE.ShapeBufferGeometry(shape);
       zoneMesh = new THREE.Mesh(zoneGeom, zoneMaterial);
-
-      fixtureShape = new Polygon(fixturePoints);
     } else {
       console.warn("Some type of zone must be specified");
     }
@@ -139,13 +152,15 @@ export class Zone extends SimObject {
       },
     };
 
-    this._fixtureSpecs = {
-      shape: fixtureShape,
-      isSensor: true,
-      userData,
-      filterCategoryBits: EntityCategory.ZONES,
-      filterMaskBits: EntityMask.ZONES,
-    };
+    fixtureShapes.forEach((fixtureShape) => {
+      this._fixtureSpecs.push({
+        shape: fixtureShape,
+        isSensor: true,
+        userData,
+        filterCategoryBits: EntityCategory.ZONES,
+        filterMaskBits: EntityMask.ZONES,
+      });
+    });
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -159,7 +174,7 @@ export class Zone extends SimObject {
     return this._bodySpecs;
   }
 
-  getFixtureDef(): FixtureDef {
+  getFixtureDefs(): FixtureDef[] {
     return this._fixtureSpecs;
   }
 

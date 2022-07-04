@@ -76,7 +76,7 @@ export abstract class SimObject {
    * returns the specification for the world's body
    */
   public abstract getBodySpecs(): BodyDef;
-  public abstract getFixtureDef(): FixtureDef;
+  public abstract getFixtureDefs(): FixtureDef[];
 
   public getFriction(): FrictionSpec | null {
     return null;

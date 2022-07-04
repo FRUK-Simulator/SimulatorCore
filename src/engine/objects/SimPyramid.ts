@@ -115,8 +115,8 @@ export class SimPyramid extends SimObject {
     return this.bodySpecs;
   }
 
-  getFixtureDef(): FixtureDef {
-    return this.fixtureSpecs;
+  getFixtureDefs(): FixtureDef[] {
+    return [this.fixtureSpecs];
   }
 
   getFriction(): FrictionSpec | null {

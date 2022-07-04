@@ -274,7 +274,9 @@ export class Sim3D extends EventEmitter {
 
     const robotBody = this.world.createBody(robot.getBodySpecs());
     robot.setBody(robotBody);
-    robotBody.createFixture(robot.getFixtureDef());
+    robot.getFixtureDefs().forEach((fixtureDef) => {
+      robotBody.createFixture(fixtureDef);
+    });
 
     const world = this.world;
     // Create bodies and fixtures for the children
@@ -282,9 +284,9 @@ export class Sim3D extends EventEmitter {
       if (child.getBodySpecs() !== undefined) {
         const childBody = world.createBody(child.getBodySpecs());
         child.setBody(childBody);
-        if (child.getFixtureDef() !== undefined) {
-          childBody.createFixture(child.getFixtureDef());
-        }
+        child.getFixtureDefs().forEach((fixtureDef) => {
+          childBody.createFixture(fixtureDef);
+        });
       }
       child.children.forEach(init_bodies);
     });
@@ -722,7 +724,9 @@ export class Sim3D extends EventEmitter {
     }
     const body = this.world.createBody(obj.getBodySpecs());
     obj.setBody(body);
-    body.createFixture(obj.getFixtureDef());
+    obj.getFixtureDefs().forEach((fixtureDef) => {
+      body.createFixture(fixtureDef);
+    });
     if (obj.getFriction() !== null) {
       const frictionJoint = new FrictionJoint({
         localAnchorA: new Vec2(),

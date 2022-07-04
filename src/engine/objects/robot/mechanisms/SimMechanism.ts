@@ -36,8 +36,8 @@ export abstract class SimMechanism extends SimObject {
     return this._bodySpecs;
   }
 
-  getFixtureDef(): FixtureDef {
-    return this._fixtureSpecs;
+  getFixtureDefs(): FixtureDef[] {
+    return [this._fixtureSpecs];
   }
 
   // returns the proxy sensors to be added to the robots sensor manager
