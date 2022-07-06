@@ -56,8 +56,7 @@ export class Zone extends SimObject {
 
     const zoneMaterial = new THREE.MeshBasicMaterial(materialSpecs);
 
-    // eslint-disable-next-line prefer-const
-    let fixtureShapes = [];
+    const fixtureShapes = [];
     let zoneMesh;
 
     if (spec.zoneShape.type == "rectangle") {
