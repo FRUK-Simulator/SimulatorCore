@@ -76,7 +76,7 @@ export class SimGripperJaw extends SimObject {
     return this._bodySpecs;
   }
 
-  public getFixtureDef(): FixtureDef {
-    return this._fixtureSpecs;
+  public getFixtureDefs(): FixtureDef[] {
+    return [this._fixtureSpecs];
   }
 }

@@ -91,7 +91,7 @@ export class SimBall extends SimObject {
     return this.bodySpecs;
   }
 
-  getFixtureDef(): FixtureDef {
-    return this.fixtureSpecs;
+  getFixtureDefs(): FixtureDef[] {
+    return [this.fixtureSpecs];
   }
 }

@@ -115,8 +115,8 @@ export class SimRobotWheel extends SimObject {
     return this._bodySpecs;
   }
 
-  getFixtureDef(): FixtureDef {
-    return this._fixtureSpecs;
+  getFixtureDefs(): FixtureDef[] {
+    return [this._fixtureSpecs];
   }
 
   private getForwardVelocity(): Vec2 {
