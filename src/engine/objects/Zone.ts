@@ -93,10 +93,7 @@ export class Zone extends SimObject {
 
       // We need to transform the zone's Vector2d points into THREE.Vector2 points.
       zoneShape.points.forEach((vector2dPoint) => {
-        const point = new THREE.Vector2(
-          vector2dPoint.x + initialPosition.x,
-          vector2dPoint.y + initialPosition.y
-        );
+        const point = new THREE.Vector2(vector2dPoint.x, vector2dPoint.y);
         shapePoints.push(point);
       });
 
