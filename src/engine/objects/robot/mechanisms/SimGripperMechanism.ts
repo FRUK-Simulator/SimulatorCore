@@ -1,4 +1,4 @@
-import { Box, PrismaticJoint, Vec2, World } from "planck-js";
+import { Box, DistanceJoint, PrismaticJoint, Vec2, World } from "planck-js";
 import { getSensorMountPosition } from "../../../utils/RobotUtils";
 import {
   IGripperMechanismSpec,
@@ -63,7 +63,7 @@ export class SimGripperMechanism extends SimMechanism {
   private _spec: IGripperMechanismSpec;
   private _range: number;
   private _robot: SimRobot;
-  private _grabbed: PrismaticJoint;
+  private _grabbed: DistanceJoint;
 
   constructor(
     robotGuid: string,
@@ -187,11 +187,11 @@ export class SimGripperMechanism extends SimMechanism {
     switch (action) {
       case Action.OPEN:
         this._state = GripperState.OPENING;
-        this._slideJoint.setMotorSpeed(this._closeSpeed);
+        this._slideJoint.setMotorSpeed(this._openSpeed);
         break;
       case Action.CLOSE:
         this._state = GripperState.CLOSING;
-        this._slideJoint.setMotorSpeed(this._openSpeed);
+        this._slideJoint.setMotorSpeed(this._closeSpeed);
         break;
     }
   }
@@ -300,17 +300,14 @@ export class SimGripperMechanism extends SimMechanism {
     const world = this._body.getWorld();
 
     this._grabbed = world.createJoint(
-      new PrismaticJoint(
+      new DistanceJoint(
         {
-          // allow grabbed object to move horizontally between the jaws
-          enableLimit: true,
-          lowerTranslation: -1,
-          upperTranslation: 1,
+          collideConnected: false,
         },
         this._body,
         object,
-        object.getWorldCenter(),
-        new Vec2(1, 0)
+        this._body.getWorldCenter(),
+        object.getWorldCenter()
       )
     );
   }
