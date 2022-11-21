@@ -192,6 +192,11 @@ export class SimRobotDrivetrain {
     motor.inputSignal = value;
   }
 
+  getMotorInputSignal(channel: number): number {
+    const motor = this._motors.get(channel);
+    return motor.inputSignal;
+  }
+
   update(): void {
     // Run through the list of wheel groups, get the power for each
     // wheel and assign it to the SimWheel
