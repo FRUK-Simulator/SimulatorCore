@@ -311,6 +311,10 @@ export class SimRobot extends SimObject {
     this._drivetrain.setMotorPower(channel, value);
   }
 
+  getMotorInputSignal(channel: number): number {
+    return this._drivetrain.getMotorInputSignal(channel);
+  }
+
   getDigitalInput(channel: number): boolean {
     return this._basicSensors.getDigitalInput(channel);
   }

@@ -6,6 +6,10 @@ export class RobotHandle extends ObjectHandle<SimRobot> {
     this._rootObject.setMotorPower(channel, value);
   }
 
+  getMotorInputSignal(channel: number): number {
+    return this._rootObject.getMotorInputSignal(channel);
+  }
+
   getDigitalInput(channel: number): boolean {
     return this._rootObject.getDigitalInput(channel);
   }
