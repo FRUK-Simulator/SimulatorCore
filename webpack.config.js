@@ -28,12 +28,9 @@ const webConfig = {
     }),
   ],
   devServer: {
-    writeToDisk: true,
-    contentBase: path.resolve(__dirname, "public"),
     compress: true,
     port: 8080,
     hot: true,
-    overlay: true,
   },
 };
 
