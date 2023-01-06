@@ -214,6 +214,16 @@ export class Sim3D extends EventEmitter {
     this.physicsActive = isActive;
   }
 
+  step(stepsCount: number = 1): void {
+    const r = (time: number) => {
+      const dt = stepsCount * (1.0 / 60);
+      this.updatePhysics(dt);
+      this.render(dt);
+    };
+
+    window.requestAnimationFrame(r);
+  }
+
   // Public API - Objects
   /**
    * Add a new Ball object to the simulation

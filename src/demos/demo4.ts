@@ -41,6 +41,8 @@ window.onresize = () => {
 
 const demoOptions = {
   debugMode: false,
+  physicsActive: true,
+  step: false,
   cameraMode: "position",
 };
 
@@ -68,6 +70,20 @@ function main() {
 
   debugModeController.onChange((val) => {
     simulator.setDebugMode(val);
+  });
+
+  const physicsActiveController = debugFolder
+    .add(demoOptions, "physicsActive")
+    .setValue(true);
+
+  physicsActiveController.onChange((val) => {
+    simulator.setPhysicsActive(val);
+  });
+
+  const stepController = debugFolder.add(demoOptions, "step").setValue(false);
+
+  stepController.onChange((val) => {
+    simulator.step();
   });
 
   const settingFolder = gui.addFolder("Settings");
@@ -227,6 +243,15 @@ function main() {
     },
     baseColor: 0xff00ff,
   });
+
+  let _dir = 1;
+  const backForwardFunc = () => {
+    _dir *= -1;
+    robot.setMotorPower(LEFT_DRIVE_CHANNEL, 0.2 * _dir);
+    robot.setMotorPower(RIGHT_DRIVE_CHANNEL, 0.2 * _dir);
+  };
+
+  setInterval(backForwardFunc, 2000);
 
   const el = window.document.body;
 
