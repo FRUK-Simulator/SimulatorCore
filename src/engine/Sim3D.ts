@@ -218,7 +218,7 @@ export class Sim3D extends EventEmitter {
     const r = (time: number) => {
       const dt = stepsCount * (1.0 / 60);
       this.updatePhysics(dt);
-      this.render(dt);
+      // this.render(dt);
     };
 
     window.requestAnimationFrame(r);
